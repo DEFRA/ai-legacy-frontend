@@ -1,0 +1,328 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% set breadcrumbs = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "TB Case Form",
+    href: "/tbcase"
+  },
+  {
+    text: "Cons",
+    href: "/tbcase/cons"
+  }
+] %}
+
+{% block beforeContent %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <span class="govuk-caption-l">{{ caption }}</span>
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      
+      <!-- Case context summary card -->
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          {{ govukSummaryList({
+            rows: [
+              {
+                key: {
+                  text: "CPH Number"
+                },
+                value: {
+                  text: "12/345/6789"
+                }
+              },
+              {
+                key: {
+                  text: "Current Incident"
+                },
+                value: {
+                  text: "TB-2025-12345"
+                }
+              }
+            ]
+          }) }}
+        </div>
+      </div>
+
+      <!-- Service Navigation -->
+      {% include "includes/tb-service-navigation.html" %}
+
+      <!-- Main form content -->
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-m">Contiguous Holdings</h2>
+          
+          <div class="govuk-form-group">
+            {{ govukTable({
+              caption: "Contiguous Holdings Records",
+              captionClasses: "govuk-table__caption--m",
+              firstCellIsHeader: true,
+              head: [
+                {
+                  text: "CPH Number"
+                },
+                {
+                  text: "Keeper Name"
+                },
+                {
+                  text: "Address"
+                },
+                {
+                  text: "Distance (km)"
+                },
+                {
+                  text: "TB Status"
+                },
+                {
+                  text: "Last Test Date"
+                },
+                {
+                  text: "Actions"
+                }
+              ],
+              rows: [
+                [
+                  {
+                    text: "12/345/6790"
+                  },
+                  {
+                    text: "James Wilson"
+                  },
+                  {
+                    text: "Home Farm, Leicestershire"
+                  },
+                  {
+                    text: "0.5"
+                  },
+                  {
+                    text: "Clear"
+                  },
+                  {
+                    text: "10 May 2025"
+                  },
+                  {
+                    html: '<a href="#" class="govuk-link">View</a>'
+                  }
+                ],
+                [
+                  {
+                    text: "12/345/6791"
+                  },
+                  {
+                    text: "Sarah Johnson"
+                  },
+                  {
+                    text: "Hill Farm, Leicestershire"
+                  },
+                  {
+                    text: "1.2"
+                  },
+                  {
+                    text: "Under Restriction"
+                  },
+                  {
+                    text: "15 May 2025"
+                  },
+                  {
+                    html: '<a href="#" class="govuk-link">View</a>'
+                  }
+                ],
+                [
+                  {
+                    text: "12/345/6792"
+                  },
+                  {
+                    text: "David Thompson"
+                  },
+                  {
+                    text: "Valley Farm, Leicestershire"
+                  },
+                  {
+                    text: "1.8"
+                  },
+                  {
+                    text: "Clear"
+                  },
+                  {
+                    text: "20 May 2025"
+                  },
+                  {
+                    html: '<a href="#" class="govuk-link">View</a>'
+                  }
+                ]
+              ]
+            }) }}
+          </div>
+          
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    Add Contiguous Holding
+                  </legend>
+                  
+                  {{ govukInput({
+                    label: {
+                      text: "CPH Number"
+                    },
+                    id: "cph-number",
+                    name: "cph-number",
+                    classes: "govuk-input--width-10"
+                  }) }}
+                  
+                  {{ govukInput({
+                    label: {
+                      text: "Distance (km)"
+                    },
+                    id: "distance",
+                    name: "distance",
+                    classes: "govuk-input--width-5",
+                    type: "number",
+                    suffix: {
+                      text: "km"
+                    }
+                  }) }}
+                  
+                  <div class="govuk-button-group">
+                    {{ govukButton({
+                      text: "Add Holding",
+                      classes: "govuk-button"
+                    }) }}
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+          
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                Actions
+              </legend>
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  {{ govukSelect({
+                    id: "action",
+                    name: "action",
+                    label: {
+                      text: "Action"
+                    },
+                    items: [
+                      {
+                        value: "",
+                        text: "Please select"
+                      },
+                      {
+                        value: "action-1",
+                        text: "Action 1"
+                      },
+                      {
+                        value: "action-2",
+                        text: "Action 2"
+                      },
+                      {
+                        value: "action-3",
+                        text: "Action 3"
+                      }
+                    ]
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-half">
+                  {{ govukSelect({
+                    id: "letter-type",
+                    name: "letter-type",
+                    label: {
+                      text: "Letter Type"
+                    },
+                    items: [
+                      {
+                        value: "",
+                        text: "Please select"
+                      },
+                      {
+                        value: "letter-1",
+                        text: "Letter Type 1"
+                      },
+                      {
+                        value: "letter-2",
+                        text: "Letter Type 2"
+                      },
+                      {
+                        value: "letter-3",
+                        text: "Letter Type 3"
+                      }
+                    ]
+                  }) }}
+                </div>
+              </div>
+              <div class="govuk-button-group">
+                {{ govukButton({
+                  text: "Generate Letter",
+                  classes: "govuk-button--secondary"
+                }) }}
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="govuk-form-group">
+            {{ govukTextarea({
+              name: "comments",
+              id: "comments",
+              label: {
+                text: "Comments",
+                classes: "govuk-label--m"
+              },
+              hint: {
+                text: "Maximum 250 characters"
+              },
+              maxlength: 250,
+              rows: 3
+            }) }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-m">Tools</h2>
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Delete",
+              classes: "govuk-button--warning"
+            }) }}
+            
+            {{ govukButton({
+              text: "Edit",
+              classes: "govuk-button--secondary"
+            }) }}
+            
+            {{ govukButton({
+              text: "Add / Amend",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
