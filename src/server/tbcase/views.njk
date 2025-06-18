@@ -1,0 +1,323 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% set breadcrumbs = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "TB Case Form",
+    href: "/tbcase"
+  },
+  {
+    text: "Views",
+    href: "/tbcase/views"
+  }
+] %}
+
+{% block beforeContent %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <span class="govuk-caption-l">{{ caption }}</span>
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      
+      <!-- Case context summary card -->
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          {{ govukSummaryList({
+            rows: [
+              {
+                key: {
+                  text: "CPH Number"
+                },
+                value: {
+                  text: "12/345/6789"
+                }
+              },
+              {
+                key: {
+                  text: "Current Incident"
+                },
+                value: {
+                  text: "TB-2025-12345"
+                }
+              }
+            ]
+          }) }}
+        </div>
+      </div>
+
+      <!-- Service Navigation -->
+      {% include "includes/tb-service-navigation.html" %}
+
+      <!-- Main content -->
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-m">Case Summary Views</h2>
+          
+          {{ govukTabs({
+            items: [
+              {
+                label: "Summary",
+                id: "summary",
+                panel: {
+                  html: "<div class='govuk-grid-row'>
+                          <div class='govuk-grid-column-full'>
+                            <h3 class='govuk-heading-s'>Case Overview</h3>
+                            <p class='govuk-body'>This is a summary view of the TB case. It provides an overview of all key information related to this incident.</p>
+                            
+                            <div class='govuk-inset-text'>
+                              <h4 class='govuk-heading-s'>Keeper Details</h4>
+                              <p class='govuk-body'>Name: John Doe<br>Address: Home Farm, Leicestershire<br>CPH: 12/345/6789</p>
+                              
+                              <h4 class='govuk-heading-s'>Incident Summary</h4>
+                              <p class='govuk-body'>Incident Type: Reactor Removal<br>Date Opened: 10 Jun 2025<br>Status: Active</p>
+                              
+                              <h4 class='govuk-heading-s'>Testing Information</h4>
+                              <p class='govuk-body'>Last Test Date: 12 Jun 2025<br>Test Type: Skin Test<br>Reactors Identified: 5</p>
+                            </div>
+                          </div>
+                        </div>"
+                }
+              },
+              {
+                label: "Timeline",
+                id: "timeline",
+                panel: {
+                  html: "<div class='govuk-grid-row'>
+                          <div class='govuk-grid-column-full'>
+                            <h3 class='govuk-heading-s'>Case Timeline</h3>
+                            <p class='govuk-body'>This shows a chronological history of all events related to this TB case.</p>
+                            
+                            <ol class='govuk-list govuk-list--number'>
+                              <li class='govuk-!-margin-bottom-4'>
+                                <h4 class='govuk-heading-s'>10 Jun 2025 - Case Opened</h4>
+                                <p class='govuk-body'>Case registered following identification of 5 reactors during routine skin test.</p>
+                              </li>
+                              <li class='govuk-!-margin-bottom-4'>
+                                <h4 class='govuk-heading-s'>12 Jun 2025 - Valuation Completed</h4>
+                                <p class='govuk-body'>Valuation of 5 reactor animals completed by J. Smith.</p>
+                              </li>
+                              <li class='govuk-!-margin-bottom-4'>
+                                <h4 class='govuk-heading-s'>15 Jun 2025 - Removal Scheduled</h4>
+                                <p class='govuk-body'>Animals scheduled for removal to Abattoir A on 20 Jun 2025.</p>
+                              </li>
+                              <li class='govuk-!-margin-bottom-4'>
+                                <h4 class='govuk-heading-s'>15 Jun 2025 - Letter Sent</h4>
+                                <p class='govuk-body'>Removal notification letter generated and sent to keeper.</p>
+                              </li>
+                              <li class='govuk-!-margin-bottom-4'>
+                                <h4 class='govuk-heading-s'>16 Jun 2025 - Radial Testing Scheduled</h4>
+                                <p class='govuk-body'>Radial testing within 3km scheduled for 25 Jun 2025.</p>
+                              </li>
+                            </ol>
+                          </div>
+                        </div>"
+                }
+              },
+              {
+                label: "Reports",
+                id: "reports",
+                panel: {
+                  html: "<div class='govuk-grid-row'>
+                          <div class='govuk-grid-column-full'>
+                            <h3 class='govuk-heading-s'>Available Reports</h3>
+                            <p class='govuk-body'>The following reports are available for this case:</p>
+                            
+                            <ul class='govuk-list govuk-list--bullet'>
+                              <li><a href='#' class='govuk-link'>Case Summary Report</a></li>
+                              <li><a href='#' class='govuk-link'>Removal History Report</a></li>
+                              <li><a href='#' class='govuk-link'>Testing Schedule Report</a></li>
+                              <li><a href='#' class='govuk-link'>Financial Report</a></li>
+                              <li><a href='#' class='govuk-link'>Contact History Report</a></li>
+                            </ul>
+                            
+                            <div class='govuk-form-group'>
+                              <label class='govuk-label' for='custom-report'>
+                                Generate Custom Report
+                              </label>
+                              <select class='govuk-select' id='custom-report' name='custom-report'>
+                                <option value=''>Please select</option>
+                                <option value='custom-1'>Custom Report 1</option>
+                                <option value='custom-2'>Custom Report 2</option>
+                                <option value='custom-3'>Custom Report 3</option>
+                              </select>
+                            </div>
+                            
+                            <button class='govuk-button govuk-button--secondary'>
+                              Generate Report
+                            </button>
+                          </div>
+                        </div>"
+                }
+              },
+              {
+                label: "Statistics",
+                id: "statistics",
+                panel: {
+                  html: "<div class='govuk-grid-row'>
+                          <div class='govuk-grid-column-full'>
+                            <h3 class='govuk-heading-s'>Case Statistics</h3>
+                            <p class='govuk-body'>Statistical information related to this TB case and the holding.</p>
+                            
+                            <div class='govuk-inset-text'>
+                              <h4 class='govuk-heading-s'>Current Incident</h4>
+                              <p class='govuk-body'>
+                                Duration: 7 days<br>
+                                Reactors Identified: 5<br>
+                                Removals Completed: 0<br>
+                                Tests Scheduled: 2
+                              </p>
+                              
+                              <h4 class='govuk-heading-s'>Historical Data</h4>
+                              <p class='govuk-body'>
+                                Previous Incidents: 1<br>
+                                Last Incident Date: May 2023<br>
+                                Total Reactors (All Time): 12<br>
+                                Average Time to Clearance: 145 days
+                              </p>
+                              
+                              <h4 class='govuk-heading-s'>Area Context</h4>
+                              <p class='govuk-body'>
+                                Risk Level: High<br>
+                                Active Cases Within 3km: 2<br>
+                                Area Testing Frequency: Annual<br>
+                                Regional Prevalence: 8.5%
+                              </p>
+                            </div>
+                          </div>
+                        </div>"
+                }
+              }
+            ]
+          }) }}
+          
+          <div class="govuk-form-group govuk-!-margin-top-6">
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                Actions
+              </legend>
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  {{ govukSelect({
+                    id: "action",
+                    name: "action",
+                    label: {
+                      text: "Action"
+                    },
+                    items: [
+                      {
+                        value: "",
+                        text: "Please select"
+                      },
+                      {
+                        value: "action-1",
+                        text: "Action 1"
+                      },
+                      {
+                        value: "action-2",
+                        text: "Action 2"
+                      },
+                      {
+                        value: "action-3",
+                        text: "Action 3"
+                      }
+                    ]
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-half">
+                  {{ govukSelect({
+                    id: "letter-type",
+                    name: "letter-type",
+                    label: {
+                      text: "Letter Type"
+                    },
+                    items: [
+                      {
+                        value: "",
+                        text: "Please select"
+                      },
+                      {
+                        value: "letter-1",
+                        text: "Letter Type 1"
+                      },
+                      {
+                        value: "letter-2",
+                        text: "Letter Type 2"
+                      },
+                      {
+                        value: "letter-3",
+                        text: "Letter Type 3"
+                      }
+                    ]
+                  }) }}
+                </div>
+              </div>
+              <div class="govuk-button-group">
+                {{ govukButton({
+                  text: "Generate Letter",
+                  classes: "govuk-button--secondary"
+                }) }}
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="govuk-form-group">
+            {{ govukTextarea({
+              name: "comments",
+              id: "comments",
+              label: {
+                text: "Comments",
+                classes: "govuk-label--m"
+              },
+              hint: {
+                text: "Maximum 250 characters"
+              },
+              maxlength: 250,
+              rows: 3
+            }) }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-m">Tools</h2>
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Delete",
+              classes: "govuk-button--warning"
+            }) }}
+            
+            {{ govukButton({
+              text: "Edit",
+              classes: "govuk-button--secondary"
+            }) }}
+            
+            {{ govukButton({
+              text: "Add / Amend",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

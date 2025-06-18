@@ -1,0 +1,63 @@
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% set navLinks = [
+  {
+    text: "Case Details",
+    href: "/tbcase/case-details",
+    active: activePage === "case-details"
+  },
+  {
+    text: "Removals",
+    href: "/tbcase/removals",
+    active: activePage === "removals"
+  },
+  {
+    text: "Eartags",
+    href: "/tbcase/eartags",
+    active: activePage === "eartags"
+  },
+  {
+    text: "Tracings",
+    href: "/tbcase/tracings",
+    active: activePage === "tracings"
+  },
+  {
+    text: "Allocations",
+    href: "/tbcase/allocations",
+    active: activePage === "allocations"
+  },
+  {
+    text: "GIS",
+    href: "/tbcase/gis",
+    active: activePage === "gis"
+  },
+  {
+    text: "DRFS",
+    href: "/tbcase/drfs",
+    active: activePage === "drfs"
+  },
+  {
+    text: "Cons",
+    href: "/tbcase/cons",
+    active: activePage === "cons"
+  },
+  {
+    text: "Radial Testing",
+    href: "/tbcase/radial-testing",
+    active: activePage === "radial-testing"
+  },
+  {
+    text: "Post-Kill",
+    href: "/tbcase/post-kill",
+    active: activePage === "post-kill"
+  },
+  {
+    text: "Views",
+    href: "/tbcase/views",
+    active: activePage === "views"
+  }
+] %}
+
+{{ govukServiceNavigation({
+  navigation: navLinks
+}) }}
