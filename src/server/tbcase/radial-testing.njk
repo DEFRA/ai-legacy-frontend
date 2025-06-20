@@ -1,0 +1,45 @@
+{% extends 'layouts/page.njk' %}
+
+{% set breadcrumbs = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "TB Case Form",
+    href: "/tbcase"
+  },
+  {
+    text: pageTitle,
+    href: request.path
+  }
+] %}
+
+{% block beforeContent %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <span class="govuk-caption-l">{{ caption }}</span>
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      
+      <!-- Service Navigation -->
+      {% include "includes/tb-service-navigation.html" %}
+      
+      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header">
+          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+            Information
+          </h2>
+        </div>
+        <div class="govuk-notification-banner__content">
+          <p class="govuk-notification-banner__heading">
+            Form fields to be implemented based on Slide6.png requirements.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
