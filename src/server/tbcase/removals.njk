@@ -1,5 +1,17 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+
 {% set breadcrumbs = [
   {
     text: "Home",
@@ -16,30 +28,942 @@
 ] %}
 
 {% block beforeContent %}
+  <!-- Skip link for screen readers -->
+  {{ govukSkipLink({
+    href: "#main-content",
+    text: "Skip to main content"
+  }) }}
   {{ super() }}
 {% endblock %}
 
 {% block content %}
+  <!-- Error Summary - appears at top of page when there are errors -->
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: {
+        role: "alert",
+        "aria-labelledby": "error-summary-title"
+      }
+    }) }}
+  {% endif %}
+
+  <!-- Success notification -->
+  {% if success %}
+    {{ govukNotificationBanner({
+      text: success,
+      type: "success",
+      attributes: {
+        role: "alert",
+        "aria-live": "polite"
+      }
+    }) }}
+  {% endif %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{ caption }}</span>
-      <h1 class="govuk-heading-l">{{ heading }}</h1>
       
-      <!-- Service Navigation -->
-      {% include "includes/tb-service-navigation.html" %}
+      <!-- Page Header with semantic heading structure -->
+      <header class="govuk-!-margin-bottom-6" role="banner">
+        <div class="govuk-!-display-flex govuk-!-justify-content-space-between govuk-!-align-items-start">
+          <div>
+            <span class="govuk-caption-l" aria-describedby="page-context">TBCMS: TB Case Form (Exeter - Reactor Removal)</span>
+            <h1 class="govuk-heading-l" id="main-content">TB Case Removals</h1>
+          </div>
+          <div>
+            {{ govukButton({
+              text: "Close form",
+              classes: "govuk-button--secondary",
+              href: "/tbcase",
+              attributes: {
+                "aria-label": "Close TB case form and return to main page"
+              }
+            }) }}
+          </div>
+        </div>
+      </header>
+
+      <!-- CPH Number Section with proper labeling -->
+      <section aria-labelledby="cph-heading" class="govuk-!-margin-bottom-6">
+        <h2 class="govuk-heading-m" id="cph-heading">Case Reference</h2>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-quarter">
+            {{ govukInput({
+              label: {
+                text: "CPH Number",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "County Parish Holding number format: XX/XXX/XXXX"
+              },
+              id: "cph-number",
+              name: "cphNumber",
+              value: formData.cphNumber if formData else "12/345/6789",
+              classes: "govuk-input--width-15",
+              attributes: {
+                "aria-describedby": "cph-number-hint",
+                pattern: "[0-9]+/[0-9]+/[0-9]+",
+                "aria-required": "true"
+              },
+              errorMessage: errors.cphNumber if errors
+            }) }}
+          </div>
+        </div>
+      </section>
       
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Information
-          </h2>
-        </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            Form fields to be implemented based on Slide6.png requirements.
-          </p>
-        </div>
-      </div>
+      <!-- Service Navigation with proper ARIA labels -->
+      <nav aria-label="TB Case sections" class="govuk-!-margin-bottom-6">
+        {% include "includes/tb-service-navigation.html" %}
+      </nav>
+
+      <!-- Incident Information Section with proper semantic structure -->
+      <section aria-labelledby="incident-heading" class="govuk-!-margin-bottom-8">
+        <fieldset class="govuk-fieldset" role="group" aria-labelledby="incident-heading">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading" id="incident-heading">
+              Auto populated Incident Information
+            </h2>
+          </legend>
+          
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "National Incident",
+                      classes: "govuk-label--s"
+                    },
+                    hint: {
+                      text: "TB incident reference number"
+                    },
+                    id: "nat-inc",
+                    name: "natInc",
+                    value: formData.natInc if formData else "TB10",
+                    classes: "govuk-input--width-10",
+                    attributes: {
+                      readonly: "readonly",
+                      "aria-describedby": "nat-inc-hint"
+                    }
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Case Number",
+                      classes: "govuk-label--s"
+                    },
+                    hint: {
+                      text: "Internal case reference"
+                    },
+                    id: "case-no",
+                    name: "caseNo",
+                    value: formData.caseNo if formData else "21/00123",
+                    classes: "govuk-input--width-10",
+                    attributes: {
+                      readonly: "readonly",
+                      "aria-describedby": "case-no-hint"
+                    }
+                  }) }}
+                </div>
+              </div>
+              
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Incident Date",
+                      classes: "govuk-label--s"
+                    },
+                    hint: {
+                      text: "Date incident was reported"
+                    },
+                    id: "incident-date",
+                    name: "incidentDate",
+                    value: formData.incidentDate if formData else "15/03/2024",
+                    classes: "govuk-input--width-10",
+                    attributes: {
+                      readonly: "readonly",
+                      "aria-describedby": "incident-date-hint"
+                    }
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Telephone",
+                      classes: "govuk-label--s"
+                    },
+                    hint: {
+                      text: "Primary contact number"
+                    },
+                    id: "telephone",
+                    name: "telephone",
+                    value: formData.telephone if formData else "01234 567890",
+                    classes: "govuk-input--width-15",
+                    attributes: {
+                      readonly: "readonly",
+                      "aria-describedby": "telephone-hint",
+                      type: "tel"
+                    }
+                  }) }}
+                </div>
+              </div>
+              
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Mobile/Web",
+                      classes: "govuk-label--s"
+                    },
+                    hint: {
+                      text: "Mobile or web contact"
+                    },
+                    id: "web",
+                    name: "web",
+                    value: formData.web if formData else "07890 123456",
+                    classes: "govuk-input--width-15",
+                    attributes: {
+                      readonly: "readonly",
+                      "aria-describedby": "web-hint",
+                      type: "tel"
+                    }
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Incident CPH",
+                      classes: "govuk-label--s"
+                    },
+                    hint: {
+                      text: "CPH associated with incident"
+                    },
+                    id: "incident-cph",
+                    name: "incidentCph",
+                    value: formData.incidentCph if formData else "12/345/6789",
+                    classes: "govuk-input--width-10",
+                    attributes: {
+                      readonly: "readonly",
+                      "aria-describedby": "incident-cph-hint"
+                    }
+                  }) }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="govuk-grid-column-one-half">
+              {{ govukTextarea({
+                name: "address",
+                id: "address",
+                label: {
+                  text: "Registered Address",
+                  classes: "govuk-label--s"
+                },
+                hint: {
+                  text: "Full registered address of the holding"
+                },
+                value: formData.address if formData else "Farm Holdings Ltd\n123 Meadow View Farm\nGreen Lane\nLittle Hampstead\nOxfordshire\nOX12 3AB",
+                rows: 7,
+                attributes: {
+                  readonly: "readonly",
+                  "aria-describedby": "address-hint"
+                }
+              }) }}
+            </div>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- Main Removals Form with enhanced accessibility -->
+      <form method="post" action="/tbcase/removals" novalidate aria-labelledby="removals-form-heading">
+        
+        <!-- Removals Data Section -->
+        <section aria-labelledby="removals-form-heading" class="govuk-!-margin-bottom-8">
+          <fieldset class="govuk-fieldset" role="group" aria-labelledby="removals-form-heading">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading" id="removals-form-heading">
+                Removals Data Entry
+              </h2>
+            </legend>
+
+            <!-- Action Buttons Toolbar with proper ARIA labeling -->
+            <div class="govuk-button-group govuk-!-margin-bottom-6" role="toolbar" aria-label="Record management actions">
+              {{ govukButton({
+                text: "Delete record",
+                classes: "govuk-button--warning",
+                name: "action",
+                value: "delete",
+                attributes: {
+                  "aria-describedby": "delete-help",
+                  formnovalidate: "true"
+                }
+              }) }}
+              <div id="delete-help" class="govuk-visually-hidden">Delete the currently selected removal record</div>
+              
+              {{ govukButton({
+                text: "Edit record",
+                classes: "govuk-button--secondary",
+                name: "action",
+                value: "edit",
+                attributes: {
+                  "aria-describedby": "edit-help",
+                  formnovalidate: "true"
+                }
+              }) }}
+              <div id="edit-help" class="govuk-visually-hidden">Edit the currently selected removal record</div>
+              
+              {{ govukButton({
+                text: "Add / Amend record",
+                classes: "govuk-button--secondary",
+                name: "action",
+                value: "add-amend",
+                attributes: {
+                  "aria-describedby": "add-help",
+                  formnovalidate: "true"
+                }
+              }) }}
+              <div id="add-help" class="govuk-visually-hidden">Add a new removal record or amend existing</div>
+              
+              {{ govukButton({
+                text: "Duplicate record",
+                classes: "govuk-button--secondary",
+                name: "action",
+                value: "duplicate",
+                attributes: {
+                  "aria-describedby": "duplicate-help",
+                  formnovalidate: "true"
+                }
+              }) }}
+              <div id="duplicate-help" class="govuk-visually-hidden">Create a copy of the currently selected record</div>
+            </div>
+
+            <!-- Removals Data Grid with proper table structure for screen readers -->
+            <div class="govuk-form-group">
+              <h3 class="govuk-heading-s">Removal Record Details</h3>
+              
+              <!-- Row 1: Actions and Case Information -->
+              <fieldset class="govuk-fieldset govuk-!-margin-bottom-4" role="group" aria-labelledby="actions-heading">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                  <h4 class="govuk-fieldset__heading" id="actions-heading">Actions and Case Assignment</h4>
+                </legend>
+                
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukSelect({
+                      id: "actions",
+                      name: "actions",
+                      label: {
+                        text: "Actions",
+                        classes: "govuk-label--s"
+                      },
+                      hint: {
+                        text: "Select the responsible person or action"
+                      },
+                      items: [
+                        {
+                          value: "",
+                          text: "Select action"
+                        },
+                        {
+                          value: "john-smith",
+                          text: "John Smith",
+                          selected: (formData.actions == "john-smith") if formData else true
+                        },
+                        {
+                          value: "",
+                          text: "Other Action"
+                        }
+                      ],
+                      attributes: {
+                        "aria-describedby": "actions-hint",
+                        "aria-required": "true"
+                      },
+                      errorMessage: errors.actions if errors
+                    }) }}
+                  </div>
+                  
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukSelect({
+                      id: "actions-type",
+                      name: "actionsType",
+                      label: {
+                        text: "Actions (Letter) Type",
+                        classes: "govuk-label--s"
+                      },
+                      hint: {
+                        text: "Type of action or letter to be sent"
+                      },
+                      items: [
+                        {
+                          value: "",
+                          text: "Select type"
+                        },
+                        {
+                          value: "letter-type-1",
+                          text: "Notice of Intention",
+                          selected: (formData.actionsType == "letter-type-1") if formData
+                        },
+                        {
+                          value: "letter-type-2",
+                          text: "Removal Notice"
+                        },
+                        {
+                          value: "letter-type-3",
+                          text: "Final Notice"
+                        }
+                      ],
+                      attributes: {
+                        "aria-describedby": "actions-type-hint"
+                      },
+                      errorMessage: errors.actionsType if errors
+                    }) }}
+                  </div>
+                  
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukInput({
+                      label: {
+                        text: "Case Veterinarian",
+                        classes: "govuk-label--s"
+                      },
+                      hint: {
+                        text: "Veterinarian assigned to this case"
+                      },
+                      id: "case-vet",
+                      name: "caseVet",
+                      value: formData.caseVet if formData else "Sarah Lloyd",
+                      classes: "govuk-input--width-20",
+                      attributes: {
+                        "aria-describedby": "case-vet-hint"
+                      },
+                      errorMessage: errors.caseVet if errors
+                    }) }}
+                  </div>
+                  
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukInput({
+                      label: {
+                        text: "Case Administrator",
+                        classes: "govuk-label--s"
+                      },
+                      hint: {
+                        text: "Administrator assigned to this case"
+                      },
+                      id: "case-admin",
+                      name: "caseAdmin",
+                      value: formData.caseAdmin if formData,
+                      classes: "govuk-input--width-20",
+                      attributes: {
+                        "aria-describedby": "case-admin-hint"
+                      },
+                      errorMessage: errors.caseAdmin if errors
+                    }) }}
+                  </div>
+                </div>
+              </fieldset>
+              
+              <!-- Row 2: Dates and Testing Information -->
+              <fieldset class="govuk-fieldset govuk-!-margin-bottom-4" role="group" aria-labelledby="dates-heading">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                  <h4 class="govuk-fieldset__heading" id="dates-heading">Dates and Testing Information</h4>
+                </legend>
+                
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukDateInput({
+                      id: "incident-start-date",
+                      namePrefix: "incidentStartDate",
+                      fieldset: {
+                        legend: {
+                          text: "Incident start date",
+                          classes: "govuk-label--s"
+                        }
+                      },
+                      hint: {
+                        text: "For example, 15 3 2024"
+                      },
+                      items: [
+                        {
+                          name: "day",
+                          classes: "govuk-input--width-2",
+                          value: "15" if not formData else (formData.incidentStartDate.day if formData.incidentStartDate else "")
+                        },
+                        {
+                          name: "month", 
+                          classes: "govuk-input--width-2",
+                          value: "03" if not formData else (formData.incidentStartDate.month if formData.incidentStartDate else "")
+                        },
+                        {
+                          name: "year",
+                          classes: "govuk-input--width-4",
+                          value: "2024" if not formData else (formData.incidentStartDate.year if formData.incidentStartDate else "")
+                        }
+                      ],
+                      errorMessage: errors.incidentStartDate if errors
+                    }) }}
+                  </div>
+                  
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukDateInput({
+                      id: "tb2-tb181-served",
+                      namePrefix: "tb2TB181Served",
+                      fieldset: {
+                        legend: {
+                          text: "TB2 / TB181 Served",
+                          classes: "govuk-label--s"
+                        }
+                      },
+                      hint: {
+                        text: "Date TB2 or TB181 form was served"
+                      },
+                      items: [
+                        {
+                          name: "day",
+                          classes: "govuk-input--width-2",
+                          value: "15" if not formData else (formData.tb2TB181Served.day if formData.tb2TB181Served else "")
+                        },
+                        {
+                          name: "month",
+                          classes: "govuk-input--width-2", 
+                          value: "03" if not formData else (formData.tb2TB181Served.month if formData.tb2TB181Served else "")
+                        },
+                        {
+                          name: "year",
+                          classes: "govuk-input--width-4",
+                          value: "2024" if not formData else (formData.tb2TB181Served.year if formData.tb2TB181Served else "")
+                        }
+                      ],
+                      errorMessage: errors.tb2TB181Served if errors
+                    }) }}
+                  </div>
+                  
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukSelect({
+                      id: "fin-unit",
+                      name: "finUnit",
+                      label: {
+                        text: "Financial Unit",
+                        classes: "govuk-label--s"
+                      },
+                      hint: {
+                        text: "Select the appropriate financial unit"
+                      },
+                      items: [
+                        {
+                          value: "",
+                          text: "Select unit"
+                        },
+                        {
+                          value: "unit-1",
+                          text: "Exeter Unit",
+                          selected: (formData.finUnit == "unit-1") if formData
+                        },
+                        {
+                          value: "unit-2",
+                          text: "Bristol Unit"
+                        },
+                        {
+                          value: "unit-3",
+                          text: "Truro Unit"
+                        }
+                      ],
+                      attributes: {
+                        "aria-describedby": "fin-unit-hint"
+                      },
+                      errorMessage: errors.finUnit if errors
+                    }) }}
+                  </div>
+                  
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukSelect({
+                      id: "result",
+                      name: "result",
+                      label: {
+                        text: "Test Result",
+                        classes: "govuk-label--s"
+                      },
+                      hint: {
+                        text: "Latest test result status"
+                      },
+                      items: [
+                        {
+                          value: "",
+                          text: "Select result"
+                        },
+                        {
+                          value: "vl-pos",
+                          text: "VL - Positive",
+                          selected: (formData.result == "vl-pos") if formData else true
+                        },
+                        {
+                          value: "vl-neg",
+                          text: "VL - Negative"
+                        },
+                        {
+                          value: "ir-pos",
+                          text: "IR - Positive"
+                        },
+                        {
+                          value: "ir-neg",
+                          text: "IR - Negative"
+                        }
+                      ],
+                      attributes: {
+                        "aria-describedby": "result-hint",
+                        "aria-required": "true"
+                      },
+                      errorMessage: errors.result if errors
+                    }) }}
+                  </div>
+                </div>
+              </fieldset>
+              
+              <!-- Row 3: Additional Information -->
+              <fieldset class="govuk-fieldset govuk-!-margin-bottom-4" role="group" aria-labelledby="additional-heading">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                  <h4 class="govuk-fieldset__heading" id="additional-heading">Additional Information</h4>
+                </legend>
+                
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukDateInput({
+                      id: "conf-date",
+                      namePrefix: "confDate",
+                      fieldset: {
+                        legend: {
+                          text: "Confirmation Date",
+                          classes: "govuk-label--s"
+                        }
+                      },
+                      hint: {
+                        text: "Date confirmation was received"
+                      },
+                      items: [
+                        {
+                          name: "day",
+                          classes: "govuk-input--width-2",
+                          value: "24" if not formData else (formData.confDate.day if formData.confDate else "")
+                        },
+                        {
+                          name: "month",
+                          classes: "govuk-input--width-2",
+                          value: "01" if not formData else (formData.confDate.month if formData.confDate else "")
+                        },
+                        {
+                          name: "year",
+                          classes: "govuk-input--width-4",
+                          value: "2024" if not formData else (formData.confDate.year if formData.confDate else "")
+                        }
+                      ],
+                      errorMessage: errors.confDate if errors
+                    }) }}
+                  </div>
+                  
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukInput({
+                      label: {
+                        text: "BTS Sent Status",
+                        classes: "govuk-label--s"
+                      },
+                      hint: {
+                        text: "British Tuberculosis Society sent status"
+                      },
+                      id: "bts-sent",
+                      name: "btsSent",
+                      value: formData.btsSent if formData else "TB10 Pending",
+                      classes: "govuk-input--width-20",
+                      attributes: {
+                        "aria-describedby": "bts-sent-hint"
+                      },
+                      errorMessage: errors.btsSent if errors
+                    }) }}
+                  </div>
+                  
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukInput({
+                      label: {
+                        text: "TB10 Reference",
+                        classes: "govuk-label--s"
+                      },
+                      hint: {
+                        text: "TB10 form reference number"
+                      },
+                      id: "tb10",
+                      name: "tb10",
+                      value: formData.tb10 if formData,
+                      classes: "govuk-input--width-15",
+                      attributes: {
+                        "aria-describedby": "tb10-hint"
+                      },
+                      errorMessage: errors.tb10 if errors
+                    }) }}
+                  </div>
+                  
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukInput({
+                      label: {
+                        text: "WSS Reference",
+                        classes: "govuk-label--s"
+                      },
+                      hint: {
+                        text: "Wildlife and Screening Service reference"
+                      },
+                      id: "wss",
+                      name: "wss",
+                      value: formData.wss if formData,
+                      classes: "govuk-input--width-15",
+                      attributes: {
+                        "aria-describedby": "wss-hint"
+                      },
+                      errorMessage: errors.wss if errors
+                    }) }}
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </fieldset>
+        </section>
+
+        <!-- Comments Section with proper labeling and accessibility -->
+        <section aria-labelledby="comments-heading" class="govuk-!-margin-bottom-8">
+          <fieldset class="govuk-fieldset" role="group" aria-labelledby="comments-heading">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              <h2 class="govuk-fieldset__heading" id="comments-heading">
+                Comments and Notes
+              </h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "comments",
+                  id: "comments",
+                  label: {
+                    text: "General Comments",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Add any relevant comments about this removal case. Maximum 250 characters."
+                  },
+                  value: formData.comments if formData,
+                  rows: 8,
+                  attributes: {
+                    maxlength: "250",
+                    "aria-describedby": "comments-hint comments-info",
+                    "aria-required": "false"
+                  },
+                  errorMessage: errors.comments if errors
+                }) }}
+                <div id="comments-info" class="govuk-hint govuk-!-margin-top-1">
+                  <span id="comments-count" aria-live="polite">0 of 250 characters used</span>
+                </div>
+              </div>
+              
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "dashboard-comments",
+                  id: "dashboard-comments",
+                  label: {
+                    text: "Dashboard Only Comments",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Internal comments visible only on the dashboard. Maximum 250 characters."
+                  },
+                  value: formData.dashboardComments if formData,
+                  rows: 8,
+                  attributes: {
+                    maxlength: "250",
+                    "aria-describedby": "dashboard-comments-hint dashboard-comments-info",
+                    "aria-required": "false"
+                  },
+                  errorMessage: errors.dashboardComments if errors
+                }) }}
+                <div id="dashboard-comments-info" class="govuk-hint govuk-!-margin-top-1">
+                  <span id="dashboard-comments-count" aria-live="polite">0 of 250 characters used</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </section>
+
+        <!-- Exemption Section with proper checkbox implementation -->
+        <section aria-labelledby="exemption-heading" class="govuk-!-margin-bottom-8">
+          <fieldset class="govuk-fieldset" role="group" aria-labelledby="exemption-heading">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              <h2 class="govuk-fieldset__heading" id="exemption-heading">
+                Exemption Information
+              </h2>
+            </legend>
+            
+            {{ govukCheckboxes({
+              idPrefix: "gamma-exemption",
+              name: "gammaExemption",
+              fieldset: {
+                legend: {
+                  text: "Exemption Status",
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "Select if this case qualifies for gamma exemption"
+              },
+              items: [
+                {
+                  value: "yes",
+                  text: "Gamma Exemption applies",
+                  checked: (formData.gammaExemption == "yes") if formData
+                }
+              ],
+              errorMessage: errors.gammaExemption if errors
+            }) }}
+            
+            {{ govukTextarea({
+              name: "exemption-comments",
+              id: "exemption-comments",
+              label: {
+                text: "Exemption Comments",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "Provide details about the exemption if applicable. Maximum 250 characters."
+              },
+              value: formData.exemptionComments if formData,
+              rows: 4,
+              attributes: {
+                maxlength: "250",
+                "aria-describedby": "exemption-comments-hint exemption-comments-info"
+              },
+              errorMessage: errors.exemptionComments if errors
+            }) }}
+            <div id="exemption-comments-info" class="govuk-hint govuk-!-margin-top-1">
+              <span id="exemption-comments-count" aria-live="polite">0 of 250 characters used</span>
+            </div>
+          </fieldset>
+        </section>
+
+        <!-- Form Actions with clear button hierarchy -->
+        <section aria-labelledby="form-actions-heading">
+          <h2 class="govuk-visually-hidden" id="form-actions-heading">Form Actions</h2>
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Save changes",
+              attributes: {
+                "aria-describedby": "save-help"
+              }
+            }) }}
+            <div id="save-help" class="govuk-visually-hidden">Save all changes to the removal record</div>
+            
+            {{ govukButton({
+              text: "Generate letter",
+              classes: "govuk-button--secondary",
+              name: "action",
+              value: "generate-letter",
+              attributes: {
+                "aria-describedby": "letter-help",
+                formnovalidate: "true"
+              }
+            }) }}
+            <div id="letter-help" class="govuk-visually-hidden">Generate a letter based on the selected action type</div>
+            
+            {{ govukButton({
+              text: "Cancel",
+              classes: "govuk-button--secondary",
+              href: "/tbcase",
+              attributes: {
+                "aria-describedby": "cancel-help"
+              }
+            }) }}
+            <div id="cancel-help" class="govuk-visually-hidden">Cancel changes and return to the TB case overview</div>
+          </div>
+        </section>
+      </form>
     </div>
   </div>
+
+  <!-- JavaScript for character counting and accessibility enhancements -->
+  <script>
+    (function() {
+      'use strict';
+      
+      // Character counting for textareas
+      function setupCharacterCounting(textareaId, countId, maxLength) {
+        var textarea = document.getElementById(textareaId);
+        var counter = document.getElementById(countId);
+        
+        if (textarea && counter) {
+          function updateCount() {
+            var count = textarea.value.length;
+            counter.textContent = count + ' of ' + maxLength + ' characters used';
+            
+            if (count > maxLength * 0.9) {
+              counter.style.color = '#d4351c'; // Warning color
+            } else {
+              counter.style.color = '#505a5f'; // Default color
+            }
+          }
+          
+          textarea.addEventListener('input', updateCount);
+          updateCount(); // Initial count
+        }
+      }
+      
+      // Setup character counting for all textareas
+      setupCharacterCounting('comments', 'comments-count', 250);
+      setupCharacterCounting('dashboard-comments', 'dashboard-comments-count', 250);
+      setupCharacterCounting('exemption-comments', 'exemption-comments-count', 250);
+      
+      // Enhanced keyboard navigation for toolbar buttons
+      var toolbar = document.querySelector('[role="toolbar"]');
+      if (toolbar) {
+        var buttons = toolbar.querySelectorAll('button');
+        
+        toolbar.addEventListener('keydown', function(e) {
+          var currentIndex = Array.from(buttons).indexOf(document.activeElement);
+          
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            var nextIndex = (currentIndex + 1) % buttons.length;
+            buttons[nextIndex].focus();
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            var prevIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+            buttons[prevIndex].focus();
+          } else if (e.key === 'Home') {
+            e.preventDefault();
+            buttons[0].focus();
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            buttons[buttons.length - 1].focus();
+          }
+        });
+      }
+      
+      // Form validation enhancement
+      var form = document.querySelector('form[method="post"]');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          var requiredFields = form.querySelectorAll('[aria-required="true"]');
+          var errors = [];
+          
+          requiredFields.forEach(function(field) {
+            if (!field.value.trim()) {
+              errors.push({
+                field: field,
+                message: 'This field is required'
+              });
+            }
+          });
+          
+          if (errors.length > 0) {
+            e.preventDefault();
+            // Focus first error field
+            errors[0].field.focus();
+          }
+        });
+      }
+    })();
+  </script>
 {% endblock %}

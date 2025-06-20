@@ -1,4 +1,8 @@
-import { tbCaseController } from '~/src/server/tbcase/controller.js'
+import {
+  tbCaseController,
+  tbCaseRemovalsController,
+  tbCaseRemovalsPostController
+} from '~/src/server/tbcase/controller.js'
 
 /**
  * Sets up the routes used in the TB case form.
@@ -33,14 +37,12 @@ export const tbcase = {
         {
           method: 'GET',
           path: '/tbcase/removals',
-          handler: (_request, h) => {
-            return h.view('tbcase/removals', {
-              pageTitle: 'Removals',
-              heading: 'Removals',
-              caption: 'TB Case Form',
-              activePage: 'removals'
-            })
-          }
+          ...tbCaseRemovalsController
+        },
+        {
+          method: 'POST',
+          path: '/tbcase/removals',
+          ...tbCaseRemovalsPostController
         },
         {
           method: 'GET',
