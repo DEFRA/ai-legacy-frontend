@@ -1,5 +1,17 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+
 {% set breadcrumbs = [
   {
     text: "Home",
@@ -16,29 +28,602 @@
 ] %}
 
 {% block beforeContent %}
+  <!-- Skip link for screen readers -->
+  {{ govukSkipLink({
+    href: "#main-content",
+    text: "Skip to main content"
+  }) }}
   {{ super() }}
 {% endblock %}
 
 {% block content %}
+  <!-- Error Summary - appears at top of page when there are errors -->
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: {
+        role: "alert",
+        "aria-labelledby": "error-summary-title"
+      }
+    }) }}
+  {% endif %}
+
+  <!-- Success Banner -->
+  {% if success %}
+    {{ govukNotificationBanner({
+      type: "success",
+      html: '<h3 class="govuk-notification-banner__heading">Success</h3><p class="govuk-body">' + success + '</p>'
+    }) }}
+  {% endif %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{ caption }}</span>
-      <h1 class="govuk-heading-l">{{ heading }}</h1>
-      
-      <!-- Service Navigation -->
-      {% include "includes/tb-service-navigation.html" %}
-      
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Information
-          </h2>
+      <div class="govuk-!-margin-bottom-6">
+        <!-- Header with close button -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+          <div>
+            <span class="govuk-caption-l">{{ caption }}</span>
+            <h1 class="govuk-heading-l" id="main-content">{{ heading }}</h1>
+          </div>
+          <button type="button" class="govuk-button govuk-button--secondary" style="margin-top: 0;">
+            <span aria-hidden="true">✕</span>
+            <span class="govuk-visually-hidden">Close form</span>
+          </button>
         </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            Form fields to be implemented based on Slide6.png requirements.
-          </p>
-        </div>
+
+        <!-- Service Navigation -->
+        {% include "includes/tb-service-navigation.html" %}
+
+        <form method="post" action="/tbcase/eartags" novalidate>
+          <!-- Case Information Header -->
+          <div class="govuk-grid-row govuk-!-margin-bottom-6">
+            <div class="govuk-grid-column-one-quarter">
+              {{ govukInput({
+                label: {
+                  text: "CPH",
+                  classes: "govuk-label--s"
+                },
+                id: "cph-number",
+                name: "cphNumber",
+                value: formData.cphNumber if formData else "36/145/0300",
+                classes: "govuk-input--width-10",
+                errorMessage: errors.cphNumber if errors,
+                attributes: {
+                  "aria-describedby": "cph-number-hint"
+                }
+              }) }}
+            </div>
+            
+            <div class="govuk-grid-column-one-quarter">
+              {{ govukInput({
+                label: {
+                  text: "Nat Inc",
+                  classes: "govuk-label--s"
+                },
+                id: "nat-inc",
+                name: "natInc",
+                value: formData.natInc if formData else "TB10",
+                classes: "govuk-input--width-10",
+                errorMessage: errors.natInc if errors
+              }) }}
+            </div>
+
+            <div class="govuk-grid-column-one-quarter">
+              {{ govukInput({
+                label: {
+                  text: "Tel",
+                  classes: "govuk-label--s"
+                },
+                id: "telephone",
+                name: "telephone",
+                value: formData.telephone if formData else "01460221837",
+                classes: "govuk-input--width-15",
+                errorMessage: errors.telephone if errors,
+                inputmode: "tel"
+              }) }}
+            </div>
+
+            <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-label--s" for="incident-date">
+                  Date
+                </label>
+                <input class="govuk-input govuk-input--width-10" 
+                       id="incident-date" 
+                       name="incidentDate" 
+                       type="text"
+                       value="{{ formData.incidentDate if formData else '17/04/2019' }}"
+                       aria-describedby="incident-date-hint">
+              </div>
+            </div>
+          </div>
+
+          <div class="govuk-grid-row govuk-!-margin-bottom-6">
+            <div class="govuk-grid-column-one-quarter">
+              {{ govukInput({
+                label: {
+                  text: "Web",
+                  classes: "govuk-label--s"
+                },
+                id: "web",
+                name: "web",
+                value: formData.web if formData else "07817763892",
+                classes: "govuk-input--width-15",
+                errorMessage: errors.web if errors
+              }) }}
+            </div>
+
+            <div class="govuk-grid-column-three-quarters">
+              {{ govukTextarea({
+                name: "address",
+                id: "address",
+                label: {
+                  text: "Address",
+                  classes: "govuk-label--s"
+                },
+                value: formData.address if formData else "M.B.M & H.P Glanville\nMarshwood Farm Marshwood House\nWhitchurch Canonicorum\nForton\nChard\nSomerset\nTA20 4HL",
+                rows: 4,
+                errorMessage: errors.address if errors
+              }) }}
+            </div>
+          </div>
+
+          <!-- Actions Section -->
+          <div class="govuk-grid-row govuk-!-margin-bottom-4">
+            <div class="govuk-grid-column-one-third">
+              {{ govukSelect({
+                id: "actions",
+                name: "actions",
+                label: {
+                  text: "Actions",
+                  classes: "govuk-label--s"
+                },
+                items: [
+                  { value: "", text: "Select action", selected: not formData.actions },
+                  { value: "firstname-lastname", text: "FirstName-LastName", selected: (formData.actions == "firstname-lastname") if formData else true }
+                ],
+                errorMessage: errors.actions if errors
+              }) }}
+            </div>
+
+            <div class="govuk-grid-column-one-third">
+              {{ govukSelect({
+                id: "ws-filter",
+                name: "wsFilter",
+                label: {
+                  text: "WS Filter",
+                  classes: "govuk-label--s"
+                },
+                items: [
+                  { value: "", text: "Select filter", selected: not formData.wsFilter },
+                  { value: "all", text: "All", selected: (formData.wsFilter == "all") if formData else false },
+                  { value: "active", text: "Active", selected: (formData.wsFilter == "active") if formData else false },
+                  { value: "pending", text: "Pending", selected: (formData.wsFilter == "pending") if formData else false }
+                ],
+                errorMessage: errors.wsFilter if errors
+              }) }}
+            </div>
+
+            <div class="govuk-grid-column-one-third">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-label--s">&nbsp;</label>
+                <div class="govuk-button-group">
+                  {{ govukButton({
+                    text: "►",
+                    name: "action",
+                    value: "generate",
+                    classes: "govuk-button--secondary",
+                    attributes: {
+                      "title": "Generate",
+                      "aria-label": "Generate report or letter"
+                    }
+                  }) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons Row -->
+          <div class="govuk-button-group govuk-!-margin-bottom-4">
+            {{ govukButton({
+              text: "🗑️",
+              name: "action",
+              value: "delete",
+              classes: "govuk-button--warning govuk-button--small",
+              attributes: {
+                "title": "Delete selected items",
+                "aria-label": "Delete selected items"
+              }
+            }) }}
+
+            {{ govukButton({
+              text: "✏️",
+              name: "action", 
+              value: "edit",
+              classes: "govuk-button--secondary govuk-button--small",
+              attributes: {
+                "title": "Edit selected items",
+                "aria-label": "Edit selected items"
+              }
+            }) }}
+
+            {{ govukButton({
+              text: "✖️",
+              name: "action",
+              value: "remove", 
+              classes: "govuk-button--secondary govuk-button--small",
+              attributes: {
+                "title": "Remove selected items",
+                "aria-label": "Remove selected items"
+              }
+            }) }}
+
+            {{ govukButton({
+              text: "📋",
+              name: "action",
+              value: "add",
+              classes: "govuk-button--secondary govuk-button--small", 
+              attributes: {
+                "title": "Add new item",
+                "aria-label": "Add new item"
+              }
+            }) }}
+          </div>
+
+          <!-- Eartags Data Table -->
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="eartags-hint">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h2 class="govuk-fieldset__heading">
+                  Eartags
+                </h2>
+              </legend>
+              <div id="eartags-hint" class="govuk-hint">
+                Select animals and manage their eartag information
+              </div>
+
+              <!-- Select All/None Controls -->
+              <div class="govuk-checkboxes govuk-!-margin-bottom-4" data-module="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="select-all" name="selectAll" type="checkbox" value="all">
+                  <label class="govuk-label govuk-checkboxes__label" for="select-all">
+                    All
+                  </label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="select-none" name="selectNone" type="checkbox" value="none">
+                  <label class="govuk-label govuk-checkboxes__label" for="select-none">
+                    None
+                  </label>
+                </div>
+              </div>
+
+              <!-- Eartags Table -->
+              <div class="govuk-table-container">
+                <table class="govuk-table" role="table" aria-label="Animal eartag information">
+                  <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                      <th scope="col" class="govuk-table__header govuk-!-width-one-tenth">Select</th>
+                      <th scope="col" class="govuk-table__header">WS</th>
+                      <th scope="col" class="govuk-table__header">Eartag</th>
+                      <th scope="col" class="govuk-table__header">Breed</th>
+                      <th scope="col" class="govuk-table__header govuk-!-width-one-twentieth">Sex</th>
+                      <th scope="col" class="govuk-table__header">DOB</th>
+                      <th scope="col" class="govuk-table__header govuk-!-width-one-tenth">Pedigree</th>
+                      <th scope="col" class="govuk-table__header">Slaughter On Farm?</th>
+                      <th scope="col" class="govuk-table__header">Reactor Tag</th>
+                    </tr>
+                  </thead>
+                  <tbody class="govuk-table__body">
+                    <!-- Row 1 -->
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="animal-1" name="selectedAnimals" type="checkbox" value="1">
+                          <label class="govuk-label govuk-checkboxes__label" for="animal-1">
+                            <span class="govuk-visually-hidden">Select animal 1</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">WS-4445824</td>
+                      <td class="govuk-table__cell">UK343233204639</td>
+                      <td class="govuk-table__cell">Fleckvieh X</td>
+                      <td class="govuk-table__cell">F</td>
+                      <td class="govuk-table__cell">03/11/2023</td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="pedigree-1" name="pedigree-1" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-1">
+                            <span class="govuk-visually-hidden">Pedigree animal 1</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="slaughter-1" name="slaughter-1" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-1">
+                            <span class="govuk-visually-hidden">Slaughter on farm animal 1</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-1" name="reactorTag-1" type="text">
+                      </td>
+                    </tr>
+
+                    <!-- Row 2 -->
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="animal-2" name="selectedAnimals" type="checkbox" value="2">
+                          <label class="govuk-label govuk-checkboxes__label" for="animal-2">
+                            <span class="govuk-visually-hidden">Select animal 2</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">WS-4445824</td>
+                      <td class="govuk-table__cell">UK343233404515</td>
+                      <td class="govuk-table__cell">Aberdeen Angus X</td>
+                      <td class="govuk-table__cell">M</td>
+                      <td class="govuk-table__cell">06/06/2023</td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="pedigree-2" name="pedigree-2" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-2">
+                            <span class="govuk-visually-hidden">Pedigree animal 2</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="slaughter-2" name="slaughter-2" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-2">
+                            <span class="govuk-visually-hidden">Slaughter on farm animal 2</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-2" name="reactorTag-2" type="text">
+                      </td>
+                    </tr>
+
+                    <!-- Row 3 -->
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="animal-3" name="selectedAnimals" type="checkbox" value="3">
+                          <label class="govuk-label govuk-checkboxes__label" for="animal-3">
+                            <span class="govuk-visually-hidden">Select animal 3</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">WS-4445824</td>
+                      <td class="govuk-table__cell">UK343233504432</td>
+                      <td class="govuk-table__cell">Danish Red X</td>
+                      <td class="govuk-table__cell">M</td>
+                      <td class="govuk-table__cell">08/12/2022</td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="pedigree-3" name="pedigree-3" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-3">
+                            <span class="govuk-visually-hidden">Pedigree animal 3</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="slaughter-3" name="slaughter-3" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-3">
+                            <span class="govuk-visually-hidden">Slaughter on farm animal 3</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-3" name="reactorTag-3" type="text">
+                      </td>
+                    </tr>
+
+                    <!-- Row 4 -->
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="animal-4" name="selectedAnimals" type="checkbox" value="4">
+                          <label class="govuk-label govuk-checkboxes__label" for="animal-4">
+                            <span class="govuk-visually-hidden">Select animal 4</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">WS-4445824</td>
+                      <td class="govuk-table__cell">UK343233704637</td>
+                      <td class="govuk-table__cell">Fleckvieh X</td>
+                      <td class="govuk-table__cell">F</td>
+                      <td class="govuk-table__cell">01/11/2023</td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="pedigree-4" name="pedigree-4" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-4">
+                            <span class="govuk-visually-hidden">Pedigree animal 4</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="slaughter-4" name="slaughter-4" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-4">
+                            <span class="govuk-visually-hidden">Slaughter on farm animal 4</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-4" name="reactorTag-4" type="text">
+                      </td>
+                    </tr>
+
+                    <!-- Row 5 -->
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="animal-5" name="selectedAnimals" type="checkbox" value="5">
+                          <label class="govuk-label govuk-checkboxes__label" for="animal-5">
+                            <span class="govuk-visually-hidden">Select animal 5</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">WS-4445785</td>
+                      <td class="govuk-table__cell">UK343233204422</td>
+                      <td class="govuk-table__cell">Fleckvieh X</td>
+                      <td class="govuk-table__cell">F</td>
+                      <td class="govuk-table__cell">14/11/2022</td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="pedigree-5" name="pedigree-5" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-5">
+                            <span class="govuk-visually-hidden">Pedigree animal 5</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="slaughter-5" name="slaughter-5" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-5">
+                            <span class="govuk-visually-hidden">Slaughter on farm animal 5</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-5" name="reactorTag-5" type="text">
+                      </td>
+                    </tr>
+
+                    <!-- Row 6 -->
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="animal-6" name="selectedAnimals" type="checkbox" value="6">
+                          <label class="govuk-label govuk-checkboxes__label" for="animal-6">
+                            <span class="govuk-visually-hidden">Select animal 6</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">WS-4445785</td>
+                      <td class="govuk-table__cell">UK343233404396</td>
+                      <td class="govuk-table__cell">Fleckvieh X</td>
+                      <td class="govuk-table__cell">F</td>
+                      <td class="govuk-table__cell">27/10/2022</td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="pedigree-6" name="pedigree-6" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-6">
+                            <span class="govuk-visually-hidden">Pedigree animal 6</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="slaughter-6" name="slaughter-6" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-6">
+                            <span class="govuk-visually-hidden">Slaughter on farm animal 6</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-6" name="reactorTag-6" type="text">
+                      </td>
+                    </tr>
+
+                    <!-- Row 7 -->
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="animal-7" name="selectedAnimals" type="checkbox" value="7">
+                          <label class="govuk-label govuk-checkboxes__label" for="animal-7">
+                            <span class="govuk-visually-hidden">Select animal 7</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">WS-4445785</td>
+                      <td class="govuk-table__cell">UK343233404403</td>
+                      <td class="govuk-table__cell">British Blue X</td>
+                      <td class="govuk-table__cell">F</td>
+                      <td class="govuk-table__cell">30/10/2022</td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="pedigree-7" name="pedigree-7" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-7">
+                            <span class="govuk-visually-hidden">Pedigree animal 7</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="slaughter-7" name="slaughter-7" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-7">
+                            <span class="govuk-visually-hidden">Slaughter on farm animal 7</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-7" name="reactorTag-7" type="text">
+                      </td>
+                    </tr>
+
+                    <!-- Row 8 -->
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="animal-8" name="selectedAnimals" type="checkbox" value="8">
+                          <label class="govuk-label govuk-checkboxes__label" for="animal-8">
+                            <span class="govuk-visually-hidden">Select animal 8</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">WS-4445785</td>
+                      <td class="govuk-table__cell">UK343233504271</td>
+                      <td class="govuk-table__cell">Holstein Friesian</td>
+                      <td class="govuk-table__cell">F</td>
+                      <td class="govuk-table__cell">17/06/2022</td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="pedigree-8" name="pedigree-8" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-8">
+                            <span class="govuk-visually-hidden">Pedigree animal 8</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
+                          <input class="govuk-checkboxes__input" id="slaughter-8" name="slaughter-8" type="checkbox">
+                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-8">
+                            <span class="govuk-visually-hidden">Slaughter on farm animal 8</span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="govuk-table__cell">
+                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-8" name="reactorTag-8" type="text">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Save changes",
+              name: "action",
+              value: "save"
+            }) }}
+
+            {{ govukButton({
+              text: "Cancel",
+              classes: "govuk-button--secondary",
+              href: "/tbcase"
+            }) }}
+          </div>
+        </form>
       </div>
     </div>
   </div>

@@ -1,7 +1,9 @@
 import {
   tbCaseController,
   tbCaseRemovalsController,
-  tbCaseRemovalsPostController
+  tbCaseRemovalsPostController,
+  tbCaseEartagsController,
+  tbCaseEartagsPostController
 } from '~/src/server/tbcase/controller.js'
 
 /**
@@ -47,14 +49,12 @@ export const tbcase = {
         {
           method: 'GET',
           path: '/tbcase/eartags',
-          handler: (_request, h) => {
-            return h.view('tbcase/eartags', {
-              pageTitle: 'Eartags',
-              heading: 'Eartags',
-              caption: 'TB Case Form',
-              activePage: 'eartags'
-            })
-          }
+          ...tbCaseEartagsController
+        },
+        {
+          method: 'POST',
+          path: '/tbcase/eartags',
+          ...tbCaseEartagsPostController
         },
         {
           method: 'GET',
