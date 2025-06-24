@@ -4,7 +4,12 @@ import { health } from '~/src/server/health/index.js'
 import { home } from '~/src/server/home/index.js'
 import { serveStaticFiles } from '~/src/server/common/helpers/serve-static-files.js'
 import { about } from '~/src/server/about/index.js'
-import { tbcase } from '~/src/server/tbcase/index.js'
+import { tbcaseMain } from '~/src/server/tbcase-main/index.js'
+import { tbcaseRemovals } from '~/src/server/tbcase-removals/index.js'
+import { tbcaseEartags } from '~/src/server/tbcase-eartags/index.js'
+import { tbcaseCaseDetails } from '~/src/server/tbcase-case-details/index.js'
+import { tbcaseTracings } from '~/src/server/tbcase-tracings/index.js'
+import { tbcaseAllocations } from '~/src/server/tbcase-allocations/index.js'
 
 /**
  * @satisfies {ServerRegisterPluginObject<void>}
@@ -19,7 +24,16 @@ export const router = {
       await server.register([health])
 
       // Application specific routes, add your own routes here
-      await server.register([home, about, tbcase])
+      await server.register([
+        home,
+        about,
+        tbcaseMain,
+        tbcaseRemovals,
+        tbcaseEartags,
+        tbcaseCaseDetails,
+        tbcaseTracings,
+        tbcaseAllocations
+      ])
 
       // Static assets
       await server.register([serveStaticFiles])
