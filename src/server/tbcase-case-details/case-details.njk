@@ -207,6 +207,20 @@
               <!-- Row 1: TB Status, Dates -->
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-quarter">
+                  {% set tbStatusItems = [
+                    {
+                      value: "",
+                      text: "Please select"
+                    }
+                  ] %}
+                  {% for status in tbStatuses %}
+                    {% set tbStatusItems = (tbStatusItems.push({
+                      value: status.status_abb,
+                      text: status.status_abb + " - " + status.status,
+                      selected: status.status_abb == selectedTbStatus
+                    }), tbStatusItems) %}
+                  {% endfor %}
+                  
                   {{ govukSelect({
                     id: "tb-status",
                     name: "tb-status",
@@ -214,25 +228,7 @@
                       text: "TB Status",
                       classes: "govuk-label--s"
                     },
-                    items: [
-                      {
-                        value: "TB2+",
-                        text: "TB2+",
-                        selected: true
-                      },
-                      {
-                        value: "TB1",
-                        text: "TB1"
-                      },
-                      {
-                        value: "TB3",
-                        text: "TB3"
-                      },
-                      {
-                        value: "TB4",
-                        text: "TB4"
-                      }
-                    ]
+                    items: tbStatusItems
                   }) }}
                 </div>
                 <div class="govuk-grid-column-one-quarter">
