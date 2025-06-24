@@ -5,10 +5,9 @@
 export const tbCaseDetailsController = {
   handler(_request, h) {
     return h.view('tbcase-case-details/case-details', {
-      pageTitle: 'Case Details',
-      heading: 'Case Details',
-      caption: 'TB Case Form',
-      activePage: 'case-details'
+      pageTitle: 'TB Case Form',
+      heading: 'TB Case Form',
+      caption: 'Exeter Reactor Removals - Landing Page'
     })
   }
 }

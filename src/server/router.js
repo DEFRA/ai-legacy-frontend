@@ -4,7 +4,6 @@ import { health } from '~/src/server/health/index.js'
 import { home } from '~/src/server/home/index.js'
 import { serveStaticFiles } from '~/src/server/common/helpers/serve-static-files.js'
 import { about } from '~/src/server/about/index.js'
-import { tbcaseMain } from '~/src/server/tbcase-main/index.js'
 import { tbcaseRemovals } from '~/src/server/tbcase-removals/index.js'
 import { tbcaseEartags } from '~/src/server/tbcase-eartags/index.js'
 import { tbcaseCaseDetails } from '~/src/server/tbcase-case-details/index.js'
@@ -27,7 +26,6 @@ export const router = {
       await server.register([
         home,
         about,
-        tbcaseMain,
         tbcaseRemovals,
         tbcaseEartags,
         tbcaseCaseDetails,
