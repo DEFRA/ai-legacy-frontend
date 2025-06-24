@@ -1,0 +1,397 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set breadcrumbs = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "TB Case Form",
+    href: "/tbcase"
+  },
+  {
+    text: "Post-Kill",
+    href: "/tbcase/post-kill"
+  }
+] %}
+
+{% block beforeContent %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <span class="govuk-caption-l">{{ caption }}</span>
+      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      
+      <!-- Case context summary card -->
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          {{ govukSummaryList({
+            rows: [
+              {
+                key: {
+                  text: "CPH Number"
+                },
+                value: {
+                  text: "12/345/6789"
+                }
+              },
+              {
+                key: {
+                  text: "Current Incident"
+                },
+                value: {
+                  text: "TB-2025-12345"
+                }
+              }
+            ]
+          }) }}
+        </div>
+      </div>
+
+      <!-- Service Navigation -->
+      {% include "includes/tb-service-navigation.html" %}
+
+      <!-- Main form content -->
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-m">Post-Kill Information</h2>
+          
+          <div class="govuk-form-group">
+            {{ govukTable({
+              caption: "Post-Kill Records",
+              captionClasses: "govuk-table__caption--m",
+              firstCellIsHeader: true,
+              head: [
+                {
+                  text: "Reference"
+                },
+                {
+                  text: "Kill Date"
+                },
+                {
+                  text: "Number of Animals"
+                },
+                {
+                  text: "Location"
+                },
+                {
+                  text: "Test Results"
+                },
+                {
+                  text: "Status"
+                },
+                {
+                  text: "Actions"
+                }
+              ],
+              rows: [
+                [
+                  {
+                    text: "PK-12345"
+                  },
+                  {
+                    text: "15 Jun 2025"
+                  },
+                  {
+                    text: "3"
+                  },
+                  {
+                    text: "Abattoir A"
+                  },
+                  {
+                    text: "Positive"
+                  },
+                  {
+                    text: "Complete"
+                  },
+                  {
+                    html: '<a href="#" class="govuk-link">View</a>'
+                  }
+                ],
+                [
+                  {
+                    text: "PK-12346"
+                  },
+                  {
+                    text: "16 Jun 2025"
+                  },
+                  {
+                    text: "2"
+                  },
+                  {
+                    text: "Abattoir B"
+                  },
+                  {
+                    text: "Pending"
+                  },
+                  {
+                    text: "In Progress"
+                  },
+                  {
+                    html: '<a href="#" class="govuk-link">View</a>'
+                  }
+                ]
+              ]
+            }) }}
+          </div>
+          
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+              <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    Add Post-Kill Record
+                  </legend>
+                  
+                  <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                      {{ govukDateInput({
+                        id: "kill-date",
+                        namePrefix: "kill-date",
+                        fieldset: {
+                          legend: {
+                            text: "Kill Date",
+                            classes: "govuk-fieldset__legend--s"
+                          }
+                        },
+                        hint: {
+                          text: "For example, 17 6 2025"
+                        }
+                      }) }}
+                    </div>
+                    
+                    <div class="govuk-grid-column-one-half">
+                      {{ govukInput({
+                        label: {
+                          text: "Number of Animals"
+                        },
+                        id: "number-of-animals",
+                        name: "number-of-animals",
+                        classes: "govuk-input--width-5",
+                        type: "number"
+                      }) }}
+                    </div>
+                  </div>
+                  
+                  <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                      {{ govukSelect({
+                        id: "location",
+                        name: "location",
+                        label: {
+                          text: "Location"
+                        },
+                        items: [
+                          {
+                            value: "",
+                            text: "Please select"
+                          },
+                          {
+                            value: "abattoir-a",
+                            text: "Abattoir A"
+                          },
+                          {
+                            value: "abattoir-b",
+                            text: "Abattoir B"
+                          },
+                          {
+                            value: "abattoir-c",
+                            text: "Abattoir C"
+                          }
+                        ]
+                      }) }}
+                    </div>
+                    
+                    <div class="govuk-grid-column-one-half">
+                      {{ govukSelect({
+                        id: "test-result",
+                        name: "test-result",
+                        label: {
+                          text: "Test Result"
+                        },
+                        items: [
+                          {
+                            value: "",
+                            text: "Please select"
+                          },
+                          {
+                            value: "positive",
+                            text: "Positive"
+                          },
+                          {
+                            value: "negative",
+                            text: "Negative"
+                          },
+                          {
+                            value: "pending",
+                            text: "Pending"
+                          }
+                        ]
+                      }) }}
+                    </div>
+                  </div>
+                  
+                  {{ govukCheckboxes({
+                    idPrefix: "actions-taken",
+                    name: "actions-taken",
+                    fieldset: {
+                      legend: {
+                        text: "Actions Taken",
+                        classes: "govuk-fieldset__legend--s"
+                      }
+                    },
+                    items: [
+                      {
+                        value: "sample-collected",
+                        text: "Sample Collected"
+                      },
+                      {
+                        value: "lab-submission",
+                        text: "Lab Submission Completed"
+                      },
+                      {
+                        value: "notification-sent",
+                        text: "Notification Sent"
+                      }
+                    ]
+                  }) }}
+                  
+                  <div class="govuk-button-group">
+                    {{ govukButton({
+                      text: "Add Record",
+                      classes: "govuk-button"
+                    }) }}
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+          
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                Actions
+              </legend>
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  {{ govukSelect({
+                    id: "action",
+                    name: "action",
+                    label: {
+                      text: "Action"
+                    },
+                    items: [
+                      {
+                        value: "",
+                        text: "Please select"
+                      },
+                      {
+                        value: "action-1",
+                        text: "Action 1"
+                      },
+                      {
+                        value: "action-2",
+                        text: "Action 2"
+                      },
+                      {
+                        value: "action-3",
+                        text: "Action 3"
+                      }
+                    ]
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-half">
+                  {{ govukSelect({
+                    id: "letter-type",
+                    name: "letter-type",
+                    label: {
+                      text: "Letter Type"
+                    },
+                    items: [
+                      {
+                        value: "",
+                        text: "Please select"
+                      },
+                      {
+                        value: "letter-1",
+                        text: "Letter Type 1"
+                      },
+                      {
+                        value: "letter-2",
+                        text: "Letter Type 2"
+                      },
+                      {
+                        value: "letter-3",
+                        text: "Letter Type 3"
+                      }
+                    ]
+                  }) }}
+                </div>
+              </div>
+              <div class="govuk-button-group">
+                {{ govukButton({
+                  text: "Generate Letter",
+                  classes: "govuk-button--secondary"
+                }) }}
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="govuk-form-group">
+            {{ govukTextarea({
+              name: "comments",
+              id: "comments",
+              label: {
+                text: "Comments",
+                classes: "govuk-label--m"
+              },
+              hint: {
+                text: "Maximum 250 characters"
+              },
+              maxlength: 250,
+              rows: 3
+            }) }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-m">Tools</h2>
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Delete",
+              classes: "govuk-button--warning"
+            }) }}
+            
+            {{ govukButton({
+              text: "Edit",
+              classes: "govuk-button--secondary"
+            }) }}
+            
+            {{ govukButton({
+              text: "Add / Amend",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -10,6 +10,7 @@ import { tbcaseCaseDetails } from '~/src/server/tbcase-case-details/index.js'
 import { tbcaseTracings } from '~/src/server/tbcase-tracings/index.js'
 import { tbcaseAllocations } from '~/src/server/tbcase-allocations/index.js'
 
+
 /**
  * @satisfies {ServerRegisterPluginObject<void>}
  */
@@ -32,6 +33,7 @@ export const router = {
         tbcaseTracings,
         tbcaseAllocations
       ])
+
 
       // Static assets
       await server.register([serveStaticFiles])
