@@ -68,6 +68,12 @@ export const config = convict({
     format: Boolean,
     default: isTest
   },
+  backendApiUrl: {
+    doc: 'Backend API base URL',
+    format: String,
+    default: 'http://localhost:3002',
+    env: 'BACKEND_API_URL'
+  },
   log: {
     enabled: {
       doc: 'Is logging enabled',
