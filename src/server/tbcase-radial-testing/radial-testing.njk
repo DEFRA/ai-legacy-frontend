@@ -1,5 +1,15 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
 {% set breadcrumbs = [
   {
     text: "Home",
@@ -10,8 +20,8 @@
     href: "/tbcase/case-details"
   },
   {
-    text: pageTitle,
-    href: request.path
+    text: "Radial Testing",
+    href: "/tbcase/radial-testing"
   }
 ] %}
 
@@ -22,22 +32,425 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{ caption }}</span>
-      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
       
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - Radial Testing</h1>
+      
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              {{ govukInput({
+                label: {
+                  text: "CPH Number",
+                  classes: "govuk-label--s"
+                },
+                id: "cph-number",
+                name: "cph-number",
+                value: "01/234/5678",
+                classes: "govuk-!-margin-bottom-0"
+              }) }}
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Auto Populated Incident List</h3>
+              <ul class="govuk-list">
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=25/12345" class="govuk-link">
+                    <strong>25/12345</strong> (Current)
+                  </a>
+                </li>
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=24/98765" class="govuk-link">
+                    24/98765 (Previous)
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Service Navigation -->
+      {% set activePage = "radial-testing" %}
       {% include "includes/tb-service-navigation.html" %}
       
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Information
-          </h2>
+      <!-- Radial Testing Content -->
+      <div class="govuk-!-margin-top-6">
+        <form action="#" method="post">
+          
+          <!-- Radial Testing Parameters -->
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Radial Testing Parameters</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "Test Radius (km)", classes: "govuk-label--s" },
+                  id: "test-radius",
+                  name: "test-radius",
+                  value: "3",
+                  hint: { text: "Standard radius is 3km for TB breakdown" }
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "test-type-radial",
+                  name: "test-type-radial",
+                  label: { text: "Test Type", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "routine", text: "Routine Test", selected: true },
+                    { value: "check", text: "Check Test" },
+                    { value: "gamma", text: "Gamma Interferon" },
+                    { value: "pre-movement", text: "Pre-movement" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "test-due-date",
+                  namePrefix: "test-due-date",
+                  fieldset: {
+                    legend: { text: "Test Due Date", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "When tests must be completed by" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2", value: "15" },
+                    { name: "month", classes: "govuk-input--width-2", value: "04" },
+                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "CPHs in Radius", classes: "govuk-label--s" },
+                  id: "cphs-in-radius",
+                  name: "cphs-in-radius",
+                  value: "12",
+                  attributes: { readonly: "readonly" }
+                }) }}
+              </div>
+            </div>
+
+            <!-- Risk Assessment -->
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "risk-level",
+                  name: "risk-level",
+                  label: { text: "Risk Level", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "low", text: "Low Risk" },
+                    { value: "medium", text: "Medium Risk" },
+                    { value: "high", text: "High Risk", selected: true },
+                    { value: "critical", text: "Critical Risk" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "test-frequency",
+                  name: "test-frequency",
+                  label: { text: "Test Frequency", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "annual", text: "Annual" },
+                    { value: "six-monthly", text: "Six Monthly", selected: true },
+                    { value: "quarterly", text: "Quarterly" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "Priority Score", classes: "govuk-label--s" },
+                  id: "priority-score",
+                  name: "priority-score",
+                  value: "85",
+                  hint: { text: "Calculated risk score (0-100)" }
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "testing-officer",
+                  name: "testing-officer",
+                  label: { text: "Assigned Officer", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "officer1", text: "J. Smith (SW)" },
+                    { value: "officer2", text: "A. Jones (Devon)" },
+                    { value: "officer3", text: "M. Brown (Cornwall)" }
+                  ]
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Holdings in Radius -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Holdings Within Radius</h2>
+            </legend>
+
+            <div class="govuk-!-margin-bottom-4">
+              <div class="govuk-button-group">
+                {{ govukButton({
+                  text: "Schedule All Tests",
+                  classes: "govuk-button--secondary"
+                }) }}
+                {{ govukButton({
+                  text: "Schedule Selected",
+                  classes: "govuk-button--secondary"
+                }) }}
+                {{ govukButton({
+                  text: "Update Risk Scores",
+                  classes: "govuk-button--secondary"
+                }) }}
+                {{ govukButton({
+                  text: "Export List",
+                  classes: "govuk-button--secondary"
+                }) }}
+              </div>
+            </div>
+
+            {{ govukTable({
+              head: [
+                { text: "Select", classes: "govuk-!-width-one-tenth" },
+                { text: "CPH" },
+                { text: "Holding Name" },
+                { text: "Distance (km)" },
+                { text: "Risk Level" },
+                { text: "Last Test Date" },
+                { text: "Test Due" },
+                { text: "Herd Size" },
+                { text: "Status" },
+                { text: "Actions" }
+              ],
+              rows: [
+                [
+                  {
+                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
+                             <input class="govuk-checkboxes__input" id="select-cph-1" name="select-cphs" type="checkbox" value="01/234/5679">
+                             <label class="govuk-label govuk-checkboxes__label" for="select-cph-1"><span class="govuk-visually-hidden">Select CPH 01/234/5679</span></label>
+                           </div>'
+                  },
+                  { text: "01/234/5679" },
+                  { text: "Valley Farm" },
+                  { text: "1.2" },
+                  { text: "High", classes: "govuk-tag govuk-tag--red" },
+                  { text: "15/09/2024" },
+                  { text: "15/03/2025" },
+                  { text: "85" },
+                  { text: "Overdue", classes: "govuk-tag govuk-tag--red" },
+                  {
+                    html: '<a href="#" class="govuk-link">Schedule</a> | <a href="#" class="govuk-link">View</a>'
+                  }
+                ],
+                [
+                  {
+                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
+                             <input class="govuk-checkboxes__input" id="select-cph-2" name="select-cphs" type="checkbox" value="01/234/5680">
+                             <label class="govuk-label govuk-checkboxes__label" for="select-cph-2"><span class="govuk-visually-hidden">Select CPH 01/234/5680</span></label>
+                           </div>'
+                  },
+                  { text: "01/234/5680" },
+                  { text: "Hill Top Holdings" },
+                  { text: "2.1" },
+                  { text: "Medium", classes: "govuk-tag govuk-tag--yellow" },
+                  { text: "28/02/2025" },
+                  { text: "28/08/2025" },
+                  { text: "120" },
+                  { text: "Current", classes: "govuk-tag govuk-tag--green" },
+                  {
+                    html: '<a href="#" class="govuk-link">Schedule</a> | <a href="#" class="govuk-link">View</a>'
+                  }
+                ],
+                [
+                  {
+                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
+                             <input class="govuk-checkboxes__input" id="select-cph-3" name="select-cphs" type="checkbox" value="01/234/5681">
+                             <label class="govuk-label govuk-checkboxes__label" for="select-cph-3"><span class="govuk-visually-hidden">Select CPH 01/234/5681</span></label>
+                           </div>'
+                  },
+                  { text: "01/234/5681" },
+                  { text: "Meadow Farm" },
+                  { text: "2.8" },
+                  { text: "High", classes: "govuk-tag govuk-tag--red" },
+                  { text: "10/01/2025" },
+                  { text: "10/07/2025" },
+                  { text: "65" },
+                  { text: "Due Soon", classes: "govuk-tag govuk-tag--yellow" },
+                  {
+                    html: '<a href="#" class="govuk-link">Schedule</a> | <a href="#" class="govuk-link">View</a>'
+                  }
+                ],
+                [
+                  {
+                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
+                             <input class="govuk-checkboxes__input" id="select-cph-4" name="select-cphs" type="checkbox" value="01/234/5682">
+                             <label class="govuk-label govuk-checkboxes__label" for="select-cph-4"><span class="govuk-visually-hidden">Select CPH 01/234/5682</span></label>
+                           </div>'
+                  },
+                  { text: "01/234/5682" },
+                  { text: "Oak Tree Farm" },
+                  { text: "2.9" },
+                  { text: "Low", classes: "govuk-tag govuk-tag--blue" },
+                  { text: "05/12/2024" },
+                  { text: "05/12/2025" },
+                  { text: "45" },
+                  { text: "Current", classes: "govuk-tag govuk-tag--green" },
+                  {
+                    html: '<a href="#" class="govuk-link">Schedule</a> | <a href="#" class="govuk-link">View</a>'
+                  }
+                ]
+              ]
+            }) }}
+          </fieldset>
+
+          <!-- Testing Schedule -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Testing Schedule</h2>
+            </legend>
+
+            {{ govukDetails({
+              summaryText: "View detailed testing calendar",
+              html: '
+                <table class="govuk-table">
+                  <caption class="govuk-table__caption govuk-table__caption--s">April 2025 Testing Schedule</caption>
+                  <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                      <th scope="col" class="govuk-table__header">Week</th>
+                      <th scope="col" class="govuk-table__header">Tests Scheduled</th>
+                      <th scope="col" class="govuk-table__header">Officer Assigned</th>
+                      <th scope="col" class="govuk-table__header">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">1-5 Apr</td>
+                      <td class="govuk-table__cell">3 holdings</td>
+                      <td class="govuk-table__cell">J. Smith</td>
+                      <td class="govuk-table__cell">Scheduled</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">8-12 Apr</td>
+                      <td class="govuk-table__cell">2 holdings</td>
+                      <td class="govuk-table__cell">A. Jones</td>
+                      <td class="govuk-table__cell">Pending</td>
+                    </tr>
+                  </tbody>
+                </table>
+              '
+            }) }}
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "testing-notes",
+                  id: "testing-notes",
+                  label: { text: "Testing Programme Notes", classes: "govuk-label--s" },
+                  hint: { text: "Record special requirements or observations" },
+                  rows: 4,
+                  value: "Priority testing required for overdue holdings. Coordinate with local vets for gamma testing if needed."
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "risk-assessment-notes",
+                  id: "risk-assessment-notes",
+                  label: { text: "Risk Assessment Notes", classes: "govuk-label--s" },
+                  hint: { text: "Document risk factors and mitigation measures" },
+                  rows: 4,
+                  value: "High risk area due to recent TB breakdown. Enhanced surveillance required for 12 months."
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+        </form>
+      </div>
+
+      <!-- Actions and Tools Section -->
+      <div class="govuk-grid-row govuk-!-margin-top-6">
+        <div class="govuk-grid-column-two-thirds">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Actions</h2>
+            </legend>
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukSelect({
+                  id: "action",
+                  name: "action",
+                  label: { text: "Action", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "schedule-tests", text: "Schedule Tests" },
+                    { value: "update-risk", text: "Update Risk Assessment" },
+                    { value: "extend-radius", text: "Extend Test Radius" },
+                    { value: "generate-report", text: "Generate Testing Report" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukSelect({
+                  id: "letter-type",
+                  name: "letter-type",
+                  label: { text: "Letter Type", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "test-notice", text: "Test Notice" },
+                    { value: "overdue-notice", text: "Overdue Test Notice" },
+                    { value: "risk-assessment", text: "Risk Assessment Letter" },
+                    { value: "programme-update", text: "Programme Update" }
+                  ]
+                }) }}
+              </div>
+            </div>
+            <div class="govuk-button-group">
+              {{ govukButton({
+                text: "Generate Letter",
+                classes: "govuk-button--secondary"
+              }) }}
+            </div>
+          </fieldset>
         </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            Form fields to be implemented based on Slide6.png requirements.
-          </p>
+        
+        <!-- Tools Section -->
+        <div class="govuk-grid-column-one-third">
+          <h2 class="govuk-heading-m">Tools</h2>
+          <p class="govuk-body-s">Radial testing tools</p>
+          <div class="govuk-button-group govuk-button-group--vertical">
+            {{ govukButton({
+              text: "Delete Selected",
+              classes: "govuk-button--warning"
+            }) }}
+            {{ govukButton({
+              text: "Edit Selected",
+              classes: "govuk-button--secondary"
+            }) }}
+            {{ govukButton({
+              text: "Add / Amend",
+              classes: "govuk-button--secondary"
+            }) }}
+            {{ govukButton({
+              text: "Map View",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
         </div>
       </div>
     </div>

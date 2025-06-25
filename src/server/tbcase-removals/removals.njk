@@ -37,17 +37,362 @@
 {% endblock %}
 
 {% block content %}
-  <!-- Error Summary - appears at top of page when there are errors -->
-  {% if errors %}
-    {{ govukErrorSummary({
-      titleText: "There is a problem",
-      errorList: errors,
-      attributes: {
-        role: "alert",
-        "aria-labelledby": "error-summary-title"
-      }
-    }) }}
-  {% endif %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
+      
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - Removals</h1>
+      
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              {{ govukInput({
+                label: {
+                  text: "CPH Number",
+                  classes: "govuk-label--s"
+                },
+                id: "cph-number",
+                name: "cph-number",
+                value: "01/234/5678",
+                classes: "govuk-!-margin-bottom-0"
+              }) }}
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Auto Populated Incident List</h3>
+              <ul class="govuk-list">
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=25/12345" class="govuk-link">
+                    <strong>25/12345</strong> (Current)
+                  </a>
+                </li>
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=24/98765" class="govuk-link">
+                    24/98765 (Previous)
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Navigation -->
+      {% set activePage = "removals" %}
+      {% include "includes/tb-service-navigation.html" %}
+
+      <!-- Removals Content -->
+      <div class="govuk-!-margin-top-6">
+        <form action="#" method="post">
+          
+          <!-- Removal Summary Section -->
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Reactor Removal Summary</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "No. of Reactors", classes: "govuk-label--s" },
+                  id: "num-reactors",
+                  name: "num-reactors",
+                  value: "3"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "No. Priority Reactors", classes: "govuk-label--s" },
+                  id: "num-priority",
+                  name: "num-priority",
+                  value: "1"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "abattoir",
+                  name: "abattoir",
+                  label: { text: "Abattoir/Knackery", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "ab001", text: "Southwest Abattoir", selected: true },
+                    { value: "ab002", text: "Devon Processing" },
+                    { value: "ab003", text: "Cornwall Meat Co" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "Abattoir Ref No", classes: "govuk-label--s" },
+                  id: "ab-ref",
+                  name: "ab-ref",
+                  value: "SW2025001"
+                }) }}
+              </div>
+            </div>
+
+            <!-- Removal Scheduling -->
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "removal-date",
+                  namePrefix: "removal-date",
+                  fieldset: {
+                    legend: { text: "Planned Removal Date", classes: "govuk-label--s" }
+                  },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2", value: "30" },
+                    { name: "month", classes: "govuk-input--width-2", value: "03" },
+                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "test-type",
+                  name: "test-type",
+                  label: { text: "Test Type", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "skin", text: "Skin Test", selected: true },
+                    { value: "gamma", text: "Gamma Interferon" },
+                    { value: "blood", text: "Blood Test" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "work-schedule",
+                  name: "work-schedule",
+                  label: { text: "Work Schedule", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "ws001", text: "WS-2025-001", selected: true },
+                    { value: "ws002", text: "WS-2025-002" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "Transport Ref", classes: "govuk-label--s" },
+                  id: "transport-ref",
+                  name: "transport-ref",
+                  value: "TR2025001"
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Individual Animal Removals Table -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Animal Removal Details</h2>
+            </legend>
+
+            <div class="govuk-!-margin-bottom-4">
+              <div class="govuk-button-group">
+                {{ govukButton({
+                  text: "Add Animal",
+                  classes: "govuk-button--secondary"
+                }) }}
+                {{ govukButton({
+                  text: "Duplicate Line",
+                  classes: "govuk-button--secondary"
+                }) }}
+                {{ govukButton({
+                  text: "Remove Selected",
+                  classes: "govuk-button--warning"
+                }) }}
+              </div>
+            </div>
+
+            {{ govukTable({
+              head: [
+                { text: "Select", classes: "govuk-!-width-one-tenth" },
+                { text: "Animal ID" },
+                { text: "Ear Tag Primary" },
+                { text: "Ear Tag Secondary" },
+                { text: "Test Result" },
+                { text: "Reactor Status" },
+                { text: "Removal Date" },
+                { text: "Destination" },
+                { text: "Status" },
+                { text: "Actions" }
+              ],
+              rows: [
+                [
+                  {
+                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
+                             <input class="govuk-checkboxes__input" id="select-1" name="select-animals" type="checkbox" value="A001">
+                             <label class="govuk-label govuk-checkboxes__label" for="select-1"><span class="govuk-visually-hidden">Select animal A001</span></label>
+                           </div>'
+                  },
+                  { text: "A001" },
+                  { text: "UK123456789" },
+                  { text: "UK123456790" },
+                  { text: "Reactor" },
+                  { text: "Priority" },
+                  { text: "30/03/2025" },
+                  { text: "Southwest Abattoir" },
+                  { text: "Scheduled" },
+                  {
+                    html: '<a href="#" class="govuk-link">Edit</a> | <a href="#" class="govuk-link">Remove</a>'
+                  }
+                ],
+                [
+                  {
+                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
+                             <input class="govuk-checkboxes__input" id="select-2" name="select-animals" type="checkbox" value="A002">
+                             <label class="govuk-label govuk-checkboxes__label" for="select-2"><span class="govuk-visually-hidden">Select animal A002</span></label>
+                           </div>'
+                  },
+                  { text: "A002" },
+                  { text: "UK987654321" },
+                  { text: "UK987654322" },
+                  { text: "Reactor" },
+                  { text: "Standard" },
+                  { text: "30/03/2025" },
+                  { text: "Southwest Abattoir" },
+                  { text: "Scheduled" },
+                  {
+                    html: '<a href="#" class="govuk-link">Edit</a> | <a href="#" class="govuk-link">Remove</a>'
+                  }
+                ],
+                [
+                  {
+                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
+                             <input class="govuk-checkboxes__input" id="select-3" name="select-animals" type="checkbox" value="A003">
+                             <label class="govuk-label govuk-checkboxes__label" for="select-3"><span class="govuk-visually-hidden">Select animal A003</span></label>
+                           </div>'
+                  },
+                  { text: "A003" },
+                  { text: "UK555666777" },
+                  { text: "UK555666778" },
+                  { text: "Reactor" },
+                  { text: "Standard" },
+                  { text: "30/03/2025" },
+                  { text: "Southwest Abattoir" },
+                  { text: "Pending" },
+                  {
+                    html: '<a href="#" class="govuk-link">Edit</a> | <a href="#" class="govuk-link">Remove</a>'
+                  }
+                ]
+              ]
+            }) }}
+          </fieldset>
+
+          <!-- Removal Documentation -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Documentation & Notes</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "removal-notes",
+                  id: "removal-notes",
+                  label: { text: "Removal Notes", classes: "govuk-label--s" },
+                  hint: { text: "Record any special instructions or observations" },
+                  rows: 4
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "transport-notes",
+                  id: "transport-notes",
+                  label: { text: "Transport Notes", classes: "govuk-label--s" },
+                  hint: { text: "Note any transport-specific requirements" },
+                  rows: 4
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+        </form>
+      </div>
+
+      <!-- Actions and Tools Section -->
+      <div class="govuk-grid-row govuk-!-margin-top-6">
+        <div class="govuk-grid-column-two-thirds">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Actions</h2>
+            </legend>
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukSelect({
+                  id: "action",
+                  name: "action",
+                  label: { text: "Action", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "schedule-removal", text: "Schedule Removal" },
+                    { value: "confirm-removal", text: "Confirm Removal" },
+                    { value: "cancel-removal", text: "Cancel Removal" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukSelect({
+                  id: "letter-type",
+                  name: "letter-type",
+                  label: { text: "Letter Type", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "removal-notice", text: "Removal Notice" },
+                    { value: "transport-order", text: "Transport Order" },
+                    { value: "completion-cert", text: "Completion Certificate" }
+                  ]
+                }) }}
+              </div>
+            </div>
+            <div class="govuk-button-group">
+              {{ govukButton({
+                text: "Generate Letter",
+                classes: "govuk-button--secondary"
+              }) }}
+            </div>
+          </fieldset>
+        </div>
+        
+        <!-- Tools Section -->
+        <div class="govuk-grid-column-one-third">
+          <h2 class="govuk-heading-m">Tools</h2>
+          <p class="govuk-body-s">Removal-specific tools</p>
+          <div class="govuk-button-group govuk-button-group--vertical">
+            {{ govukButton({
+              text: "Delete Selected",
+              classes: "govuk-button--warning"
+            }) }}
+            {{ govukButton({
+              text: "Edit Selected",
+              classes: "govuk-button--secondary"
+            }) }}
+            {{ govukButton({
+              text: "Add / Amend",
+              classes: "govuk-button--secondary"
+            }) }}
+            {{ govukButton({
+              text: "Duplicate Line",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
 
   <!-- Success notification -->
   {% if success %}

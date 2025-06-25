@@ -182,8 +182,8 @@ export const tbCaseEartagsPostController = {
         heading: "TB Case Form – Eartags' Tab (Reactor Removal)",
         caption: 'TBCMS: TB Case Form',
         activePage: 'eartags',
-        formData: formData,
-        errors: errors,
+        formData,
+        errors,
         success: null
       })
     }
@@ -201,7 +201,7 @@ export const tbCaseEartagsPostController = {
       heading: "TB Case Form – Eartags' Tab (Reactor Removal)",
       caption: 'TBCMS: TB Case Form',
       activePage: 'eartags',
-      formData: formData,
+      formData,
       errors: null,
       success: successMessage
     })
