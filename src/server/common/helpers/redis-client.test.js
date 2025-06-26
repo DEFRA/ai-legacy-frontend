@@ -1,13 +1,17 @@
+import { vi, describe, beforeEach, test, expect } from 'vitest'
 import { Cluster, Redis } from 'ioredis'
 
 import { config } from '~/src/config/config.js'
 import { buildRedisClient } from '~/src/server/common/helpers/redis-client.js'
 
-jest.mock('ioredis', () => ({
-  ...jest.requireActual('ioredis'),
-  Cluster: jest.fn().mockReturnValue({ on: () => ({}) }),
-  Redis: jest.fn().mockReturnValue({ on: () => ({}) })
-}))
+vi.mock('ioredis', async () => {
+  const actual = await vi.importActual('ioredis')
+  return {
+    ...actual,
+    Cluster: vi.fn().mockReturnValue({ on: () => ({}) }),
+    Redis: vi.fn().mockReturnValue({ on: () => ({}) })
+  }
+})
 
 describe('#buildRedisClient', () => {
   describe('When Redis Single InstanceCache is requested', () => {

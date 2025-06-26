@@ -1,11 +1,17 @@
-const mockReadFileSync = jest.fn()
-const mockLoggerError = jest.fn()
+import { vi, describe, beforeAll, beforeEach, test, expect } from 'vitest'
 
-jest.mock('node:fs', () => ({
-  ...jest.requireActual('node:fs'),
-  readFileSync: () => mockReadFileSync()
-}))
-jest.mock('~/src/server/common/helpers/logging/logger.js', () => ({
+const mockReadFileSync = vi.fn()
+const mockLoggerError = vi.fn()
+
+vi.mock('node:fs', async () => {
+  const actual = await vi.importActual('node:fs')
+  return {
+    ...actual,
+    readFileSync: mockReadFileSync
+  }
+})
+
+vi.mock('~/src/server/common/helpers/logging/logger.js', () => ({
   createLogger: () => ({ error: (...args) => mockLoggerError(...args) })
 }))
 
@@ -77,7 +83,10 @@ describe('#context', () => {
     })
 
     beforeEach(() => {
-      mockReadFileSync.mockReturnValue(new Error('File not found'))
+      vi.clearAllMocks()
+      mockReadFileSync.mockImplementation(() => {
+        throw new Error('File not found')
+      })
 
       contextResult = contextImport.context(mockRequest)
     })
@@ -102,6 +111,7 @@ describe('#context cache', () => {
     })
 
     beforeEach(() => {
+      vi.clearAllMocks()
       // Return JSON string
       mockReadFileSync.mockReturnValue(`{
         "application.js": "javascripts/application.js",

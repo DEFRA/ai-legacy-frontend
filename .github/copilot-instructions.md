@@ -14,3 +14,30 @@ Important: Only implement elements and fields that are explicitly visible in the
 - All form fields must have proper semantic HTML with appropriate labels, hints, and error handling structure
 - Form must be fully navigable via keyboard and screen reader accessible
 - Update the router.js file to include the new pages
+- ignore any data that may be visible in the screenshots that is not explicitly part of the design, such as placeholder text or example data
+- ensure all form fields have a hint text that is appropriate to the field and follows GDS guidelines
+
+# JavaScript Conventions
+
+- Use named functions over arrow functions
+- Use kebab case for filenames
+- Use ES Modules
+- Use Vitest for testing
+- Avoid bloated routes
+- Use JSDoc to describe areas of complexity
+- Proactively maintain documentation
+- Focus on behaviour coverage over line coverage
+- Write immutable code where possible
+- Focus on simplicitly and reducing longer term maintainability
+- Follow principles of Test Driven Development (TDD)
+- No more than three parameters for a function
+- Functions to have one role
+- Do not use barrel functions
+- Validate requests
+- Add contributors name and email to package.json
+- One controller per Hapi route
+- Hapi routes and handlers (controllers) should be in one file
+
+# Up to date README.md
+
+Generate updated README.md documentation and keeping it in sync with the code changes.

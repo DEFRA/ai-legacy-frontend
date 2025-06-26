@@ -4,10 +4,13 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_ai-legacy-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_ai-legacy-frontend)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_ai-legacy-frontend&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_ai-legacy-frontend)
 
-Core delivery platform Node.js Frontend Template.
+Core delivery platform Node.js Frontend Template for TB Case Management System (TBCMS).
 
 - [Requirements](#requirements)
   - [Node.js](#nodejs)
+- [Development Standards](#development-standards)
+  - [JavaScript Conventions](#javascript-conventions)
+  - [Testing](#testing)
 - [Server-side Caching](#server-side-caching)
 - [Redis](#redis)
 - [Local Development](#local-development)
@@ -31,7 +34,7 @@ Core delivery platform Node.js Frontend Template.
 
 ### Node.js
 
-Please install [Node.js](http://nodejs.org/) `>= v18` and [npm](https://nodejs.org/) `>= v9`. You will find it
+Please install [Node.js](http://nodejs.org/) `>= v22.13.1` and [npm](https://nodejs.org/) `>= v9`. You will find it
 easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
 
 To use the correct version of Node.js for this application, via nvm:
@@ -40,6 +43,33 @@ To use the correct version of Node.js for this application, via nvm:
 cd ai-legacy-frontend
 nvm use
 ```
+
+## Development Standards
+
+### JavaScript Conventions
+
+This project follows strict JavaScript conventions to maintain code quality and consistency:
+
+- **Named functions over arrow functions**: All functions use the `function` keyword instead of arrow functions
+- **Kebab-case filenames**: All file names use kebab-case convention (e.g., `case-details.js`)
+- **ES Modules**: All imports/exports use ES Module syntax
+- **JSDoc documentation**: All functions and classes include comprehensive JSDoc comments
+- **Request validation**: All route handlers validate input parameters
+- **Single responsibility**: Each function has one clear purpose
+- **Maximum 3 parameters**: Functions accept no more than three parameters
+- **No barrel exports**: Avoid index.js files that only re-export from other files
+- **Immutable code patterns**: Write code that avoids mutation where possible
+
+### Testing
+
+- **Vitest**: Uses Vitest as the testing framework for fast, modern JavaScript testing
+- **Behavior coverage**: Focus on testing behavior rather than achieving line coverage targets
+- **Test-Driven Development (TDD)**: Follow TDD principles when developing new features
+- **Test commands**:
+  ```bash
+  npm test           # Run all tests with coverage
+  npm run test:watch # Run tests in watch mode
+  ```
 
 ## Server-side Caching
 
