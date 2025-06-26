@@ -8,6 +8,11 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% set breadcrumbs = [
   {
@@ -48,32 +53,21 @@
         </div>
         <div class="govuk-summary-card__content">
           <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              {{ govukInput({
-                label: {
-                  text: "CPH Number",
-                  classes: "govuk-label--s"
-                },
-                id: "cph-number",
-                name: "cph-number",
-                value: "01/234/5678",
-                classes: "govuk-!-margin-bottom-0"
-              }) }}
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">CPH:</dt>
+              <dd class="govuk-summary-list__value">01/234/5678</dd>
             </div>
-            <div class="govuk-grid-column-one-half">
-              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Auto Populated Incident List</h3>
-              <ul class="govuk-list">
-                <li class="govuk-!-margin-bottom-2">
-                  <a href="/tbcase/case-details?incident=25/12345" class="govuk-link">
-                    <strong>25/12345</strong> (Current)
-                  </a>
-                </li>
-                <li class="govuk-!-margin-bottom-2">
-                  <a href="/tbcase/case-details?incident=24/98765" class="govuk-link">
-                    24/98765 (Previous)
-                  </a>
-                </li>
-              </ul>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Nat Inc:</dt>
+              <dd class="govuk-summary-list__value">25/12345</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Keeper:</dt>
+              <dd class="govuk-summary-list__value">John Smith Farms Ltd</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Status:</dt>
+              <dd class="govuk-summary-list__value">Under Restriction</dd>
             </div>
           </div>
         </div>
@@ -82,342 +76,450 @@
       <!-- Service Navigation -->
       {% set activePage = "allocations" %}
       {% include "includes/tb-service-navigation.html" %}
-      
+
       <!-- Allocations Content -->
       <div class="govuk-!-margin-top-6">
-        <form action="#" method="post">
+        {{ govukInsetText({
+          text: "Abattoir allocations must be arranged for all reactor animals to ensure proper post-mortem examination."
+        }) }}
+
+        <form action="/tbcase/allocations" method="post" novalidate>
           
-          <!-- Allocation Management Section -->
+          <!-- Create New Allocation -->
           <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Abattoir Allocation Management</h2>
+              <h2 class="govuk-fieldset__heading">Create Abattoir Allocation</h2>
             </legend>
             
             <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-grid-column-one-half">
                 {{ govukSelect({
-                  id: "allocation-abattoir",
-                  name: "allocation-abattoir",
-                  label: { text: "Selected Abattoir", classes: "govuk-label--s" },
+                  id: "abattoir",
+                  name: "abattoir",
+                  label: {
+                    text: "Select Abattoir",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Choose approved abattoir for TB reactors"
+                  },
                   items: [
-                    { value: "", text: "Please select" },
-                    { value: "ab001", text: "Southwest Abattoir", selected: true },
-                    { value: "ab002", text: "Devon Processing" },
-                    { value: "ab003", text: "Cornwall Meat Co" }
+                    {
+                      value: "",
+                      text: "Select an abattoir"
+                    },
+                    {
+                      value: "devon-abattoir-ltd",
+                      text: "Devon Abattoir Ltd - Exeter"
+                    },
+                    {
+                      value: "southwest-meat-co",
+                      text: "Southwest Meat Company - Plymouth"
+                    },
+                    {
+                      value: "westcountry-abattoir",
+                      text: "Westcountry Abattoir - Taunton"
+                    },
+                    {
+                      value: "cornwall-meat-plant",
+                      text: "Cornwall Meat Plant - Bodmin"
+                    }
                   ]
                 }) }}
               </div>
-              <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-grid-column-one-half">
+                {{ govukInput({
+                  label: {
+                    text: "Abattoir Contact",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Contact person at the abattoir"
+                  },
+                  id: "abattoir-contact",
+                  name: "abattoir-contact",
+                  classes: "govuk-input--width-20"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-third">
                 {{ govukDateInput({
                   id: "allocation-date",
                   namePrefix: "allocation-date",
                   fieldset: {
-                    legend: { text: "Preferred Date", classes: "govuk-label--s" }
+                    legend: {
+                      text: "Allocation Date",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  hint: {
+                    text: "Date animals will be delivered"
                   },
                   items: [
-                    { name: "day", classes: "govuk-input--width-2", value: "30" },
-                    { name: "month", classes: "govuk-input--width-2", value: "03" },
-                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
+                    {
+                      name: "day",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "month",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "year",
+                      classes: "govuk-input--width-4"
+                    }
                   ]
                 }) }}
               </div>
-              <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-grid-column-one-third">
                 {{ govukInput({
-                  label: { text: "Animals Required", classes: "govuk-label--s" },
-                  id: "capacity-required",
-                  name: "capacity-required",
-                  value: "3"
+                  label: {
+                    text: "Number of Animals",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Total animals for this allocation"
+                  },
+                  id: "number-animals",
+                  name: "number-animals",
+                  type: "number",
+                  classes: "govuk-input--width-5"
                 }) }}
               </div>
-              <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-grid-column-one-third">
                 {{ govukInput({
-                  label: { text: "Available Capacity", classes: "govuk-label--s" },
-                  id: "available-capacity",
-                  name: "available-capacity",
-                  value: "15",
-                  attributes: { readonly: "readonly" }
+                  label: {
+                    text: "Reference Number",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Abattoir reference or booking number"
+                  },
+                  id: "reference-number",
+                  name: "reference-number",
+                  classes: "govuk-input--width-15"
                 }) }}
               </div>
             </div>
 
-            <!-- Capacity Planning -->
             <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-grid-column-one-half">
                 {{ govukSelect({
-                  id: "priority-level",
-                  name: "priority-level",
-                  label: { text: "Priority Level", classes: "govuk-label--s" },
+                  id: "allocation-priority",
+                  name: "allocation-priority",
+                  label: {
+                    text: "Priority Level",
+                    classes: "govuk-label--s"
+                  },
                   items: [
-                    { value: "", text: "Please select" },
-                    { value: "urgent", text: "Urgent" },
-                    { value: "high", text: "High", selected: true },
-                    { value: "normal", text: "Normal" },
-                    { value: "low", text: "Low" }
+                    {
+                      value: "",
+                      text: "Select priority"
+                    },
+                    {
+                      value: "urgent",
+                      text: "Urgent (Within 24 hours)"
+                    },
+                    {
+                      value: "high",
+                      text: "High (Within 3 days)"
+                    },
+                    {
+                      value: "normal",
+                      text: "Normal (Within 5 days)"
+                    }
                   ]
                 }) }}
               </div>
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukInput({
-                  label: { text: "Transport Distance (miles)", classes: "govuk-label--s" },
-                  id: "transport-distance",
-                  name: "transport-distance",
-                  value: "25"
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukInput({
-                  label: { text: "Estimated Cost (£)", classes: "govuk-label--s" },
-                  id: "estimated-cost",
-                  name: "estimated-cost",
-                  value: "450.00"
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukSelect({
-                  id: "allocation-status",
-                  name: "allocation-status",
-                  label: { text: "Status", classes: "govuk-label--s" },
+              <div class="govuk-grid-column-one-half">
+                {{ govukCheckboxes({
+                  name: "special-requirements",
+                  fieldset: {
+                    legend: {
+                      text: "Special Requirements",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
                   items: [
-                    { value: "", text: "Please select" },
-                    { value: "pending", text: "Pending" },
-                    { value: "confirmed", text: "Confirmed", selected: true },
-                    { value: "cancelled", text: "Cancelled" }
+                    {
+                      value: "pm-examination",
+                      text: "Post-mortem examination required"
+                    },
+                    {
+                      value: "veterinary-presence",
+                      text: "Veterinary presence required"
+                    },
+                    {
+                      value: "sampling-required",
+                      text: "Tissue sampling required"
+                    }
                   ]
                 }) }}
               </div>
             </div>
-          </fieldset>
 
-          <!-- Weekly Capacity Overview -->
-          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Weekly Capacity Overview</h2>
-            </legend>
-
-            {{ govukTable({
-              caption: "Abattoir capacity for week commencing 24/03/2025",
-              captionClasses: "govuk-visually-hidden",
-              head: [
-                { text: "Abattoir" },
-                { text: "Monday" },
-                { text: "Tuesday" },
-                { text: "Wednesday" },
-                { text: "Thursday" },
-                { text: "Friday" },
-                { text: "Total Capacity" },
-                { text: "Available" }
-              ],
-              rows: [
-                [
-                  { text: "Southwest Abattoir" },
-                  { text: "20/25", classes: "govuk-table__cell--numeric" },
-                  { text: "15/25", classes: "govuk-table__cell--numeric" },
-                  { text: "18/25", classes: "govuk-table__cell--numeric" },
-                  { text: "22/25", classes: "govuk-table__cell--numeric" },
-                  { text: "12/25", classes: "govuk-table__cell--numeric" },
-                  { text: "125", classes: "govuk-table__cell--numeric" },
-                  { text: "38", classes: "govuk-table__cell--numeric" }
-                ],
-                [
-                  { text: "Devon Processing" },
-                  { text: "30/40", classes: "govuk-table__cell--numeric" },
-                  { text: "35/40", classes: "govuk-table__cell--numeric" },
-                  { text: "28/40", classes: "govuk-table__cell--numeric" },
-                  { text: "32/40", classes: "govuk-table__cell--numeric" },
-                  { text: "25/40", classes: "govuk-table__cell--numeric" },
-                  { text: "200", classes: "govuk-table__cell--numeric" },
-                  { text: "50", classes: "govuk-table__cell--numeric" }
-                ],
-                [
-                  { text: "Cornwall Meat Co" },
-                  { text: "8/15", classes: "govuk-table__cell--numeric" },
-                  { text: "12/15", classes: "govuk-table__cell--numeric" },
-                  { text: "9/15", classes: "govuk-table__cell--numeric" },
-                  { text: "11/15", classes: "govuk-table__cell--numeric" },
-                  { text: "7/15", classes: "govuk-table__cell--numeric" },
-                  { text: "75", classes: "govuk-table__cell--numeric" },
-                  { text: "28", classes: "govuk-table__cell--numeric" }
-                ]
-              ]
-            }) }}
-          </fieldset>
-
-          <!-- Current Allocations -->
-          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Current Allocations</h2>
-            </legend>
-
-            <div class="govuk-!-margin-bottom-4">
-              <div class="govuk-button-group">
-                {{ govukButton({
-                  text: "Add Allocation",
-                  classes: "govuk-button--secondary"
-                }) }}
-                {{ govukButton({
-                  text: "Modify Allocation",
-                  classes: "govuk-button--secondary"
-                }) }}
-                {{ govukButton({
-                  text: "Cancel Selected",
-                  classes: "govuk-button--warning"
-                }) }}
-              </div>
-            </div>
-
-            {{ govukTable({
-              head: [
-                { text: "Select", classes: "govuk-!-width-one-tenth" },
-                { text: "Allocation Date" },
-                { text: "Abattoir" },
-                { text: "Animals Allocated" },
-                { text: "Capacity Used" },
-                { text: "Priority" },
-                { text: "Status" },
-                { text: "Reference" },
-                { text: "Actions" }
-              ],
-              rows: [
+            <!-- Animal Selection -->
+            <fieldset class="govuk-fieldset govuk-!-margin-top-4">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                <h3 class="govuk-fieldset__heading">Select Animals for Allocation</h3>
+              </legend>
+              
+              {% set animalSelectionRows = [
                 [
                   {
-                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
-                             <input class="govuk-checkboxes__input" id="select-alloc-1" name="select-allocations" type="checkbox" value="ALO001">
-                             <label class="govuk-label govuk-checkboxes__label" for="select-alloc-1"><span class="govuk-visually-hidden">Select allocation ALO001</span></label>
+                    html: '<div class="govuk-checkboxes__item">
+                             <input class="govuk-checkboxes__input" id="animal-uk123456789" name="selected-animals" type="checkbox" value="UK123456789">
+                             <label class="govuk-label govuk-checkboxes__label" for="animal-uk123456789">
+                               Select
+                             </label>
                            </div>'
                   },
-                  { text: "30/03/2025" },
-                  { text: "Southwest Abattoir" },
-                  { text: "3" },
-                  { text: "3/25 (12%)" },
-                  { text: "High", classes: "govuk-tag govuk-tag--orange" },
-                  { text: "Confirmed", classes: "govuk-tag govuk-tag--green" },
-                  { text: "ALO001" },
                   {
-                    html: '<a href="#" class="govuk-link">Edit</a> | <a href="#" class="govuk-link">Cancel</a>'
+                    text: "UK123456789"
+                  },
+                  {
+                    text: "Holstein"
+                  },
+                  {
+                    text: "TB Reactor"
+                  },
+                  {
+                    text: "15/01/2025"
+                  },
+                  {
+                    text: "Pending"
                   }
                 ],
                 [
                   {
-                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
-                             <input class="govuk-checkboxes__input" id="select-alloc-2" name="select-allocations" type="checkbox" value="ALO002">
-                             <label class="govuk-label govuk-checkboxes__label" for="select-alloc-2"><span class="govuk-visually-hidden">Select allocation ALO002</span></label>
+                    html: '<div class="govuk-checkboxes__item">
+                             <input class="govuk-checkboxes__input" id="animal-uk987654321" name="selected-animals" type="checkbox" value="UK987654321">
+                             <label class="govuk-label govuk-checkboxes__label" for="animal-uk987654321">
+                               Select
+                             </label>
                            </div>'
                   },
-                  { text: "02/04/2025" },
-                  { text: "Devon Processing" },
-                  { text: "5" },
-                  { text: "5/40 (13%)" },
-                  { text: "Normal", classes: "govuk-tag govuk-tag--blue" },
-                  { text: "Pending", classes: "govuk-tag govuk-tag--yellow" },
-                  { text: "ALO002" },
                   {
-                    html: '<a href="#" class="govuk-link">Edit</a> | <a href="#" class="govuk-link">Cancel</a>'
+                    text: "UK987654321"
+                  },
+                  {
+                    text: "Limousin"
+                  },
+                  {
+                    text: "Inconclusive Reactor"
+                  },
+                  {
+                    text: "16/01/2025"
+                  },
+                  {
+                    text: "Pending"
                   }
                 ]
-              ]
-            }) }}
-          </fieldset>
+              ] %}
 
-          <!-- Allocation Notes -->
-          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Allocation Notes & Requirements</h2>
-            </legend>
-            
-            <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-half">
-                {{ govukTextarea({
-                  name: "allocation-notes",
-                  id: "allocation-notes",
-                  label: { text: "Allocation Notes", classes: "govuk-label--s" },
-                  hint: { text: "Record any special requirements or notes" },
-                  rows: 4,
-                  value: "Priority removal required due to reactor status. Arrange transport for Thursday AM."
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-half">
-                {{ govukTextarea({
-                  name: "transport-requirements",
-                  id: "transport-requirements",
-                  label: { text: "Transport Requirements", classes: "govuk-label--s" },
-                  hint: { text: "Specify any special transport needs" },
-                  rows: 4,
-                  value: "Cattle trailer required. Direct route due to reactor status."
-                }) }}
-              </div>
+              {{ govukTable({
+                head: [
+                  {
+                    text: ""
+                  },
+                  {
+                    text: "Eartag Number"
+                  },
+                  {
+                    text: "Breed"
+                  },
+                  {
+                    text: "Reason"
+                  },
+                  {
+                    text: "Identified Date"
+                  },
+                  {
+                    text: "Status"
+                  }
+                ],
+                rows: animalSelectionRows,
+                classes: "govuk-!-margin-top-2"
+              }) }}
+            </fieldset>
+
+            <div class="govuk-!-margin-top-4">
+              {{ govukTextarea({
+                name: "allocation-notes",
+                id: "allocation-notes",
+                label: {
+                  text: "Additional Notes",
+                  classes: "govuk-label--s"
+                },
+                hint: {
+                  text: "Any special instructions or requirements for this allocation"
+                },
+                rows: 3
+              }) }}
             </div>
-          </fieldset>
 
-        </form>
-      </div>
-
-      <!-- Actions and Tools Section -->
-      <div class="govuk-grid-row govuk-!-margin-top-6">
-        <div class="govuk-grid-column-two-thirds">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Actions</h2>
-            </legend>
-            <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-half">
-                {{ govukSelect({
-                  id: "action",
-                  name: "action",
-                  label: { text: "Action", classes: "govuk-label--s" },
-                  items: [
-                    { value: "", text: "Please select" },
-                    { value: "confirm-allocation", text: "Confirm Allocation" },
-                    { value: "modify-allocation", text: "Modify Allocation" },
-                    { value: "cancel-allocation", text: "Cancel Allocation" }
-                  ]
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-half">
-                {{ govukSelect({
-                  id: "letter-type",
-                  name: "letter-type",
-                  label: { text: "Letter Type", classes: "govuk-label--s" },
-                  items: [
-                    { value: "", text: "Please select" },
-                    { value: "allocation-notice", text: "Allocation Notice" },
-                    { value: "transport-order", text: "Transport Order" },
-                    { value: "capacity-report", text: "Capacity Report" }
-                  ]
-                }) }}
-              </div>
-            </div>
-            <div class="govuk-button-group">
+            <div class="govuk-button-group govuk-!-margin-top-4">
               {{ govukButton({
-                text: "Generate Letter",
-                classes: "govuk-button--secondary"
+                text: "Create Allocation",
+                name: "action",
+                value: "create-allocation"
               }) }}
             </div>
           </fieldset>
-        </div>
-        
-        <!-- Tools Section -->
-        <div class="govuk-grid-column-one-third">
-          <h2 class="govuk-heading-m">Tools</h2>
-          <p class="govuk-body-s">Allocation management tools</p>
-          <div class="govuk-button-group govuk-button-group--vertical">
-            {{ govukButton({
-              text: "Delete Selected",
-              classes: "govuk-button--warning"
-            }) }}
-            {{ govukButton({
-              text: "Edit Selected",
-              classes: "govuk-button--secondary"
-            }) }}
-            {{ govukButton({
-              text: "Add / Amend",
-              classes: "govuk-button--secondary"
-            }) }}
-            {{ govukButton({
-              text: "Export Report",
-              classes: "govuk-button--secondary"
+
+          <!-- Current Allocations -->
+          <div class="govuk-!-margin-top-8">
+            <h3 class="govuk-heading-m">Current Allocations</h3>
+            
+            {% set allocationsTableRows = [
+              [
+                {
+                  text: "ALL-2025-001"
+                },
+                {
+                  text: "Devon Abattoir Ltd"
+                },
+                {
+                  text: "20/01/2025"
+                },
+                {
+                  text: "2"
+                },
+                {
+                  text: "High"
+                },
+                {
+                  text: "Confirmed"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="View allocation ALL-2025-001">View</a> | <a class="govuk-link" href="#" aria-label="Edit allocation ALL-2025-001">Edit</a>'
+                }
+              ],
+              [
+                {
+                  text: "ALL-2025-002"
+                },
+                {
+                  text: "Southwest Meat Company"
+                },
+                {
+                  text: "25/01/2025"
+                },
+                {
+                  text: "1"
+                },
+                {
+                  text: "Normal"
+                },
+                {
+                  text: "Pending"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="View allocation ALL-2025-002">View</a> | <a class="govuk-link" href="#" aria-label="Edit allocation ALL-2025-002">Edit</a>'
+                }
+              ]
+            ] %}
+
+            {{ govukTable({
+              head: [
+                {
+                  text: "Allocation ID"
+                },
+                {
+                  text: "Abattoir"
+                },
+                {
+                  text: "Allocation Date"
+                },
+                {
+                  text: "Animals"
+                },
+                {
+                  text: "Priority"
+                },
+                {
+                  text: "Status"
+                },
+                {
+                  text: "Actions"
+                }
+              ],
+              rows: allocationsTableRows,
+              classes: "govuk-!-margin-top-4"
             }) }}
           </div>
-        </div>
+
+          <!-- Allocation Summary -->
+          <div class="govuk-!-margin-top-6">
+            <div class="govuk-summary-card">
+              <div class="govuk-summary-card__title-wrapper">
+                <h3 class="govuk-summary-card__title">Allocation Summary</h3>
+              </div>
+              <div class="govuk-summary-card__content">
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Total Allocations:</dt>
+                    <dd class="govuk-summary-list__value govuk-!-font-weight-bold">2</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Animals Allocated:</dt>
+                    <dd class="govuk-summary-list__value">3</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Pending Animals:</dt>
+                    <dd class="govuk-summary-list__value">2</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Urgent Pending:</dt>
+                    <dd class="govuk-summary-list__value">0</dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Abattoir Information -->
+          {{ govukDetails({
+            summaryText: "Approved Abattoirs Information",
+            html: '<div class="govuk-grid-row">
+                     <div class="govuk-grid-column-one-half">
+                       <h4 class="govuk-heading-s">Devon Abattoir Ltd</h4>
+                       <p class="govuk-body-s">
+                         Address: Industrial Estate, Exeter, EX2 8AB<br>
+                         Contact: 01392 123456<br>
+                         Capacity: 50 cattle/day<br>
+                         PM facilities: Yes
+                       </p>
+                     </div>
+                     <div class="govuk-grid-column-one-half">
+                       <h4 class="govuk-heading-s">Southwest Meat Company</h4>
+                       <p class="govuk-body-s">
+                         Address: Dockyard Road, Plymouth, PL1 3DX<br>
+                         Contact: 01752 987654<br>
+                         Capacity: 30 cattle/day<br>
+                         PM facilities: Yes
+                       </p>
+                     </div>
+                   </div>'
+          }) }}
+
+          <!-- Form Actions -->
+          <div class="govuk-button-group govuk-!-margin-top-6">
+            {{ govukButton({
+              text: "Save and continue",
+              type: "submit"
+            }) }}
+            
+            {{ govukButton({
+              text: "Save as draft",
+              classes: "govuk-button--secondary",
+              name: "action",
+              value: "draft"
+            }) }}
+          </div>
+        </form>
       </div>
     </div>
   </div>

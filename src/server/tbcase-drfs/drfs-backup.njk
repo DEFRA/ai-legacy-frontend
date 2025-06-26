@@ -1,0 +1,500 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% set breadcrumbs = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "TB Case Form",
+    href: "/tbcase/case-details"
+  },
+  {
+    text: "DRFS",
+    href: "/tbcase/drfs"
+  }
+] %}
+
+{% block beforeContent %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
+      
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - Disease Reporting Forms (DRFS)</h1>
+      
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              {{ govukInput({
+                label: {
+                  text: "CPH Number",
+                  classes: "govuk-label--s"
+                },
+                id: "cph-number",
+                name: "cph-number",
+                value: "01/234/5678",
+                classes: "govuk-!-margin-bottom-0"
+              }) }}
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Auto Populated Incident List</h3>
+              <ul class="govuk-list">
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=25/12345" class="govuk-link">
+                    <strong>25/12345</strong> (Current)
+                  </a>
+                </li>
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=24/98765" class="govuk-link">
+                    24/98765 (Previous)
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Navigation -->
+      {% set activePage = "drfs" %}
+      {% include "includes/tb-service-navigation.html" %}
+      
+      <!-- DRFS Content -->
+      <div class="govuk-!-margin-top-6">
+        <form action="#" method="post" enctype="multipart/form-data">
+          
+          <!-- Current DRF Form -->
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">New Disease Report Form</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "DRF Number", classes: "govuk-label--s" },
+                  id: "drf-number",
+                  name: "drf-number",
+                  value: "DRF-2025-001",
+                  attributes: { readonly: "readonly" }
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "drf-type",
+                  name: "drf-type",
+                  label: { text: "Report Type", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "initial", text: "Initial Report", selected: true },
+                    { value: "follow-up", text: "Follow-up Report" },
+                    { value: "closure", text: "Closure Report" },
+                    { value: "emergency", text: "Emergency Report" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "drf-date",
+                  namePrefix: "drf-date",
+                  fieldset: {
+                    legend: { text: "Report Date", classes: "govuk-label--s" }
+                  },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2", value: "25" },
+                    { name: "month", classes: "govuk-input--width-2", value: "06" },
+                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "drf-status",
+                  name: "drf-status",
+                  label: { text: "Status", classes: "govuk-label--s" },
+                  items: [
+                    { value: "draft", text: "Draft", selected: true },
+                    { value: "pending-review", text: "Pending Review" },
+                    { value: "submitted", text: "Submitted" },
+                    { value: "approved", text: "Approved" },
+                    { value: "rejected", text: "Rejected" }
+                  ]
+                }) }}
+              </div>
+            </div>
+
+            <!-- Disease Information -->
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "disease-type",
+                  name: "disease-type",
+                  label: { text: "Disease Type", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "tb", text: "Tuberculosis", selected: true },
+                    { value: "brucellosis", text: "Brucellosis" },
+                    { value: "fmd", text: "Foot and Mouth" },
+                    { value: "other", text: "Other" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "Animals Affected", classes: "govuk-label--s" },
+                  id: "animals-affected",
+                  name: "animals-affected",
+                  value: "3"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "confirmation-method",
+                  name: "confirmation-method",
+                  label: { text: "Confirmation Method", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "skin-test", text: "Skin Test" },
+                    { value: "gamma", text: "Gamma Interferon" },
+                    { value: "post-mortem", text: "Post Mortem" },
+                    { value: "histology", text: "Histology" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "reporting-officer",
+                  name: "reporting-officer",
+                  label: { text: "Reporting Officer", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "officer1", text: "J. Smith (VVO)" },
+                    { value: "officer2", text: "A. Jones (SVO)" },
+                    { value: "officer3", text: "M. Brown (AVO)" }
+                  ]
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Detailed Report Content -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Report Details</h2>
+            </legend>
+
+            {{ govukWarningText({
+              text: "Ensure all information is accurate before submitting. False information may result in penalties.",
+              iconFallbackText: "Warning"
+            }) }}
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                {{ govukTextarea({
+                  name: "disease-description",
+                  id: "disease-description",
+                  label: { text: "Disease Description & Clinical Signs", classes: "govuk-label--s" },
+                  hint: { text: "Provide detailed description of clinical signs and disease progression" },
+                  rows: 4,
+                  value: "Three cattle tested positive for tuberculosis during routine annual test. Animals showed no clinical signs. Confirmed by skin test with reactor readings >4mm increase."
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "epidemiological-findings",
+                  id: "epidemiological-findings",
+                  label: { text: "Epidemiological Findings", classes: "govuk-label--s" },
+                  hint: { text: "Detail investigation findings and potential sources" },
+                  rows: 4,
+                  value: "No obvious source identified. Herd has been clear for 5 years. No recent cattle movements. Neighbouring farm clear on testing."
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "control-measures",
+                  id: "control-measures",
+                  label: { text: "Control Measures Implemented", classes: "govuk-label--s" },
+                  hint: { text: "List all measures taken to control disease spread" },
+                  rows: 4,
+                  value: "Movement restrictions imposed. Reactor animals identified for removal. Radial testing programme initiated within 3km radius."
+                }) }}
+              </div>
+            </div>
+
+            <!-- Laboratory Results -->
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "Laboratory Reference", classes: "govuk-label--s" },
+                  id: "lab-reference",
+                  name: "lab-reference",
+                  value: "LAB-2025-TB-001"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "sample-date",
+                  namePrefix: "sample-date",
+                  fieldset: {
+                    legend: { text: "Sample Collection Date", classes: "govuk-label--s" }
+                  },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2", value: "20" },
+                    { name: "month", classes: "govuk-input--width-2", value: "06" },
+                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "result-date",
+                  namePrefix: "result-date",
+                  fieldset: {
+                    legend: { text: "Result Date", classes: "govuk-label--s" }
+                  },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2", value: "24" },
+                    { name: "month", classes: "govuk-input--width-2", value: "06" },
+                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "laboratory",
+                  name: "laboratory",
+                  label: { text: "Testing Laboratory", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "apha-weybridge", text: "APHA Weybridge", selected: true },
+                    { value: "apha-lasswade", text: "APHA Lasswade" },
+                    { value: "private-lab", text: "Private Laboratory" }
+                  ]
+                }) }}
+              </div>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="govuk-grid-row govuk-!-margin-top-4">
+              <div class="govuk-grid-column-one-half">
+                {{ govukFileUpload({
+                  id: "supporting-documents",
+                  name: "supporting-documents",
+                  label: {
+                    text: "Supporting Documents",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Upload laboratory reports, photographs, or other supporting evidence (PDF, JPG, PNG, max 5MB)"
+                  }
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                <h3 class="govuk-heading-s">Uploaded Documents</h3>
+                <ul class="govuk-list">
+                  <li><a href="#" class="govuk-link">lab-report-TB-001.pdf</a> (245KB)</li>
+                  <li><a href="#" class="govuk-link">skin-test-results.pdf</a> (156KB)</li>
+                </ul>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Previous DRF History -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">DRF History</h2>
+            </legend>
+
+            {{ govukTable({
+              head: [
+                { text: "DRF Number" },
+                { text: "Type" },
+                { text: "Date Submitted" },
+                { text: "Status" },
+                { text: "Submitted By" },
+                { text: "Comments" },
+                { text: "Actions" }
+              ],
+              rows: [
+                [
+                  { text: "DRF-2024-045" },
+                  { text: "Initial Report" },
+                  { text: "15/12/2024" },
+                  { text: "Approved", classes: "govuk-tag govuk-tag--green" },
+                  { text: "J. Smith" },
+                  { text: "Clear test result" },
+                  {
+                    html: '<a href="#" class="govuk-link">View</a> | <a href="#" class="govuk-link">Download</a>'
+                  }
+                ],
+                [
+                  { text: "DRF-2023-123" },
+                  { text: "Closure Report" },
+                  { text: "20/08/2023" },
+                  { text: "Approved", classes: "govuk-tag govuk-tag--green" },
+                  { text: "A. Jones" },
+                  { text: "Case closed - no issues" },
+                  {
+                    html: '<a href="#" class="govuk-link">View</a> | <a href="#" class="govuk-link">Download</a>'
+                  }
+                ]
+              ]
+            }) }}
+          </fieldset>
+
+          <!-- Submission Actions -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Submission & Approval</h2>
+            </legend>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "submission-comments",
+                  id: "submission-comments",
+                  label: { text: "Submission Comments", classes: "govuk-label--s" },
+                  hint: { text: "Add any comments for the reviewing officer" },
+                  rows: 3
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukCheckboxes({
+                  idPrefix: "submission-checklist",
+                  name: "submission-checklist",
+                  fieldset: {
+                    legend: {
+                      text: "Pre-submission Checklist",
+                      classes: "govuk-label--s"
+                    }
+                  },
+                  items: [
+                    { value: "accurate", text: "Information is accurate and complete" },
+                    { value: "supporting-docs", text: "All supporting documents attached" },
+                    { value: "control-measures", text: "Control measures implemented" },
+                    { value: "notifications", text: "Required notifications made" }
+                  ]
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-button-group govuk-!-margin-top-4">
+              {{ govukButton({
+                text: "Save Draft"
+              }) }}
+              {{ govukButton({
+                text: "Submit for Review",
+                classes: "govuk-button--secondary"
+              }) }}
+              {{ govukButton({
+                text: "Print Preview",
+                classes: "govuk-button--secondary"
+              }) }}
+            </div>
+          </fieldset>
+
+        </form>
+      </div>
+
+      <!-- Actions and Tools Section -->
+      <div class="govuk-grid-row govuk-!-margin-top-6">
+        <div class="govuk-grid-column-two-thirds">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Actions</h2>
+            </legend>
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukSelect({
+                  id: "action",
+                  name: "action",
+                  label: { text: "Action", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "create-followup", text: "Create Follow-up Report" },
+                    { value: "amend-report", text: "Amend Current Report" },
+                    { value: "request-approval", text: "Request Approval" },
+                    { value: "generate-summary", text: "Generate Summary" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukSelect({
+                  id: "letter-type",
+                  name: "letter-type",
+                  label: { text: "Letter Type", classes: "govuk-label--s" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "disease-notification", text: "Disease Notification" },
+                    { value: "control-notice", text: "Control Measures Notice" },
+                    { value: "test-requirement", text: "Test Requirement Letter" },
+                    { value: "clearance-letter", text: "Clearance Letter" }
+                  ]
+                }) }}
+              </div>
+            </div>
+            <div class="govuk-button-group">
+              {{ govukButton({
+                text: "Generate Letter",
+                classes: "govuk-button--secondary"
+              }) }}
+            </div>
+          </fieldset>
+        </div>
+        
+        <!-- Tools Section -->
+        <div class="govuk-grid-column-one-third">
+          <h2 class="govuk-heading-m">Tools</h2>
+          <p class="govuk-body-s">DRF management tools</p>
+          <div class="govuk-button-group govuk-button-group--vertical">
+            {{ govukButton({
+              text: "Delete Draft",
+              classes: "govuk-button--warning"
+            }) }}
+            {{ govukButton({
+              text: "Edit Report",
+              classes: "govuk-button--secondary"
+            }) }}
+            {{ govukButton({
+              text: "Add / Amend",
+              classes: "govuk-button--secondary"
+            }) }}
+            {{ govukButton({
+              text: "Export History",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

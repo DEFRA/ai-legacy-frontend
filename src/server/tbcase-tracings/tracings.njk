@@ -1,5 +1,19 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+
 {% set breadcrumbs = [
   {
     text: "Home",
@@ -10,8 +24,8 @@
     href: "/tbcase/case-details"
   },
   {
-    text: pageTitle,
-    href: request.path
+    text: "Tracings",
+    href: "/tbcase/tracings"
   }
 ] %}
 
@@ -22,23 +36,473 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{ caption }}</span>
-      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
       
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - Contact Tracings</h1>
+      
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">CPH:</dt>
+              <dd class="govuk-summary-list__value">01/234/5678</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Nat Inc:</dt>
+              <dd class="govuk-summary-list__value">25/12345</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Keeper:</dt>
+              <dd class="govuk-summary-list__value">John Smith Farms Ltd</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Status:</dt>
+              <dd class="govuk-summary-list__value">Under Restriction</dd>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Service Navigation -->
+      {% set activePage = "tracings" %}
       {% include "includes/tb-service-navigation.html" %}
-      
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Information
-          </h2>
-        </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            Form fields to be implemented based on Slide6.png requirements.
-          </p>
-        </div>
+
+      <!-- Tracings Content -->
+      <div class="govuk-!-margin-top-6">
+        {{ govukInsetText({
+          text: "Contact tracing helps identify potential sources of TB infection and animals that may have been exposed."
+        }) }}
+
+        <form action="/tbcase/tracings" method="post" novalidate>
+          
+          <!-- Add New Tracing -->
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Record Contact Tracing</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukRadios({
+                  name: "tracing-type",
+                  fieldset: {
+                    legend: {
+                      text: "Tracing Type",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  items: [
+                    {
+                      value: "tracings-in",
+                      text: "Tracings In",
+                      hint: {
+                        text: "Animals moved to this holding"
+                      }
+                    },
+                    {
+                      value: "tracings-out",
+                      text: "Tracings Out", 
+                      hint: {
+                        text: "Animals moved from this holding"
+                      }
+                    },
+                    {
+                      value: "contiguous-premises",
+                      text: "Contiguous Premises",
+                      hint: {
+                        text: "Adjacent or nearby holdings"
+                      }
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukInput({
+                  label: {
+                    text: "Contact CPH",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "CPH of the contact holding"
+                  },
+                  id: "contact-cph",
+                  name: "contact-cph",
+                  classes: "govuk-input--width-15"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukInput({
+                  label: {
+                    text: "Contact Name",
+                    classes: "govuk-label--s"
+                  },
+                  id: "contact-name",
+                  name: "contact-name",
+                  classes: "govuk-input--width-30"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukInput({
+                  label: {
+                    text: "Address/Location",
+                    classes: "govuk-label--s"
+                  },
+                  id: "contact-address",
+                  name: "contact-address",
+                  classes: "govuk-input--width-30"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-third">
+                {{ govukDateInput({
+                  id: "contact-date",
+                  namePrefix: "contact-date",
+                  fieldset: {
+                    legend: {
+                      text: "Contact Date",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  hint: {
+                    text: "Date of contact or movement"
+                  },
+                  items: [
+                    {
+                      name: "day",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "month",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "year",
+                      classes: "govuk-input--width-4"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukInput({
+                  label: {
+                    text: "Number of Animals",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Animals involved in contact"
+                  },
+                  id: "number-animals",
+                  name: "number-animals",
+                  type: "number",
+                  classes: "govuk-input--width-5"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukSelect({
+                  id: "risk-level",
+                  name: "risk-level",
+                  label: {
+                    text: "Risk Level",
+                    classes: "govuk-label--s"
+                  },
+                  items: [
+                    {
+                      value: "",
+                      text: "Select risk level"
+                    },
+                    {
+                      value: "high",
+                      text: "High Risk"
+                    },
+                    {
+                      value: "medium",
+                      text: "Medium Risk"
+                    },
+                    {
+                      value: "low",
+                      text: "Low Risk"
+                    }
+                  ]
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukSelect({
+                  id: "investigation-status",
+                  name: "investigation-status",
+                  label: {
+                    text: "Investigation Status",
+                    classes: "govuk-label--s"
+                  },
+                  items: [
+                    {
+                      value: "",
+                      text: "Select status"
+                    },
+                    {
+                      value: "pending",
+                      text: "Pending Investigation"
+                    },
+                    {
+                      value: "in-progress",
+                      text: "Investigation In Progress"
+                    },
+                    {
+                      value: "completed",
+                      text: "Investigation Completed"
+                    },
+                    {
+                      value: "no-action",
+                      text: "No Action Required"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukInput({
+                  label: {
+                    text: "Investigating Officer",
+                    classes: "govuk-label--s"
+                  },
+                  id: "investigating-officer",
+                  name: "investigating-officer",
+                  classes: "govuk-input--width-20"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-!-margin-top-4">
+              {{ govukTextarea({
+                name: "tracing-notes",
+                id: "tracing-notes",
+                label: {
+                  text: "Investigation Notes",
+                  classes: "govuk-label--s"
+                },
+                hint: {
+                  text: "Details of the contact tracing investigation"
+                },
+                rows: 3
+              }) }}
+            </div>
+
+            <div class="govuk-button-group govuk-!-margin-top-4">
+              {{ govukButton({
+                text: "Add Tracing",
+                name: "action",
+                value: "add-tracing"
+              }) }}
+            </div>
+          </fieldset>
+
+          <!-- Current Tracings Table -->
+          <div class="govuk-!-margin-top-8">
+            <h3 class="govuk-heading-m">Recorded Tracings</h3>
+            
+            {% set tracingsTableRows = [
+              [
+                {
+                  text: "Tracings In"
+                },
+                {
+                  text: "02/567/8901"
+                },
+                {
+                  text: "Green Meadows Farm"
+                },
+                {
+                  text: "12/12/2024"
+                },
+                {
+                  text: "5"
+                },
+                {
+                  text: "High"
+                },
+                {
+                  text: "Completed"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="Edit tracing for Green Meadows Farm">Edit</a> | <a class="govuk-link" href="#" aria-label="View details for Green Meadows Farm">View</a>'
+                }
+              ],
+              [
+                {
+                  text: "Tracings Out"
+                },
+                {
+                  text: "03/789/0123"
+                },
+                {
+                  text: "Valley View Holdings"
+                },
+                {
+                  text: "20/11/2024"
+                },
+                {
+                  text: "8"
+                },
+                {
+                  text: "Medium"
+                },
+                {
+                  text: "In Progress"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="Edit tracing for Valley View Holdings">Edit</a> | <a class="govuk-link" href="#" aria-label="View details for Valley View Holdings">View</a>'
+                }
+              ],
+              [
+                {
+                  text: "Contiguous"
+                },
+                {
+                  text: "01/234/5679"
+                },
+                {
+                  text: "Adjacent Field Farm"
+                },
+                {
+                  text: "Ongoing"
+                },
+                {
+                  text: "N/A"
+                },
+                {
+                  text: "Low"
+                },
+                {
+                  text: "Pending"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="Edit tracing for Adjacent Field Farm">Edit</a> | <a class="govuk-link" href="#" aria-label="View details for Adjacent Field Farm">View</a>'
+                }
+              ]
+            ] %}
+
+            {{ govukTable({
+              head: [
+                {
+                  text: "Type"
+                },
+                {
+                  text: "Contact CPH"
+                },
+                {
+                  text: "Contact Name"
+                },
+                {
+                  text: "Contact Date"
+                },
+                {
+                  text: "Animals"
+                },
+                {
+                  text: "Risk Level"
+                },
+                {
+                  text: "Status"
+                },
+                {
+                  text: "Actions"
+                }
+              ],
+              rows: tracingsTableRows,
+              classes: "govuk-!-margin-top-4"
+            }) }}
+          </div>
+
+          <!-- Tracing Summary -->
+          <div class="govuk-!-margin-top-6">
+            <div class="govuk-summary-card">
+              <div class="govuk-summary-card__title-wrapper">
+                <h3 class="govuk-summary-card__title">Tracing Summary</h3>
+              </div>
+              <div class="govuk-summary-card__content">
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Total Tracings:</dt>
+                    <dd class="govuk-summary-list__value govuk-!-font-weight-bold">3</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Tracings In:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Tracings Out:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Contiguous:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                </div>
+                <div class="govuk-grid-row govuk-!-margin-top-2">
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">High Risk:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Medium Risk:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Low Risk:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Pending:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Investigation Tools -->
+          {{ govukDetails({
+            summaryText: "Investigation Tools",
+            html: '<p class="govuk-body">Additional tools to support contact tracing investigations:</p>
+                   <ul class="govuk-list govuk-list--bullet">
+                     <li><a href="#" class="govuk-link">Movement report generator</a></li>
+                     <li><a href="#" class="govuk-link">Risk assessment calculator</a></li>
+                     <li><a href="#" class="govuk-link">Contact mapping tool</a></li>
+                     <li><a href="#" class="govuk-link">Export tracing data</a></li>
+                   </ul>'
+          }) }}
+
+          <!-- Form Actions -->
+          <div class="govuk-button-group govuk-!-margin-top-6">
+            {{ govukButton({
+              text: "Save and continue",
+              type: "submit"
+            }) }}
+            
+            {{ govukButton({
+              text: "Save as draft",
+              classes: "govuk-button--secondary",
+              name: "action",
+              value: "draft"
+            }) }}
+          </div>
+        </form>
       </div>
     </div>
   </div>

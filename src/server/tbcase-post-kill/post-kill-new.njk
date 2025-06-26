@@ -1,0 +1,646 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+
+{% set breadcrumbs = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "TB Case Form",
+    href: "/tbcase/case-details"
+  },
+  {
+    text: "Post-Kill",
+    href: "/tbcase/post-kill"
+  }
+] %}
+
+{% block beforeContent %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
+      
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - Post-Mortem Examination</h1>
+      
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">CPH:</dt>
+              <dd class="govuk-summary-list__value">01/234/5678</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Nat Inc:</dt>
+              <dd class="govuk-summary-list__value">25/12345</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Keeper:</dt>
+              <dd class="govuk-summary-list__value">John Smith Farms Ltd</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Status:</dt>
+              <dd class="govuk-summary-list__value">Under Restriction</dd>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Navigation -->
+      {% set activePage = "post-kill" %}
+      {% include "includes/tb-service-navigation.html" %}
+
+      <!-- Post-Kill Content -->
+      <div class="govuk-!-margin-top-6">
+        {{ govukInsetText({
+          text: "Post-mortem examination results are critical for confirming TB diagnosis and understanding disease progression."
+        }) }}
+
+        <form action="/tbcase/post-kill" method="post" novalidate enctype="multipart/form-data">
+          
+          <!-- Examination Details -->
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Post-Mortem Examination</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: {
+                    text: "Eartag Number",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Animal identification number"
+                  },
+                  id: "eartag-number",
+                  name: "eartag-number",
+                  classes: "govuk-input--width-15"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "examination-date",
+                  namePrefix: "examination-date",
+                  fieldset: {
+                    legend: {
+                      text: "Examination Date",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  hint: {
+                    text: "Date of post-mortem examination"
+                  },
+                  items: [
+                    {
+                      name: "day",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "month",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "year",
+                      classes: "govuk-input--width-4"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: {
+                    text: "Examining Veterinarian",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Name of examining veterinarian"
+                  },
+                  id: "examining-vet",
+                  name: "examining-vet",
+                  classes: "govuk-input--width-20"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: {
+                    text: "Abattoir Location",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Location where examination took place"
+                  },
+                  id: "abattoir-location",
+                  name: "abattoir-location",
+                  classes: "govuk-input--width-20"
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Examination Findings -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              <h3 class="govuk-fieldset__heading">Examination Findings</h3>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukRadios({
+                  name: "tb-lesions-present",
+                  fieldset: {
+                    legend: {
+                      text: "TB Lesions Present",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  hint: {
+                    text: "Were visible TB lesions found during examination"
+                  },
+                  items: [
+                    {
+                      value: "yes",
+                      text: "Yes"
+                    },
+                    {
+                      value: "no",
+                      text: "No"
+                    },
+                    {
+                      value: "inconclusive",
+                      text: "Inconclusive"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukCheckboxes({
+                  name: "lesion-locations",
+                  fieldset: {
+                    legend: {
+                      text: "Lesion Locations",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  hint: {
+                    text: "Select all locations where lesions were found"
+                  },
+                  items: [
+                    {
+                      value: "lungs",
+                      text: "Lungs"
+                    },
+                    {
+                      value: "lymph-nodes",
+                      text: "Lymph Nodes"
+                    },
+                    {
+                      value: "liver",
+                      text: "Liver"
+                    },
+                    {
+                      value: "spleen",
+                      text: "Spleen"
+                    },
+                    {
+                      value: "other",
+                      text: "Other organs"
+                    }
+                  ]
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukSelect({
+                  id: "lesion-severity",
+                  name: "lesion-severity",
+                  label: {
+                    text: "Lesion Severity",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Overall severity of lesions observed"
+                  },
+                  items: [
+                    {
+                      value: "",
+                      text: "Select severity"
+                    },
+                    {
+                      value: "mild",
+                      text: "Mild"
+                    },
+                    {
+                      value: "moderate",
+                      text: "Moderate"
+                    },
+                    {
+                      value: "severe",
+                      text: "Severe"
+                    },
+                    {
+                      value: "extensive",
+                      text: "Extensive"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukInput({
+                  label: {
+                    text: "Number of Lesions",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Total count of visible lesions"
+                  },
+                  id: "lesion-count",
+                  name: "lesion-count",
+                  type: "number",
+                  classes: "govuk-input--width-5"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-!-margin-top-4">
+              {{ govukTextarea({
+                name: "examination-findings",
+                id: "examination-findings",
+                label: {
+                  text: "Detailed Examination Findings",
+                  classes: "govuk-label--s"
+                },
+                hint: {
+                  text: "Describe the lesions, their appearance, size, and distribution"
+                },
+                rows: 4
+              }) }}
+            </div>
+          </fieldset>
+
+          <!-- Sample Collection -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              <h3 class="govuk-fieldset__heading">Sample Collection</h3>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukCheckboxes({
+                  name: "samples-collected",
+                  fieldset: {
+                    legend: {
+                      text: "Samples Collected",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  hint: {
+                    text: "Select all sample types collected for laboratory analysis"
+                  },
+                  items: [
+                    {
+                      value: "lymph-node",
+                      text: "Lymph Node Tissue"
+                    },
+                    {
+                      value: "lung-tissue",
+                      text: "Lung Tissue"
+                    },
+                    {
+                      value: "lesion-material",
+                      text: "Lesion Material"
+                    },
+                    {
+                      value: "culture-swabs",
+                      text: "Culture Swabs"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukInput({
+                  label: {
+                    text: "Laboratory Reference",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Laboratory sample reference number"
+                  },
+                  id: "lab-reference",
+                  name: "lab-reference",
+                  classes: "govuk-input--width-15"
+                }) }}
+                
+                {{ govukInput({
+                  label: {
+                    text: "Laboratory Name",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Name of laboratory receiving samples"
+                  },
+                  id: "lab-name",
+                  name: "lab-name",
+                  classes: "govuk-input--width-20"
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Photo Documentation -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              <h3 class="govuk-fieldset__heading">Photo Documentation</h3>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukFileUpload({
+                  id: "lesion-photos",
+                  name: "lesion-photos",
+                  label: {
+                    text: "Lesion Photographs",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Upload photographs of lesions found (JPG, PNG, max 5MB each)"
+                  },
+                  accept: ".jpg,.jpeg,.png",
+                  attributes: {
+                    multiple: true
+                  }
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukFileUpload({
+                  id: "organ-photos",
+                  name: "organ-photos",
+                  label: {
+                    text: "Organ Photographs",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Upload photographs of affected organs (JPG, PNG, max 5MB each)"
+                  },
+                  accept: ".jpg,.jpeg,.png",
+                  attributes: {
+                    multiple: true
+                  }
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Laboratory Results -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              <h3 class="govuk-fieldset__heading">Laboratory Results</h3>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-third">
+                {{ govukSelect({
+                  id: "culture-result",
+                  name: "culture-result",
+                  label: {
+                    text: "Culture Result",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Result of mycobacterial culture"
+                  },
+                  items: [
+                    {
+                      value: "",
+                      text: "Select result"
+                    },
+                    {
+                      value: "positive",
+                      text: "Positive"
+                    },
+                    {
+                      value: "negative",
+                      text: "Negative"
+                    },
+                    {
+                      value: "pending",
+                      text: "Pending"
+                    },
+                    {
+                      value: "contaminated",
+                      text: "Contaminated"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukSelect({
+                  id: "pcr-result",
+                  name: "pcr-result",
+                  label: {
+                    text: "PCR Result",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "PCR test result for mycobacteria"
+                  },
+                  items: [
+                    {
+                      value: "",
+                      text: "Select result"
+                    },
+                    {
+                      value: "positive",
+                      text: "Positive"
+                    },
+                    {
+                      value: "negative",
+                      text: "Negative"
+                    },
+                    {
+                      value: "pending",
+                      text: "Pending"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukDateInput({
+                  id: "results-date",
+                  namePrefix: "results-date",
+                  fieldset: {
+                    legend: {
+                      text: "Results Date",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  hint: {
+                    text: "Date laboratory results were received"
+                  },
+                  items: [
+                    {
+                      name: "day",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "month",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "year",
+                      classes: "govuk-input--width-4"
+                    }
+                  ]
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-!-margin-top-4">
+              {{ govukTextarea({
+                name: "laboratory-notes",
+                id: "laboratory-notes",
+                label: {
+                  text: "Laboratory Notes",
+                  classes: "govuk-label--s"
+                },
+                hint: {
+                  text: "Additional notes from laboratory analysis"
+                },
+                rows: 3
+              }) }}
+            </div>
+          </fieldset>
+
+          <!-- Current Examinations Table -->
+          <div class="govuk-!-margin-top-8">
+            <h3 class="govuk-heading-m">Recorded Examinations</h3>
+            
+            {% set examinationsTableRows = [
+              [
+                {
+                  text: "UK123456789"
+                },
+                {
+                  text: "15/01/2025"
+                },
+                {
+                  text: "Dr. Sarah Wilson"
+                },
+                {
+                  text: "Yes"
+                },
+                {
+                  text: "Moderate"
+                },
+                {
+                  text: "Positive"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="View examination details for UK123456789">View</a> | <a class="govuk-link" href="#" aria-label="Edit examination for UK123456789">Edit</a>'
+                }
+              ],
+              [
+                {
+                  text: "UK987654321"
+                },
+                {
+                  text: "16/01/2025"
+                },
+                {
+                  text: "Dr. Mark Johnson"
+                },
+                {
+                  text: "No"
+                },
+                {
+                  text: "N/A"
+                },
+                {
+                  text: "Negative"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="View examination details for UK987654321">View</a> | <a class="govuk-link" href="#" aria-label="Edit examination for UK987654321">Edit</a>'
+                }
+              ]
+            ] %}
+
+            {{ govukTable({
+              head: [
+                {
+                  text: "Eartag Number"
+                },
+                {
+                  text: "Examination Date"
+                },
+                {
+                  text: "Examining Vet"
+                },
+                {
+                  text: "Lesions Present"
+                },
+                {
+                  text: "Severity"
+                },
+                {
+                  text: "Lab Result"
+                },
+                {
+                  text: "Actions"
+                }
+              ],
+              rows: examinationsTableRows,
+              classes: "govuk-!-margin-top-4"
+            }) }}
+          </div>
+
+          <!-- Form Actions -->
+          <div class="govuk-button-group govuk-!-margin-top-6">
+            {{ govukButton({
+              text: "Save examination",
+              type: "submit",
+              name: "action",
+              value: "save"
+            }) }}
+            
+            {{ govukButton({
+              text: "Save as draft",
+              classes: "govuk-button--secondary",
+              name: "action",
+              value: "draft"
+            }) }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

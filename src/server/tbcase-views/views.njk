@@ -1,5 +1,19 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+
 {% set breadcrumbs = [
   {
     text: "Home",
@@ -10,8 +24,8 @@
     href: "/tbcase/case-details"
   },
   {
-    text: pageTitle,
-    href: request.path
+    text: "Views",
+    href: "/tbcase/views"
   }
 ] %}
 
@@ -22,24 +36,568 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{ caption }}</span>
-      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
       
-      <!-- Service Navigation -->
-      {% include "includes/tb-service-navigation.html" %}
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - Views</h1>
       
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Information
-          </h2>
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
         </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            Form fields to be implemented based on Slide6.png requirements.
-          </p>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-!-font-weight-bold">Case ID:</dt>
+              <dd>TB001-2024</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-!-font-weight-bold">CPH:</dt>
+              <dd>12/345/6789</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-!-font-weight-bold">County:</dt>
+              <dd>Devon</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-!-font-weight-bold">Status:</dt>
+              <dd><strong class="govuk-tag govuk-tag--yellow">In Progress</strong></dd>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Tab Navigation -->
+      <nav class="govuk-tabs" data-module="govuk-tabs" role="tablist" aria-label="TB Case Form Sections">
+        <ul class="govuk-tabs__list">
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/case-details" role="tab" aria-selected="false">
+              Case Details
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/removals" role="tab" aria-selected="false">
+              Removals
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/eartags" role="tab" aria-selected="false">
+              Eartags
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/tracings" role="tab" aria-selected="false">
+              Tracings
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/allocations" role="tab" aria-selected="false">
+              Allocations
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/gis" role="tab" aria-selected="false">
+              GIS
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/drfs" role="tab" aria-selected="false">
+              DRFs
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/cons" role="tab" aria-selected="false">
+              Cons
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/post-kill" role="tab" aria-selected="false">
+              Post-Kill
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/radial-testing" role="tab" aria-selected="false">
+              Radial Testing
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="/tbcase/views" role="tab" aria-selected="true">
+              Views
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- View Options and Filters -->
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">View Options</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          
+          <form method="get" action="/tbcase/views" class="govuk-!-margin-bottom-4">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-third">
+                {{ govukSelect({
+                  id: "view-type",
+                  name: "view-type",
+                  label: {
+                    text: "View type",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Select how you want to view the case data"
+                  },
+                  items: [
+                    {
+                      value: "summary",
+                      text: "Summary view",
+                      selected: true
+                    },
+                    {
+                      value: "detailed",
+                      text: "Detailed view"
+                    },
+                    {
+                      value: "timeline",
+                      text: "Timeline view"
+                    },
+                    {
+                      value: "print",
+                      text: "Print view"
+                    }
+                  ]
+                }) }}
+              </div>
+              
+              <div class="govuk-grid-column-one-third">
+                {{ govukSelect({
+                  id: "filter-section",
+                  name: "filter-section",
+                  label: {
+                    text: "Filter by section",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Show data from specific sections only"
+                  },
+                  items: [
+                    {
+                      value: "all",
+                      text: "All sections",
+                      selected: true
+                    },
+                    {
+                      value: "case-details",
+                      text: "Case Details"
+                    },
+                    {
+                      value: "testing",
+                      text: "Testing & Results"
+                    },
+                    {
+                      value: "movements",
+                      text: "Animal Movements"
+                    },
+                    {
+                      value: "follow-up",
+                      text: "Follow-up Actions"
+                    }
+                  ]
+                }) }}
+              </div>
+              
+              <div class="govuk-grid-column-one-third">
+                <div class="govuk-form-group">
+                  <div class="govuk-button-group govuk-!-margin-top-6">
+                    {{ govukButton({
+                      text: "Apply filters",
+                      classes: "govuk-button--secondary",
+                      type: "submit"
+                    }) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <!-- Export Options -->
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Export to PDF",
+              classes: "govuk-button--secondary",
+              attributes: {
+                "onclick": "window.print()"
+              }
+            }) }}
+            
+            {{ govukButton({
+              text: "Export to Excel",
+              classes: "govuk-button--secondary"
+            }) }}
+            
+            {{ govukButton({
+              text: "Generate Report",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Case Summary View -->
+      <div class="govuk-summary-card" id="summary-view">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Summary</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          
+          {{ govukSummaryList({
+            rows: [
+              {
+                key: {
+                  text: "Case opened"
+                },
+                value: {
+                  text: "15 January 2024"
+                }
+              },
+              {
+                key: {
+                  text: "Last updated"
+                },
+                value: {
+                  text: "28 March 2024"
+                }
+              },
+              {
+                key: {
+                  text: "Herd size"
+                },
+                value: {
+                  text: "150 cattle"
+                }
+              },
+              {
+                key: {
+                  text: "Reactors found"
+                },
+                value: {
+                  text: "3 animals"
+                }
+              },
+              {
+                key: {
+                  text: "Animals removed"
+                },
+                value: {
+                  text: "3 animals"
+                }
+              },
+              {
+                key: {
+                  text: "Confirmation status"
+                },
+                value: {
+                  html: '<strong class="govuk-tag govuk-tag--yellow">Pending lab results</strong>'
+                }
+              }
+            ]
+          }) }}
+
+        </div>
+      </div>
+
+      <!-- Testing Timeline View -->
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Testing Timeline</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          
+          <ol class="govuk-list">
+            <li class="govuk-!-margin-bottom-4">
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-quarter">
+                  <strong>15 Jan 2024</strong>
+                </div>
+                <div class="govuk-grid-column-three-quarters">
+                  <p class="govuk-!-margin-bottom-1"><strong>Initial tuberculin test</strong></p>
+                  <p class="govuk-body-s govuk-!-margin-bottom-0">3 reactors identified from 150 head tested</p>
+                </div>
+              </div>
+            </li>
+            
+            <li class="govuk-!-margin-bottom-4">
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-quarter">
+                  <strong>18 Jan 2024</strong>
+                </div>
+                <div class="govuk-grid-column-three-quarters">
+                  <p class="govuk-!-margin-bottom-1"><strong>Reactors removed</strong></p>
+                  <p class="govuk-body-s govuk-!-margin-bottom-0">3 animals removed for slaughter and post-mortem</p>
+                </div>
+              </div>
+            </li>
+            
+            <li class="govuk-!-margin-bottom-4">
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-quarter">
+                  <strong>22 Jan 2024</strong>
+                </div>
+                <div class="govuk-grid-column-three-quarters">
+                  <p class="govuk-!-margin-bottom-1"><strong>Post-mortem examination</strong></p>
+                  <p class="govuk-body-s govuk-!-margin-bottom-0">Suspicious lesions found, samples sent for culture</p>
+                </div>
+              </div>
+            </li>
+            
+            <li class="govuk-!-margin-bottom-4">
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-quarter">
+                  <strong>15 Mar 2024</strong>
+                </div>
+                <div class="govuk-grid-column-three-quarters">
+                  <p class="govuk-!-margin-bottom-1"><strong>60-day retest</strong></p>
+                  <p class="govuk-body-s govuk-!-margin-bottom-0">Whole herd clear, no reactors found</p>
+                </div>
+              </div>
+            </li>
+            
+            <li>
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-quarter">
+                  <strong>28 Mar 2024</strong>
+                </div>
+                <div class="govuk-grid-column-three-quarters">
+                  <p class="govuk-!-margin-bottom-1"><strong>Laboratory results</strong></p>
+                  <p class="govuk-body-s govuk-!-margin-bottom-0">
+                    <strong class="govuk-tag govuk-tag--yellow">Pending</strong> - Culture results expected within 2 weeks
+                  </p>
+                </div>
+              </div>
+            </li>
+          </ol>
+
+        </div>
+      </div>
+
+      <!-- Animal Movement Summary -->
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Animal Movement Summary</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-s">Movements In (Last 60 days)</h3>
+              {{ govukTable({
+                head: [
+                  {
+                    text: "Date"
+                  },
+                  {
+                    text: "From CPH"
+                  },
+                  {
+                    text: "Animals"
+                  }
+                ],
+                rows: [
+                  [
+                    {
+                      text: "05 Dec 2023"
+                    },
+                    {
+                      text: "12/123/4567"
+                    },
+                    {
+                      text: "5 cattle"
+                    }
+                  ],
+                  [
+                    {
+                      text: "12 Nov 2023"
+                    },
+                    {
+                      text: "12/234/5678"
+                    },
+                    {
+                      text: "2 cattle"
+                    }
+                  ]
+                ]
+              }) }}
+            </div>
+            
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-s">Movements Out (Since case opened)</h3>
+              {{ govukTable({
+                head: [
+                  {
+                    text: "Date"
+                  },
+                  {
+                    text: "To CPH"
+                  },
+                  {
+                    text: "Animals"
+                  }
+                ],
+                rows: [
+                  [
+                    {
+                      text: "18 Jan 2024"
+                    },
+                    {
+                      text: "Abattoir"
+                    },
+                    {
+                      text: "3 cattle"
+                    }
+                  ]
+                ]
+              }) }}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Outstanding Actions -->
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Outstanding Actions</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          
+          {{ govukTable({
+            head: [
+              {
+                text: "Action"
+              },
+              {
+                text: "Due Date"
+              },
+              {
+                text: "Status"
+              },
+              {
+                text: "Assigned To"
+              }
+            ],
+            rows: [
+              [
+                {
+                  text: "Review culture results"
+                },
+                {
+                  text: "10 Apr 2024"
+                },
+                {
+                  html: '<strong class="govuk-tag govuk-tag--yellow">Pending</strong>'
+                },
+                {
+                  text: "J. Smith (Vet)"
+                }
+              ],
+              [
+                {
+                  text: "Schedule follow-up test"
+                },
+                {
+                  text: "15 May 2024"
+                },
+                {
+                  html: '<strong class="govuk-tag govuk-tag--grey">Scheduled</strong>'
+                },
+                {
+                  text: "Field Officer"
+                }
+              ],
+              [
+                {
+                  text: "Update movement restrictions"
+                },
+                {
+                  text: "Post results"
+                },
+                {
+                  html: '<strong class="govuk-tag govuk-tag--grey">Awaiting</strong>'
+                },
+                {
+                  text: "Admin Team"
+                }
+              ]
+            ]
+          }) }}
+
+        </div>
+      </div>
+
+      <!-- Print View Actions -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-6">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Print and Export Options</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          
+          <p class="govuk-body">Generate formatted reports for different purposes:</p>
+          
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Full case report",
+              classes: "govuk-button--secondary"
+            }) }}
+            
+            {{ govukButton({
+              text: "Testing summary",
+              classes: "govuk-button--secondary"
+            }) }}
+            
+            {{ govukButton({
+              text: "Movement report",
+              classes: "govuk-button--secondary"
+            }) }}
+            
+            {{ govukButton({
+              text: "Compliance certificate",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
+
+          {{ govukDetails({
+            summaryText: "Print formatting options",
+            text: "When printing or exporting, you can choose to include or exclude certain sections. Use the filter options above to customize what information is included in your report."
+          }) }}
+
+        </div>
+      </div>
+
     </div>
   </div>
+
+  <!-- Print-specific styling -->
+  <style media="print">
+    .govuk-tabs, .govuk-button, .govuk-button-group, .no-print {
+      display: none !important;
+    }
+    
+    .govuk-summary-card {
+      page-break-inside: avoid;
+      margin-bottom: 20px;
+    }
+    
+    .govuk-heading-l {
+      page-break-after: avoid;
+    }
+  </style>
+
 {% endblock %}

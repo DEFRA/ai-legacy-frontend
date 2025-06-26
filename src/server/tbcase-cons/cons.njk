@@ -1,5 +1,19 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
 {% set breadcrumbs = [
   {
     text: "Home",
@@ -10,8 +24,8 @@
     href: "/tbcase/case-details"
   },
   {
-    text: pageTitle,
-    href: request.path
+    text: "Cons",
+    href: "/tbcase/cons"
   }
 ] %}
 
@@ -22,23 +36,371 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{ caption }}</span>
-      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
       
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - Compliance Monitoring</h1>
+      
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">CPH:</dt>
+              <dd class="govuk-summary-list__value">01/234/5678</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Nat Inc:</dt>
+              <dd class="govuk-summary-list__value">25/12345</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Keeper:</dt>
+              <dd class="govuk-summary-list__value">John Smith Farms Ltd</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Status:</dt>
+              <dd class="govuk-summary-list__value">Under Restriction</dd>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Service Navigation -->
+      {% set activePage = "cons" %}
       {% include "includes/tb-service-navigation.html" %}
-      
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Information
-          </h2>
-        </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            Form fields to be implemented based on Slide6.png requirements.
-          </p>
-        </div>
+
+      <!-- Compliance Content -->
+      <div class="govuk-!-margin-top-6">
+        {{ govukInsetText({
+          text: "Monitor compliance with TB control requirements and regulatory obligations to ensure effective disease management."
+        }) }}
+
+        <form action="/tbcase/cons" method="post" novalidate>
+          
+          <!-- Compliance Requirements -->
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Compliance Requirements</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukSelect({
+                  id: "requirement-type",
+                  name: "requirement-type",
+                  label: {
+                    text: "Requirement Type",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Select the type of compliance requirement"
+                  },
+                  items: [
+                    {
+                      value: "",
+                      text: "Select requirement type"
+                    },
+                    {
+                      value: "animal-testing",
+                      text: "Animal Testing Requirements"
+                    },
+                    {
+                      value: "movement-restrictions",
+                      text: "Movement Restrictions"
+                    },
+                    {
+                      value: "premises-isolation",
+                      text: "Premises Isolation"
+                    },
+                    {
+                      value: "biosecurity-measures",
+                      text: "Biosecurity Measures"
+                    },
+                    {
+                      value: "record-keeping",
+                      text: "Record Keeping"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukInput({
+                  label: {
+                    text: "Requirement Description",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Brief description of the specific requirement"
+                  },
+                  id: "requirement-description",
+                  name: "requirement-description",
+                  classes: "govuk-input--width-30"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-third">
+                {{ govukDateInput({
+                  id: "compliance-date",
+                  namePrefix: "compliance-date",
+                  fieldset: {
+                    legend: {
+                      text: "Compliance Due Date",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  hint: {
+                    text: "Date by which compliance must be achieved"
+                  },
+                  items: [
+                    {
+                      name: "day",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "month",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "year",
+                      classes: "govuk-input--width-4"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukSelect({
+                  id: "compliance-status",
+                  name: "compliance-status",
+                  label: {
+                    text: "Compliance Status",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Current compliance status"
+                  },
+                  items: [
+                    {
+                      value: "",
+                      text: "Select status"
+                    },
+                    {
+                      value: "compliant",
+                      text: "Compliant"
+                    },
+                    {
+                      value: "non-compliant",
+                      text: "Non-Compliant"
+                    },
+                    {
+                      value: "pending",
+                      text: "Pending Assessment"
+                    },
+                    {
+                      value: "partial",
+                      text: "Partially Compliant"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukInput({
+                  label: {
+                    text: "Responsible Officer",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Officer responsible for monitoring compliance"
+                  },
+                  id: "responsible-officer",
+                  name: "responsible-officer",
+                  classes: "govuk-input--width-20"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-!-margin-top-4">
+              {{ govukTextarea({
+                name: "compliance-notes",
+                id: "compliance-notes",
+                label: {
+                  text: "Compliance Notes",
+                  classes: "govuk-label--s"
+                },
+                hint: {
+                  text: "Additional notes about compliance status or actions required"
+                },
+                rows: 3
+              }) }}
+            </div>
+
+            <div class="govuk-button-group govuk-!-margin-top-4">
+              {{ govukButton({
+                text: "Add Requirement",
+                name: "action",
+                value: "add-requirement"
+              }) }}
+            </div>
+          </fieldset>
+
+          <!-- Current Compliance Status -->
+          <div class="govuk-!-margin-top-8">
+            <h3 class="govuk-heading-m">Current Compliance Status</h3>
+            
+            {% set complianceTableRows = [
+              [
+                {
+                  text: "Animal Testing"
+                },
+                {
+                  text: "Annual TB testing required"
+                },
+                {
+                  text: "15/03/2025"
+                },
+                {
+                  html: '<strong class="govuk-tag govuk-tag--green">Compliant</strong>'
+                },
+                {
+                  text: "Dr. Wilson"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="View animal testing compliance details">View</a> | <a class="govuk-link" href="#" aria-label="Edit animal testing compliance">Edit</a>'
+                }
+              ],
+              [
+                {
+                  text: "Movement Restrictions"
+                },
+                {
+                  text: "No cattle movements off premises"
+                },
+                {
+                  text: "Ongoing"
+                },
+                {
+                  html: '<strong class="govuk-tag govuk-tag--red">Non-Compliant</strong>'
+                },
+                {
+                  text: "Inspector Jones"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="View movement restrictions compliance details">View</a> | <a class="govuk-link" href="#" aria-label="Edit movement restrictions compliance">Edit</a>'
+                }
+              ],
+              [
+                {
+                  text: "Biosecurity Measures"
+                },
+                {
+                  text: "Enhanced biosecurity protocols"
+                },
+                {
+                  text: "01/02/2025"
+                },
+                {
+                  html: '<strong class="govuk-tag govuk-tag--yellow">Pending</strong>'
+                },
+                {
+                  text: "Dr. Wilson"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="View biosecurity measures compliance details">View</a> | <a class="govuk-link" href="#" aria-label="Edit biosecurity measures compliance">Edit</a>'
+                }
+              ]
+            ] %}
+
+            {{ govukTable({
+              head: [
+                {
+                  text: "Requirement Type"
+                },
+                {
+                  text: "Description"
+                },
+                {
+                  text: "Due Date"
+                },
+                {
+                  text: "Status"
+                },
+                {
+                  text: "Responsible Officer"
+                },
+                {
+                  text: "Actions"
+                }
+              ],
+              rows: complianceTableRows,
+              classes: "govuk-!-margin-top-4"
+            }) }}
+          </div>
+
+          <!-- Compliance Summary -->
+          <div class="govuk-!-margin-top-6">
+            <div class="govuk-summary-card">
+              <div class="govuk-summary-card__title-wrapper">
+                <h3 class="govuk-summary-card__title">Compliance Summary</h3>
+              </div>
+              <div class="govuk-summary-card__content">
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Total Requirements:</dt>
+                    <dd class="govuk-summary-list__value govuk-!-font-weight-bold">3</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Compliant:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Non-Compliant:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Pending:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Non-Compliance Actions -->
+          {{ govukDetails({
+            summaryText: "Non-Compliance Actions",
+            html: '<p class="govuk-body">Available actions for non-compliance issues:</p>
+                   <ul class="govuk-list govuk-list--bullet">
+                     <li><a href="#" class="govuk-link">Issue compliance notice</a></li>
+                     <li><a href="#" class="govuk-link">Schedule inspection visit</a></li>
+                     <li><a href="#" class="govuk-link">Generate violation report</a></li>
+                     <li><a href="#" class="govuk-link">Escalate to enforcement team</a></li>
+                   </ul>'
+          }) }}
+
+          <!-- Form Actions -->
+          <div class="govuk-button-group govuk-!-margin-top-6">
+            {{ govukButton({
+              text: "Save and continue",
+              type: "submit"
+            }) }}
+            
+            {{ govukButton({
+              text: "Save as draft",
+              classes: "govuk-button--secondary",
+              name: "action",
+              value: "draft"
+            }) }}
+          </div>
+        </form>
       </div>
     </div>
   </div>

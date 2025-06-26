@@ -1,5 +1,18 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
 {% set breadcrumbs = [
   {
     text: "Home",
@@ -10,8 +23,8 @@
     href: "/tbcase/case-details"
   },
   {
-    text: pageTitle,
-    href: request.path
+    text: "Post-Kill",
+    href: "/tbcase/post-kill"
   }
 ] %}
 
@@ -22,24 +35,600 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{ caption }}</span>
-      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
       
-      <!-- Service Navigation -->
-      {% include "includes/tb-service-navigation.html" %}
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - Post-Kill</h1>
       
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Information
-          </h2>
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
         </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            Form fields to be implemented based on Slide6.png requirements.
-          </p>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-!-font-weight-bold">Case ID:</dt>
+              <dd>TB001-2024</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-!-font-weight-bold">CPH:</dt>
+              <dd>12/345/6789</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-!-font-weight-bold">County:</dt>
+              <dd>Devon</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-!-font-weight-bold">Status:</dt>
+              <dd><strong class="govuk-tag govuk-tag--yellow">In Progress</strong></dd>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Tab Navigation -->
+      <nav class="govuk-tabs" data-module="govuk-tabs" role="tablist" aria-label="TB Case Form Sections">
+        <ul class="govuk-tabs__list">
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/case-details" role="tab" aria-selected="false">
+              Case Details
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/removals" role="tab" aria-selected="false">
+              Removals
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/eartags" role="tab" aria-selected="false">
+              Eartags
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/tracings" role="tab" aria-selected="false">
+              Tracings
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/allocations" role="tab" aria-selected="false">
+              Allocations
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/gis" role="tab" aria-selected="false">
+              GIS
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/drfs" role="tab" aria-selected="false">
+              DRFs
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/cons" role="tab" aria-selected="false">
+              Cons
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="/tbcase/post-kill" role="tab" aria-selected="true">
+              Post-Kill
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/radial-testing" role="tab" aria-selected="false">
+              Radial Testing
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/tbcase/views" role="tab" aria-selected="false">
+              Views
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Form Content -->
+      <form method="post" action="/tbcase/post-kill" novalidate>
+        
+        <!-- Post-Mortem Examination Section -->
+        <div class="govuk-summary-card">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title">Post-Mortem Examination</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            
+            {{ govukDateInput({
+              id: "post-mortem-date",
+              name: "post-mortem-date",
+              fieldset: {
+                legend: {
+                  text: "Date of post-mortem examination",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "For example, 27 3 2024"
+              },
+              items: [
+                {
+                  classes: "govuk-input--width-2",
+                  name: "day",
+                  value: ""
+                },
+                {
+                  classes: "govuk-input--width-2",
+                  name: "month",
+                  value: ""
+                },
+                {
+                  classes: "govuk-input--width-4",
+                  name: "year",
+                  value: ""
+                }
+              ]
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "Examination location",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "Enter the location where post-mortem examination was conducted"
+              },
+              id: "examination-location",
+              name: "examination-location",
+              classes: "govuk-input--width-20"
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "Veterinary surgeon name",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "Name of the veterinary surgeon conducting the examination"
+              },
+              id: "vet-surgeon",
+              name: "vet-surgeon",
+              classes: "govuk-input--width-20"
+            }) }}
+
+            {{ govukRadios({
+              name: "tb-lesions-found",
+              fieldset: {
+                legend: {
+                  text: "TB lesions found?",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "Select whether tuberculosis lesions were found during examination"
+              },
+              items: [
+                {
+                  value: "yes",
+                  text: "Yes"
+                },
+                {
+                  value: "no",
+                  text: "No"
+                },
+                {
+                  value: "inconclusive",
+                  text: "Inconclusive"
+                }
+              ]
+            }) }}
+
+          </div>
+        </div>
+
+        <!-- Pathological Findings Section -->
+        <div class="govuk-summary-card">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title">Pathological Findings</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            
+            {{ govukCheckboxes({
+              name: "lesion-locations",
+              fieldset: {
+                legend: {
+                  text: "Lesion locations",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "Select all locations where lesions were observed"
+              },
+              items: [
+                {
+                  value: "lungs",
+                  text: "Lungs"
+                },
+                {
+                  value: "lymph-nodes",
+                  text: "Lymph nodes"
+                },
+                {
+                  value: "liver",
+                  text: "Liver"
+                },
+                {
+                  value: "kidney",
+                  text: "Kidney"
+                },
+                {
+                  value: "spleen",
+                  text: "Spleen"
+                },
+                {
+                  value: "other",
+                  text: "Other organs"
+                }
+              ]
+            }) }}
+
+            {{ govukTextarea({
+              name: "pathological-description",
+              id: "pathological-description",
+              label: {
+                text: "Detailed pathological description",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "Provide detailed description of pathological findings"
+              },
+              rows: 5
+            }) }}
+
+            {{ govukSelect({
+              id: "lesion-severity",
+              name: "lesion-severity",
+              label: {
+                text: "Lesion severity",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "Select the overall severity of lesions found"
+              },
+              items: [
+                {
+                  value: "",
+                  text: "Select severity"
+                },
+                {
+                  value: "mild",
+                  text: "Mild"
+                },
+                {
+                  value: "moderate",
+                  text: "Moderate"
+                },
+                {
+                  value: "severe",
+                  text: "Severe"
+                },
+                {
+                  value: "extensive",
+                  text: "Extensive"
+                }
+              ]
+            }) }}
+
+          </div>
+        </div>
+
+        <!-- Sample Collection Section -->
+        <div class="govuk-summary-card">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title">Sample Collection</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            
+            {{ govukCheckboxes({
+              name: "samples-collected",
+              fieldset: {
+                legend: {
+                  text: "Samples collected for laboratory testing",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "Select all sample types collected"
+              },
+              items: [
+                {
+                  value: "tissue-culture",
+                  text: "Tissue for culture"
+                },
+                {
+                  value: "tissue-histology",
+                  text: "Tissue for histology"
+                },
+                {
+                  value: "lymph-node",
+                  text: "Lymph node samples"
+                },
+                {
+                  value: "other-tissue",
+                  text: "Other tissue samples"
+                }
+              ]
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "Laboratory reference number",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "Enter the laboratory reference number for submitted samples"
+              },
+              id: "lab-reference",
+              name: "lab-reference",
+              classes: "govuk-input--width-20"
+            }) }}
+
+            {{ govukDateInput({
+              id: "sample-submission-date",
+              name: "sample-submission-date",
+              fieldset: {
+                legend: {
+                  text: "Date samples submitted to laboratory",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "For example, 27 3 2024"
+              },
+              items: [
+                {
+                  classes: "govuk-input--width-2",
+                  name: "day",
+                  value: ""
+                },
+                {
+                  classes: "govuk-input--width-2",
+                  name: "month",
+                  value: ""
+                },
+                {
+                  classes: "govuk-input--width-4",
+                  name: "year",
+                  value: ""
+                }
+              ]
+            }) }}
+
+          </div>
+        </div>
+
+        <!-- Laboratory Results Section -->
+        <div class="govuk-summary-card">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title">Laboratory Results</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            
+            {{ govukRadios({
+              name: "culture-result",
+              fieldset: {
+                legend: {
+                  text: "Culture result",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "Select the result of bacterial culture"
+              },
+              items: [
+                {
+                  value: "positive",
+                  text: "Positive"
+                },
+                {
+                  value: "negative",
+                  text: "Negative"
+                },
+                {
+                  value: "pending",
+                  text: "Pending"
+                },
+                {
+                  value: "contaminated",
+                  text: "Contaminated"
+                }
+              ]
+            }) }}
+
+            {{ govukRadios({
+              name: "histology-result",
+              fieldset: {
+                legend: {
+                  text: "Histology result",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "Select the result of histological examination"
+              },
+              items: [
+                {
+                  value: "compatible",
+                  text: "Compatible with TB"
+                },
+                {
+                  value: "not-compatible",
+                  text: "Not compatible with TB"
+                },
+                {
+                  value: "pending",
+                  text: "Pending"
+                },
+                {
+                  value: "inconclusive",
+                  text: "Inconclusive"
+                }
+              ]
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "Bacterial strain type",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "Enter strain type if culture positive (e.g., M. bovis, M. tuberculosis)"
+              },
+              id: "strain-type",
+              name: "strain-type",
+              classes: "govuk-input--width-20"
+            }) }}
+
+            {{ govukDateInput({
+              id: "results-received-date",
+              name: "results-received-date",
+              fieldset: {
+                legend: {
+                  text: "Date results received",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "For example, 27 3 2024"
+              },
+              items: [
+                {
+                  classes: "govuk-input--width-2",
+                  name: "day",
+                  value: ""
+                },
+                {
+                  classes: "govuk-input--width-2",
+                  name: "month",
+                  value: ""
+                },
+                {
+                  classes: "govuk-input--width-4",
+                  name: "year",
+                  value: ""
+                }
+              ]
+            }) }}
+
+          </div>
+        </div>
+
+        <!-- Follow-up Actions Section -->
+        <div class="govuk-summary-card">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title">Follow-up Actions</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            
+            {{ govukCheckboxes({
+              name: "follow-up-actions",
+              fieldset: {
+                legend: {
+                  text: "Required follow-up actions",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "Select all follow-up actions required based on findings"
+              },
+              items: [
+                {
+                  value: "trace-on-movements",
+                  text: "Trace-on movements investigation"
+                },
+                {
+                  value: "trace-back-movements",
+                  text: "Trace-back movements investigation"
+                },
+                {
+                  value: "extended-testing",
+                  text: "Extended herd testing"
+                },
+                {
+                  value: "radial-testing",
+                  text: "Radial testing of neighboring herds"
+                },
+                {
+                  value: "wildlife-survey",
+                  text: "Wildlife survey"
+                },
+                {
+                  value: "environmental-sampling",
+                  text: "Environmental sampling"
+                }
+              ]
+            }) }}
+
+            {{ govukTextarea({
+              name: "additional-notes",
+              id: "additional-notes",
+              label: {
+                text: "Additional notes and recommendations",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "Enter any additional notes, recommendations, or follow-up actions required"
+              },
+              rows: 4
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "Next review date",
+                classes: "govuk-label--s"
+              },
+              hint: {
+                text: "Enter the date when this case should be reviewed next"
+              },
+              id: "next-review-date",
+              name: "next-review-date",
+              classes: "govuk-input--width-10"
+            }) }}
+
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="govuk-button-group govuk-!-margin-top-6">
+          {{ govukButton({
+            text: "Save and continue",
+            type: "submit"
+          }) }}
+          
+          {{ govukButton({
+            text: "Save as draft",
+            classes: "govuk-button--secondary",
+            name: "action",
+            value: "draft"
+          }) }}
+          
+          <a class="govuk-link" href="/tbcase/case-details">Cancel</a>
+        </div>
+
+      </form>
     </div>
   </div>
 {% endblock %}

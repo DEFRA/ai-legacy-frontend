@@ -8,9 +8,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
-{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
-{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% set breadcrumbs = [
   {
@@ -28,11 +29,6 @@
 ] %}
 
 {% block beforeContent %}
-  <!-- Skip link for screen readers -->
-  {{ govukSkipLink({
-    href: "#main-content",
-    text: "Skip to main content"
-  }) }}
   {{ super() }}
 {% endblock %}
 
@@ -47,7 +43,7 @@
       </div>
       
       <span class="govuk-caption-l">TBCMS</span>
-      <h1 class="govuk-heading-l">TB Case Form - Ear Tags</h1>
+      <h1 class="govuk-heading-l">TB Case Form - Eartag Management</h1>
       
       <!-- Case Context Header -->
       <div class="govuk-summary-card govuk-!-margin-bottom-4">
@@ -56,32 +52,21 @@
         </div>
         <div class="govuk-summary-card__content">
           <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              {{ govukInput({
-                label: {
-                  text: "CPH Number",
-                  classes: "govuk-label--s"
-                },
-                id: "cph-number",
-                name: "cph-number",
-                value: "01/234/5678",
-                classes: "govuk-!-margin-bottom-0"
-              }) }}
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">CPH:</dt>
+              <dd class="govuk-summary-list__value">01/234/5678</dd>
             </div>
-            <div class="govuk-grid-column-one-half">
-              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Auto Populated Incident List</h3>
-              <ul class="govuk-list">
-                <li class="govuk-!-margin-bottom-2">
-                  <a href="/tbcase/case-details?incident=25/12345" class="govuk-link">
-                    <strong>25/12345</strong> (Current)
-                  </a>
-                </li>
-                <li class="govuk-!-margin-bottom-2">
-                  <a href="/tbcase/case-details?incident=24/98765" class="govuk-link">
-                    24/98765 (Previous)
-                  </a>
-                </li>
-              </ul>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Nat Inc:</dt>
+              <dd class="govuk-summary-list__value">25/12345</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Keeper:</dt>
+              <dd class="govuk-summary-list__value">John Smith Farms Ltd</dd>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              <dt class="govuk-summary-list__key">Status:</dt>
+              <dd class="govuk-summary-list__value">Under Restriction</dd>
             </div>
           </div>
         </div>
@@ -93,922 +78,480 @@
 
       <!-- Eartags Content -->
       <div class="govuk-!-margin-top-6">
-        <form action="#" method="post">
+        {{ govukInsetText({
+          text: "All cattle over 27 months must be identified with approved eartags before movement or testing."
+        }) }}
+
+        <form action="/tbcase/eartags" method="post" novalidate>
           
-          <!-- Ear Tag Summary Section -->
+          <!-- Add/Update Eartag -->
           <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Ear Tag Summary</h2>
+              <h2 class="govuk-fieldset__heading">Record Eartag Information</h2>
             </legend>
             
             <div class="govuk-grid-row">
               <div class="govuk-grid-column-one-quarter">
                 {{ govukInput({
-                  label: { text: "Total Animals", classes: "govuk-label--s" },
-                  id: "total-animals",
-                  name: "total-animals",
-                  value: "150",
-                  attributes: { readonly: "readonly" }
+                  label: {
+                    text: "Eartag Number",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "UK followed by 12 digits"
+                  },
+                  id: "eartag-number",
+                  name: "eartag-number",
+                  classes: "govuk-input--width-15"
                 }) }}
               </div>
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukInput({
-                  label: { text: "Tagged Animals", classes: "govuk-label--s" },
-                  id: "tagged-animals",
-                  name: "tagged-animals",
-                  value: "147",
-                  attributes: { readonly: "readonly" }
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukInput({
-                  label: { text: "Missing Tags", classes: "govuk-label--s" },
-                  id: "missing-tags",
-                  name: "missing-tags",
-                  value: "3",
-                  classes: "govuk-input--error",
-                  attributes: { readonly: "readonly" }
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukInput({
-                  label: { text: "Replacement Tags", classes: "govuk-label--s" },
-                  id: "replacement-tags",
-                  name: "replacement-tags",
-                  value: "2"
-                }) }}
-              </div>
-            </div>
-
-            <!-- Tag Management Options -->
-            <div class="govuk-grid-row">
               <div class="govuk-grid-column-one-quarter">
                 {{ govukSelect({
-                  id: "tag-supplier",
-                  name: "tag-supplier",
-                  label: { text: "Tag Supplier", classes: "govuk-label--s" },
+                  id: "animal-type",
+                  name: "animal-type",
+                  label: {
+                    text: "Animal Type",
+                    classes: "govuk-label--s"
+                  },
                   items: [
-                    { value: "", text: "Please select" },
-                    { value: "defra", text: "DEFRA Official", selected: true },
-                    { value: "approved1", text: "Approved Supplier 1" },
-                    { value: "approved2", text: "Approved Supplier 2" }
+                    {
+                      value: "",
+                      text: "Select type"
+                    },
+                    {
+                      value: "beef-cattle",
+                      text: "Beef Cattle"
+                    },
+                    {
+                      value: "dairy-cattle",
+                      text: "Dairy Cattle"
+                    },
+                    {
+                      value: "breeding-bull",
+                      text: "Breeding Bull"
+                    },
+                    {
+                      value: "calf",
+                      text: "Calf"
+                    }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "sex",
+                  name: "sex",
+                  label: {
+                    text: "Sex",
+                    classes: "govuk-label--s"
+                  },
+                  items: [
+                    {
+                      value: "",
+                      text: "Select sex"
+                    },
+                    {
+                      value: "male",
+                      text: "Male"
+                    },
+                    {
+                      value: "female",
+                      text: "Female"
+                    }
                   ]
                 }) }}
               </div>
               <div class="govuk-grid-column-one-quarter">
                 {{ govukInput({
-                  label: { text: "Tag Batch Number", classes: "govuk-label--s" },
-                  id: "tag-batch",
-                  name: "tag-batch",
-                  value: "TB2025001"
+                  label: {
+                    text: "Breed",
+                    classes: "govuk-label--s"
+                  },
+                  id: "breed",
+                  name: "breed",
+                  classes: "govuk-input--width-15"
                 }) }}
               </div>
-              <div class="govuk-grid-column-one-quarter">
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-third">
                 {{ govukDateInput({
-                  id: "tag-application-date",
-                  namePrefix: "tag-application-date",
+                  id: "date-of-birth",
+                  namePrefix: "date-of-birth",
                   fieldset: {
-                    legend: { text: "Tag Application Date", classes: "govuk-label--s" }
+                    legend: {
+                      text: "Date of Birth",
+                      classes: "govuk-fieldset__legend--s"
+                    }
+                  },
+                  hint: {
+                    text: "For example, 15 6 2023"
                   },
                   items: [
-                    { name: "day", classes: "govuk-input--width-2", value: "15" },
-                    { name: "month", classes: "govuk-input--width-2", value: "03" },
-                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
+                    {
+                      name: "day",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "month",
+                      classes: "govuk-input--width-2"
+                    },
+                    {
+                      name: "year",
+                      classes: "govuk-input--width-4"
+                    }
                   ]
                 }) }}
               </div>
-              <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-grid-column-one-third">
+                {{ govukInput({
+                  label: {
+                    text: "Dam Eartag",
+                    classes: "govuk-label--s"
+                  },
+                  hint: {
+                    text: "Mother's eartag number"
+                  },
+                  id: "dam-eartag",
+                  name: "dam-eartag",
+                  classes: "govuk-input--width-15"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
                 {{ govukSelect({
-                  id: "tag-status-filter",
-                  name: "tag-status-filter",
-                  label: { text: "Filter by Status", classes: "govuk-label--s" },
+                  id: "current-status",
+                  name: "current-status",
+                  label: {
+                    text: "Current Status",
+                    classes: "govuk-label--s"
+                  },
                   items: [
-                    { value: "all", text: "All Tags", selected: true },
-                    { value: "active", text: "Active" },
-                    { value: "missing", text: "Missing" },
-                    { value: "replaced", text: "Replaced" }
+                    {
+                      value: "",
+                      text: "Select status"
+                    },
+                    {
+                      value: "on-holding",
+                      text: "On Holding"
+                    },
+                    {
+                      value: "removed",
+                      text: "Removed"
+                    },
+                    {
+                      value: "dead",
+                      text: "Dead"
+                    },
+                    {
+                      value: "missing",
+                      text: "Missing"
+                    }
                   ]
                 }) }}
               </div>
             </div>
-          </fieldset>
 
-          <!-- Individual Ear Tag Management -->
-          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Individual Ear Tag Details</h2>
-            </legend>
-
-            <div class="govuk-!-margin-bottom-4">
-              <div class="govuk-button-group">
-                {{ govukButton({
-                  text: "Add New Tag",
-                  classes: "govuk-button--secondary"
-                }) }}
-                {{ govukButton({
-                  text: "Replace Tag",
-                  classes: "govuk-button--secondary"
-                }) }}
-                {{ govukButton({
-                  text: "Mark as Missing",
-                  classes: "govuk-button--warning"
-                }) }}
-                {{ govukButton({
-                  text: "Export Tag Data",
-                  classes: "govuk-button--secondary"
-                }) }}
+            <!-- TB Testing Information -->
+            <fieldset class="govuk-fieldset govuk-!-margin-top-4">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                <h3 class="govuk-fieldset__heading">TB Testing Information</h3>
+              </legend>
+              
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+                  {{ govukDateInput({
+                    id: "last-test-date",
+                    namePrefix: "last-test-date",
+                    fieldset: {
+                      legend: {
+                        text: "Last Test Date",
+                        classes: "govuk-fieldset__legend--s"
+                      }
+                    },
+                    items: [
+                      {
+                        name: "day",
+                        classes: "govuk-input--width-2"
+                      },
+                      {
+                        name: "month",
+                        classes: "govuk-input--width-2"
+                      },
+                      {
+                        name: "year",
+                        classes: "govuk-input--width-4"
+                      }
+                    ]
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-third">
+                  {{ govukSelect({
+                    id: "test-result",
+                    name: "test-result",
+                    label: {
+                      text: "Test Result",
+                      classes: "govuk-label--s"
+                    },
+                    items: [
+                      {
+                        value: "",
+                        text: "Select result"
+                      },
+                      {
+                        value: "negative",
+                        text: "Negative"
+                      },
+                      {
+                        value: "reactor",
+                        text: "Reactor"
+                      },
+                      {
+                        value: "inconclusive",
+                        text: "Inconclusive"
+                      },
+                      {
+                        value: "not-tested",
+                        text: "Not Tested"
+                      }
+                    ]
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-third">
+                  {{ govukInput({
+                    label: {
+                      text: "Test Type",
+                      classes: "govuk-label--s"
+                    },
+                    id: "test-type",
+                    name: "test-type",
+                    classes: "govuk-input--width-15"
+                  }) }}
+                </div>
               </div>
+            </fieldset>
+
+            <div class="govuk-!-margin-top-4">
+              {{ govukTextarea({
+                name: "eartag-notes",
+                id: "eartag-notes",
+                label: {
+                  text: "Additional Notes",
+                  classes: "govuk-label--s"
+                },
+                hint: {
+                  text: "Any additional information about this animal"
+                },
+                rows: 3
+              }) }}
             </div>
 
-            {{ govukTable({
-              head: [
-                { text: "Select", classes: "govuk-!-width-one-tenth" },
-                { text: "Animal ID" },
-                { text: "Primary Tag" },
-                { text: "Secondary Tag" },
-                { text: "Tag Status" },
-                { text: "Date Applied" },
-                { text: "Applied By" },
-                { text: "Notes" },
-                { text: "Actions" }
-              ],
-              rows: [
-                [
-                  {
-                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
-                             <input class="govuk-checkboxes__input" id="select-tag-1" name="select-tags" type="checkbox" value="A001">
-                             <label class="govuk-label govuk-checkboxes__label" for="select-tag-1"><span class="govuk-visually-hidden">Select animal A001</span></label>
-                           </div>'
-                  },
-                  { text: "A001" },
-                  { text: "UK123456789" },
-                  { text: "UK123456790" },
-                  { text: "Active", classes: "govuk-tag govuk-tag--green" },
-                  { text: "01/01/2024" },
-                  { text: "J. Smith" },
-                  { text: "Original tags" },
-                  {
-                    html: '<a href="#" class="govuk-link">Edit</a> | <a href="#" class="govuk-link">Replace</a>'
-                  }
-                ],
-                [
-                  {
-                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
-                             <input class="govuk-checkboxes__input" id="select-tag-2" name="select-tags" type="checkbox" value="A002">
-                             <label class="govuk-label govuk-checkboxes__label" for="select-tag-2"><span class="govuk-visually-hidden">Select animal A002</span></label>
-                           </div>'
-                  },
-                  { text: "A002" },
-                  { text: "UK987654321" },
-                  { text: "UK987654322" },
-                  { text: "Active", classes: "govuk-tag govuk-tag--green" },
-                  { text: "01/01/2024" },
-                  { text: "J. Smith" },
-                  { text: "Original tags" },
-                  {
-                    html: '<a href="#" class="govuk-link">Edit</a> | <a href="#" class="govuk-link">Replace</a>'
-                  }
-                ],
-                [
-                  {
-                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
-                             <input class="govuk-checkboxes__input" id="select-tag-3" name="select-tags" type="checkbox" value="A003">
-                             <label class="govuk-label govuk-checkboxes__label" for="select-tag-3"><span class="govuk-visually-hidden">Select animal A003</span></label>
-                           </div>'
-                  },
-                  { text: "A003" },
-                  { text: "UK555666777" },
-                  { text: "MISSING" },
-                  { text: "Missing", classes: "govuk-tag govuk-tag--red" },
-                  { text: "01/01/2024" },
-                  { text: "J. Smith" },
-                  { text: "Secondary tag lost" },
-                  {
-                    html: '<a href="#" class="govuk-link">Edit</a> | <a href="#" class="govuk-link">Replace</a>'
-                  }
-                ],
-                [
-                  {
-                    html: '<div class="govuk-checkboxes__item govuk-checkboxes--small">
-                             <input class="govuk-checkboxes__input" id="select-tag-4" name="select-tags" type="checkbox" value="A004">
-                             <label class="govuk-label govuk-checkboxes__label" for="select-tag-4"><span class="govuk-visually-hidden">Select animal A004</span></label>
-                           </div>'
-                  },
-                  { text: "A004" },
-                  { text: "UK111222333" },
-                  { text: "UK999888777" },
-                  { text: "Replaced", classes: "govuk-tag govuk-tag--yellow" },
-                  { text: "15/03/2025" },
-                  { text: "A. Jones" },
-                  { text: "Replacement after damage" },
-                  {
-                    html: '<a href="#" class="govuk-link">Edit</a> | <a href="#" class="govuk-link">History</a>'
-                  }
-                ]
-              ]
-            }) }}
-          </fieldset>
-
-          <!-- Tag Compliance and Reporting -->
-          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Compliance & Reporting</h2>
-            </legend>
-            
-            <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-half">
-                {{ govukTextarea({
-                  name: "tag-compliance-notes",
-                  id: "tag-compliance-notes",
-                  label: { text: "Compliance Notes", classes: "govuk-label--s" },
-                  hint: { text: "Record any compliance issues or observations" },
-                  rows: 4
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-half">
-                {{ govukTextarea({
-                  name: "tag-action-notes",
-                  id: "tag-action-notes",
-                  label: { text: "Actions Required", classes: "govuk-label--s" },
-                  hint: { text: "Note any follow-up actions needed" },
-                  rows: 4,
-                  value: "Replace missing secondary tag for animal A003"
-                }) }}
-              </div>
-            </div>
-
-            <!-- Compliance Statistics -->
-            <div class="govuk-grid-row govuk-!-margin-top-4">
-              <div class="govuk-grid-column-full">
-                <h3 class="govuk-heading-s">Compliance Summary</h3>
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
-                  <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Compliance Rate</dt>
-                    <dd class="govuk-summary-list__value">98% (147 of 150 animals properly tagged)</dd>
-                  </div>
-                  <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Outstanding Issues</dt>
-                    <dd class="govuk-summary-list__value">3 missing secondary tags</dd>
-                  </div>
-                  <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Next Inspection</dt>
-                    <dd class="govuk-summary-list__value">30/04/2025</dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
-          </fieldset>
-
-        </form>
-      </div>
-
-      <!-- Actions and Tools Section -->
-      <div class="govuk-grid-row govuk-!-margin-top-6">
-        <div class="govuk-grid-column-two-thirds">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Actions</h2>
-            </legend>
-            <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-half">
-                {{ govukSelect({
-                  id: "action",
-                  name: "action",
-                  label: { text: "Action", classes: "govuk-label--s" },
-                  items: [
-                    { value: "", text: "Please select" },
-                    { value: "tag-order", text: "Order Replacement Tags" },
-                    { value: "compliance-report", text: "Generate Compliance Report" },
-                    { value: "inspection-schedule", text: "Schedule Inspection" }
-                  ]
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-half">
-                {{ govukSelect({
-                  id: "letter-type",
-                  name: "letter-type",
-                  label: { text: "Letter Type", classes: "govuk-label--s" },
-                  items: [
-                    { value: "", text: "Please select" },
-                    { value: "tag-compliance", text: "Tag Compliance Notice" },
-                    { value: "replacement-order", text: "Replacement Tag Order" },
-                    { value: "inspection-notice", text: "Inspection Notice" }
-                  ]
-                }) }}
-              </div>
-            </div>
-            <div class="govuk-button-group">
+            <div class="govuk-button-group govuk-!-margin-top-4">
               {{ govukButton({
-                text: "Generate Letter",
-                classes: "govuk-button--secondary"
+                text: "Add/Update Eartag",
+                name: "action",
+                value: "add-eartag"
               }) }}
             </div>
           </fieldset>
-        </div>
-        
-        <!-- Tools Section -->
-        <div class="govuk-grid-column-one-third">
-          <h2 class="govuk-heading-m">Tools</h2>
-          <p class="govuk-body-s">Ear tag management tools</p>
-          <div class="govuk-button-group govuk-button-group--vertical">
-            {{ govukButton({
-              text: "Delete Selected",
-              classes: "govuk-button--warning"
-            }) }}
-            {{ govukButton({
-              text: "Edit Selected",
-              classes: "govuk-button--secondary"
-            }) }}
-            {{ govukButton({
-              text: "Add / Amend",
-              classes: "govuk-button--secondary"
-            }) }}
-            {{ govukButton({
-              text: "Export Data",
-              classes: "govuk-button--secondary"
+
+          <!-- Current Eartags Table -->
+          <div class="govuk-!-margin-top-8">
+            <h3 class="govuk-heading-m">Recorded Eartags</h3>
+            
+            {% set eartagsTableRows = [
+              [
+                {
+                  text: "UK123456789012"
+                },
+                {
+                  text: "Dairy Cattle"
+                },
+                {
+                  text: "Female"
+                },
+                {
+                  text: "Holstein"
+                },
+                {
+                  text: "15/06/2023"
+                },
+                {
+                  text: "Negative"
+                },
+                {
+                  text: "On Holding"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="Edit eartag UK123456789012">Edit</a> | <a class="govuk-link" href="#" aria-label="View full details for eartag UK123456789012">View</a>'
+                }
+              ],
+              [
+                {
+                  text: "UK987654321098"
+                },
+                {
+                  text: "Beef Cattle"
+                },
+                {
+                  text: "Male"
+                },
+                {
+                  text: "Limousin"
+                },
+                {
+                  text: "22/03/2022"
+                },
+                {
+                  text: "Reactor"
+                },
+                {
+                  text: "Removed"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="Edit eartag UK987654321098">Edit</a> | <a class="govuk-link" href="#" aria-label="View full details for eartag UK987654321098">View</a>'
+                }
+              ],
+              [
+                {
+                  text: "UK555666777888"
+                },
+                {
+                  text: "Dairy Cattle"
+                },
+                {
+                  text: "Female"
+                },
+                {
+                  text: "Jersey"
+                },
+                {
+                  text: "10/01/2024"
+                },
+                {
+                  text: "Inconclusive"
+                },
+                {
+                  text: "On Holding"
+                },
+                {
+                  html: '<a class="govuk-link" href="#" aria-label="Edit eartag UK555666777888">Edit</a> | <a class="govuk-link" href="#" aria-label="View full details for eartag UK555666777888">View</a>'
+                }
+              ]
+            ] %}
+
+            {{ govukTable({
+              head: [
+                {
+                  text: "Eartag Number"
+                },
+                {
+                  text: "Type"
+                },
+                {
+                  text: "Sex"
+                },
+                {
+                  text: "Breed"
+                },
+                {
+                  text: "Date of Birth"
+                },
+                {
+                  text: "Last Test Result"
+                },
+                {
+                  text: "Status"
+                },
+                {
+                  text: "Actions"
+                }
+              ],
+              rows: eartagsTableRows,
+              classes: "govuk-!-margin-top-4"
             }) }}
           </div>
-        </div>
+
+          <!-- Eartag Summary -->
+          <div class="govuk-!-margin-top-6">
+            <div class="govuk-summary-card">
+              <div class="govuk-summary-card__title-wrapper">
+                <h3 class="govuk-summary-card__title">Eartag Summary</h3>
+              </div>
+              <div class="govuk-summary-card__content">
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Total Animals:</dt>
+                    <dd class="govuk-summary-list__value govuk-!-font-weight-bold">3</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">On Holding:</dt>
+                    <dd class="govuk-summary-list__value">2</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Removed:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    <dt class="govuk-summary-list__key">Reactors:</dt>
+                    <dd class="govuk-summary-list__value">1</dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bulk Actions -->
+          {{ govukDetails({
+            summaryText: "Bulk Actions",
+            text: "Import multiple eartags from a CSV file or export current data"
+          }) }}
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              <h4 class="govuk-heading-s">Import Eartags</h4>
+              <p class="govuk-body">Upload a CSV file with eartag data</p>
+              <div class="govuk-form-group">
+                <label class="govuk-label" for="eartag-csv">
+                  Choose CSV file
+                </label>
+                <input class="govuk-file-upload" id="eartag-csv" name="eartag-csv" type="file" accept=".csv">
+              </div>
+              {{ govukButton({
+                text: "Import CSV",
+                classes: "govuk-button--secondary",
+                name: "action",
+                value: "import-csv"
+              }) }}
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <h4 class="govuk-heading-s">Export Data</h4>
+              <p class="govuk-body">Download current eartag data as CSV</p>
+              {{ govukButton({
+                text: "Export to CSV",
+                classes: "govuk-button--secondary",
+                name: "action",
+                value: "export-csv"
+              }) }}
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="govuk-button-group govuk-!-margin-top-6">
+            {{ govukButton({
+              text: "Save and continue",
+              type: "submit"
+            }) }}
+            
+            {{ govukButton({
+              text: "Save as draft",
+              classes: "govuk-button--secondary",
+              name: "action",
+              value: "draft"
+            }) }}
+          </div>
+        </form>
       </div>
     </div>
   </div>
 {% endblock %}
-
-  <!-- Success Banner -->
-  {% if success %}
-    {{ govukNotificationBanner({
-      type: "success",
-      html: '<h3 class="govuk-notification-banner__heading">Success</h3><p class="govuk-body">' + success + '</p>'
-    }) }}
-  {% endif %}
-
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <div class="govuk-!-margin-bottom-6">
-        <!-- Header with close button -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
-          <div>
-            <span class="govuk-caption-l">{{ caption }}</span>
-            <h1 class="govuk-heading-l" id="main-content">{{ heading }}</h1>
-          </div>
-          <button type="button" class="govuk-button govuk-button--secondary" style="margin-top: 0;">
-            <span aria-hidden="true">✕</span>
-            <span class="govuk-visually-hidden">Close form</span>
-          </button>
-        </div>
-
-        <!-- Service Navigation -->
-        {% include "includes/tb-service-navigation.html" %}
-
-        <form method="post" action="/tbcase/eartags" novalidate>
-          <!-- Case Information Header -->
-          <div class="govuk-grid-row govuk-!-margin-bottom-6">
-            <div class="govuk-grid-column-one-quarter">
-              {{ govukInput({
-                label: {
-                  text: "CPH",
-                  classes: "govuk-label--s"
-                },
-                id: "cph-number",
-                name: "cphNumber",
-                value: formData.cphNumber if formData else "36/145/0300",
-                classes: "govuk-input--width-10",
-                errorMessage: errors.cphNumber if errors,
-                attributes: {
-                  "aria-describedby": "cph-number-hint"
-                }
-              }) }}
-            </div>
-            
-            <div class="govuk-grid-column-one-quarter">
-              {{ govukInput({
-                label: {
-                  text: "Nat Inc",
-                  classes: "govuk-label--s"
-                },
-                id: "nat-inc",
-                name: "natInc",
-                value: formData.natInc if formData else "TB10",
-                classes: "govuk-input--width-10",
-                errorMessage: errors.natInc if errors
-              }) }}
-            </div>
-
-            <div class="govuk-grid-column-one-quarter">
-              {{ govukInput({
-                label: {
-                  text: "Tel",
-                  classes: "govuk-label--s"
-                },
-                id: "telephone",
-                name: "telephone",
-                value: formData.telephone if formData else "01460221837",
-                classes: "govuk-input--width-15",
-                errorMessage: errors.telephone if errors,
-                inputmode: "tel"
-              }) }}
-            </div>
-
-            <div class="govuk-grid-column-one-quarter">
-              <div class="govuk-form-group">
-                <label class="govuk-label govuk-label--s" for="incident-date">
-                  Date
-                </label>
-                <input class="govuk-input govuk-input--width-10" 
-                       id="incident-date" 
-                       name="incidentDate" 
-                       type="text"
-                       value="{{ formData.incidentDate if formData else '17/04/2019' }}"
-                       aria-describedby="incident-date-hint">
-              </div>
-            </div>
-          </div>
-
-          <div class="govuk-grid-row govuk-!-margin-bottom-6">
-            <div class="govuk-grid-column-one-quarter">
-              {{ govukInput({
-                label: {
-                  text: "Web",
-                  classes: "govuk-label--s"
-                },
-                id: "web",
-                name: "web",
-                value: formData.web if formData else "07817763892",
-                classes: "govuk-input--width-15",
-                errorMessage: errors.web if errors
-              }) }}
-            </div>
-
-            <div class="govuk-grid-column-three-quarters">
-              {{ govukTextarea({
-                name: "address",
-                id: "address",
-                label: {
-                  text: "Address",
-                  classes: "govuk-label--s"
-                },
-                value: formData.address if formData else "M.B.M & H.P Glanville\nMarshwood Farm Marshwood House\nWhitchurch Canonicorum\nForton\nChard\nSomerset\nTA20 4HL",
-                rows: 4,
-                errorMessage: errors.address if errors
-              }) }}
-            </div>
-          </div>
-
-          <!-- Actions Section -->
-          <div class="govuk-grid-row govuk-!-margin-bottom-4">
-            <div class="govuk-grid-column-one-third">
-              {{ govukSelect({
-                id: "actions",
-                name: "actions",
-                label: {
-                  text: "Actions",
-                  classes: "govuk-label--s"
-                },
-                items: [
-                  { value: "", text: "Select action", selected: not formData.actions },
-                  { value: "firstname-lastname", text: "FirstName-LastName", selected: (formData.actions == "firstname-lastname") if formData else true }
-                ],
-                errorMessage: errors.actions if errors
-              }) }}
-            </div>
-
-            <div class="govuk-grid-column-one-third">
-              {{ govukSelect({
-                id: "ws-filter",
-                name: "wsFilter",
-                label: {
-                  text: "WS Filter",
-                  classes: "govuk-label--s"
-                },
-                items: [
-                  { value: "", text: "Select filter", selected: not formData.wsFilter },
-                  { value: "all", text: "All", selected: (formData.wsFilter == "all") if formData else false },
-                  { value: "active", text: "Active", selected: (formData.wsFilter == "active") if formData else false },
-                  { value: "pending", text: "Pending", selected: (formData.wsFilter == "pending") if formData else false }
-                ],
-                errorMessage: errors.wsFilter if errors
-              }) }}
-            </div>
-
-            <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group">
-                <label class="govuk-label govuk-label--s">&nbsp;</label>
-                <div class="govuk-button-group">
-                  {{ govukButton({
-                    text: "►",
-                    name: "action",
-                    value: "generate",
-                    classes: "govuk-button--secondary",
-                    attributes: {
-                      "title": "Generate",
-                      "aria-label": "Generate report or letter"
-                    }
-                  }) }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Action Buttons Row -->
-          <div class="govuk-button-group govuk-!-margin-bottom-4">
-            {{ govukButton({
-              text: "🗑️",
-              name: "action",
-              value: "delete",
-              classes: "govuk-button--warning govuk-button--small",
-              attributes: {
-                "title": "Delete selected items",
-                "aria-label": "Delete selected items"
-              }
-            }) }}
-
-            {{ govukButton({
-              text: "✏️",
-              name: "action", 
-              value: "edit",
-              classes: "govuk-button--secondary govuk-button--small",
-              attributes: {
-                "title": "Edit selected items",
-                "aria-label": "Edit selected items"
-              }
-            }) }}
-
-            {{ govukButton({
-              text: "✖️",
-              name: "action",
-              value: "remove", 
-              classes: "govuk-button--secondary govuk-button--small",
-              attributes: {
-                "title": "Remove selected items",
-                "aria-label": "Remove selected items"
-              }
-            }) }}
-
-            {{ govukButton({
-              text: "📋",
-              name: "action",
-              value: "add",
-              classes: "govuk-button--secondary govuk-button--small", 
-              attributes: {
-                "title": "Add new item",
-                "aria-label": "Add new item"
-              }
-            }) }}
-          </div>
-
-          <!-- Eartags Data Table -->
-          <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset" aria-describedby="eartags-hint">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                <h2 class="govuk-fieldset__heading">
-                  Eartags
-                </h2>
-              </legend>
-              <div id="eartags-hint" class="govuk-hint">
-                Select animals and manage their eartag information
-              </div>
-
-              <!-- Select All/None Controls -->
-              <div class="govuk-checkboxes govuk-!-margin-bottom-4" data-module="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="select-all" name="selectAll" type="checkbox" value="all">
-                  <label class="govuk-label govuk-checkboxes__label" for="select-all">
-                    All
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="select-none" name="selectNone" type="checkbox" value="none">
-                  <label class="govuk-label govuk-checkboxes__label" for="select-none">
-                    None
-                  </label>
-                </div>
-              </div>
-
-              <!-- Eartags Table -->
-              <div class="govuk-table-container">
-                <table class="govuk-table" role="table" aria-label="Animal eartag information">
-                  <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                      <th scope="col" class="govuk-table__header govuk-!-width-one-tenth">Select</th>
-                      <th scope="col" class="govuk-table__header">WS</th>
-                      <th scope="col" class="govuk-table__header">Eartag</th>
-                      <th scope="col" class="govuk-table__header">Breed</th>
-                      <th scope="col" class="govuk-table__header govuk-!-width-one-twentieth">Sex</th>
-                      <th scope="col" class="govuk-table__header">DOB</th>
-                      <th scope="col" class="govuk-table__header govuk-!-width-one-tenth">Pedigree</th>
-                      <th scope="col" class="govuk-table__header">Slaughter On Farm?</th>
-                      <th scope="col" class="govuk-table__header">Reactor Tag</th>
-                    </tr>
-                  </thead>
-                  <tbody class="govuk-table__body">
-                    <!-- Row 1 -->
-                    <tr class="govuk-table__row">
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="animal-1" name="selectedAnimals" type="checkbox" value="1">
-                          <label class="govuk-label govuk-checkboxes__label" for="animal-1">
-                            <span class="govuk-visually-hidden">Select animal 1</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">WS-4445824</td>
-                      <td class="govuk-table__cell">UK343233204639</td>
-                      <td class="govuk-table__cell">Fleckvieh X</td>
-                      <td class="govuk-table__cell">F</td>
-                      <td class="govuk-table__cell">03/11/2023</td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="pedigree-1" name="pedigree-1" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-1">
-                            <span class="govuk-visually-hidden">Pedigree animal 1</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="slaughter-1" name="slaughter-1" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-1">
-                            <span class="govuk-visually-hidden">Slaughter on farm animal 1</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-1" name="reactorTag-1" type="text">
-                      </td>
-                    </tr>
-
-                    <!-- Row 2 -->
-                    <tr class="govuk-table__row">
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="animal-2" name="selectedAnimals" type="checkbox" value="2">
-                          <label class="govuk-label govuk-checkboxes__label" for="animal-2">
-                            <span class="govuk-visually-hidden">Select animal 2</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">WS-4445824</td>
-                      <td class="govuk-table__cell">UK343233404515</td>
-                      <td class="govuk-table__cell">Aberdeen Angus X</td>
-                      <td class="govuk-table__cell">M</td>
-                      <td class="govuk-table__cell">06/06/2023</td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="pedigree-2" name="pedigree-2" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-2">
-                            <span class="govuk-visually-hidden">Pedigree animal 2</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="slaughter-2" name="slaughter-2" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-2">
-                            <span class="govuk-visually-hidden">Slaughter on farm animal 2</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-2" name="reactorTag-2" type="text">
-                      </td>
-                    </tr>
-
-                    <!-- Row 3 -->
-                    <tr class="govuk-table__row">
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="animal-3" name="selectedAnimals" type="checkbox" value="3">
-                          <label class="govuk-label govuk-checkboxes__label" for="animal-3">
-                            <span class="govuk-visually-hidden">Select animal 3</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">WS-4445824</td>
-                      <td class="govuk-table__cell">UK343233504432</td>
-                      <td class="govuk-table__cell">Danish Red X</td>
-                      <td class="govuk-table__cell">M</td>
-                      <td class="govuk-table__cell">08/12/2022</td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="pedigree-3" name="pedigree-3" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-3">
-                            <span class="govuk-visually-hidden">Pedigree animal 3</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="slaughter-3" name="slaughter-3" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-3">
-                            <span class="govuk-visually-hidden">Slaughter on farm animal 3</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-3" name="reactorTag-3" type="text">
-                      </td>
-                    </tr>
-
-                    <!-- Row 4 -->
-                    <tr class="govuk-table__row">
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="animal-4" name="selectedAnimals" type="checkbox" value="4">
-                          <label class="govuk-label govuk-checkboxes__label" for="animal-4">
-                            <span class="govuk-visually-hidden">Select animal 4</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">WS-4445824</td>
-                      <td class="govuk-table__cell">UK343233704637</td>
-                      <td class="govuk-table__cell">Fleckvieh X</td>
-                      <td class="govuk-table__cell">F</td>
-                      <td class="govuk-table__cell">01/11/2023</td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="pedigree-4" name="pedigree-4" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-4">
-                            <span class="govuk-visually-hidden">Pedigree animal 4</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="slaughter-4" name="slaughter-4" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-4">
-                            <span class="govuk-visually-hidden">Slaughter on farm animal 4</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-4" name="reactorTag-4" type="text">
-                      </td>
-                    </tr>
-
-                    <!-- Row 5 -->
-                    <tr class="govuk-table__row">
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="animal-5" name="selectedAnimals" type="checkbox" value="5">
-                          <label class="govuk-label govuk-checkboxes__label" for="animal-5">
-                            <span class="govuk-visually-hidden">Select animal 5</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">WS-4445785</td>
-                      <td class="govuk-table__cell">UK343233204422</td>
-                      <td class="govuk-table__cell">Fleckvieh X</td>
-                      <td class="govuk-table__cell">F</td>
-                      <td class="govuk-table__cell">14/11/2022</td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="pedigree-5" name="pedigree-5" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-5">
-                            <span class="govuk-visually-hidden">Pedigree animal 5</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="slaughter-5" name="slaughter-5" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-5">
-                            <span class="govuk-visually-hidden">Slaughter on farm animal 5</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-5" name="reactorTag-5" type="text">
-                      </td>
-                    </tr>
-
-                    <!-- Row 6 -->
-                    <tr class="govuk-table__row">
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="animal-6" name="selectedAnimals" type="checkbox" value="6">
-                          <label class="govuk-label govuk-checkboxes__label" for="animal-6">
-                            <span class="govuk-visually-hidden">Select animal 6</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">WS-4445785</td>
-                      <td class="govuk-table__cell">UK343233404396</td>
-                      <td class="govuk-table__cell">Fleckvieh X</td>
-                      <td class="govuk-table__cell">F</td>
-                      <td class="govuk-table__cell">27/10/2022</td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="pedigree-6" name="pedigree-6" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-6">
-                            <span class="govuk-visually-hidden">Pedigree animal 6</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="slaughter-6" name="slaughter-6" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-6">
-                            <span class="govuk-visually-hidden">Slaughter on farm animal 6</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-6" name="reactorTag-6" type="text">
-                      </td>
-                    </tr>
-
-                    <!-- Row 7 -->
-                    <tr class="govuk-table__row">
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="animal-7" name="selectedAnimals" type="checkbox" value="7">
-                          <label class="govuk-label govuk-checkboxes__label" for="animal-7">
-                            <span class="govuk-visually-hidden">Select animal 7</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">WS-4445785</td>
-                      <td class="govuk-table__cell">UK343233404403</td>
-                      <td class="govuk-table__cell">British Blue X</td>
-                      <td class="govuk-table__cell">F</td>
-                      <td class="govuk-table__cell">30/10/2022</td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="pedigree-7" name="pedigree-7" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-7">
-                            <span class="govuk-visually-hidden">Pedigree animal 7</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="slaughter-7" name="slaughter-7" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-7">
-                            <span class="govuk-visually-hidden">Slaughter on farm animal 7</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-7" name="reactorTag-7" type="text">
-                      </td>
-                    </tr>
-
-                    <!-- Row 8 -->
-                    <tr class="govuk-table__row">
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="animal-8" name="selectedAnimals" type="checkbox" value="8">
-                          <label class="govuk-label govuk-checkboxes__label" for="animal-8">
-                            <span class="govuk-visually-hidden">Select animal 8</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">WS-4445785</td>
-                      <td class="govuk-table__cell">UK343233504271</td>
-                      <td class="govuk-table__cell">Holstein Friesian</td>
-                      <td class="govuk-table__cell">F</td>
-                      <td class="govuk-table__cell">17/06/2022</td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="pedigree-8" name="pedigree-8" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="pedigree-8">
-                            <span class="govuk-visually-hidden">Pedigree animal 8</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <div class="govuk-checkboxes__item govuk-checkboxes--small">
-                          <input class="govuk-checkboxes__input" id="slaughter-8" name="slaughter-8" type="checkbox">
-                          <label class="govuk-label govuk-checkboxes__label" for="slaughter-8">
-                            <span class="govuk-visually-hidden">Slaughter on farm animal 8</span>
-                          </label>
-                        </div>
-                      </td>
-                      <td class="govuk-table__cell">
-                        <input class="govuk-input govuk-input--width-10" id="reactor-tag-8" name="reactorTag-8" type="text">
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </fieldset>
-          </div>
-
-          <!-- Form Actions -->
-          <div class="govuk-button-group">
-            {{ govukButton({
-              text: "Save changes",
-              name: "action",
-              value: "save"
-            }) }}
-
-            {{ govukButton({
-              text: "Cancel",
-              classes: "govuk-button--secondary",
-              href: "/tbcase/case-details"
-            }) }}
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>

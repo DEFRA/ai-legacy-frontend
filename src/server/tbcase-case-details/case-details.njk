@@ -11,6 +11,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set breadcrumbs = [
   {
@@ -93,7 +94,7 @@
       <!-- Tab Content -->
       <div class="govuk-!-margin-top-6">
         <!-- Case Details Tab Content -->
-        <form action="#" method="post">
+        <form action="/tbcase/case-details" method="post" novalidate>
             
             <!-- Basic Case Information -->
             <fieldset class="govuk-fieldset">
@@ -108,9 +109,13 @@
                       text: "CPH",
                       classes: "govuk-label--s"
                     },
+                    hint: {
+                      text: "County Parish Holding number"
+                    },
                     id: "cph",
                     name: "cph",
-                    value: "01/234/5678"
+                    value: "01/234/5678",
+                    classes: "govuk-input--width-10"
                   }) }}
                 </div>
                 <div class="govuk-grid-column-one-quarter">
@@ -119,9 +124,13 @@
                       text: "Nat Inc",
                       classes: "govuk-label--s"
                     },
+                    hint: {
+                      text: "National Incident number"
+                    },
                     id: "nat-inc",
                     name: "nat-inc",
-                    value: "25/12345"
+                    value: "25/12345",
+                    classes: "govuk-input--width-10"
                   }) }}
                 </div>
                 <div class="govuk-grid-column-one-quarter">
@@ -130,23 +139,322 @@
                       text: "Tel",
                       classes: "govuk-label--s"
                     },
+                    hint: {
+                      text: "Telephone number"
+                    },
                     id: "tel",
                     name: "tel",
-                    value: "01555 123456"
+                    value: "01555 123456",
+                    type: "tel",
+                    classes: "govuk-input--width-10"
                   }) }}
                 </div>
                 <div class="govuk-grid-column-one-quarter">
                   {{ govukInput({
                     label: {
-                      text: "Mob",
+                      text: "Mobile",
                       classes: "govuk-label--s"
                     },
-                    id: "mob",
-                    name: "mob",
-                    value: "07123 456789"
+                    hint: {
+                      text: "Mobile number"
+                    },
+                    id: "mobile",
+                    name: "mobile",
+                    value: "07123 456789",
+                    type: "tel",
+                    classes: "govuk-input--width-10"
                   }) }}
                 </div>
               </div>
+
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Keeper Name",
+                      classes: "govuk-label--s"
+                    },
+                    id: "keeper-name",
+                    name: "keeper-name",
+                    value: "John Smith Farms Ltd",
+                    classes: "govuk-input--width-20"
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Email",
+                      classes: "govuk-label--s"
+                    },
+                    id: "email",
+                    name: "email",
+                    value: "john.smith@example.com",
+                    type: "email",
+                    classes: "govuk-input--width-20"
+                  }) }}
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Address Information -->
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h3 class="govuk-fieldset__heading">Address</h3>
+              </legend>
+              
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                  {{ govukInput({
+                    label: {
+                      text: "Address Line 1",
+                      classes: "govuk-label--s"
+                    },
+                    id: "address-line-1",
+                    name: "address-line-1",
+                    value: "Hillside Farm",
+                    classes: "govuk-input--width-30"
+                  }) }}
+                </div>
+              </div>
+              
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Address Line 2",
+                      classes: "govuk-label--s"
+                    },
+                    id: "address-line-2",
+                    name: "address-line-2",
+                    value: "Lower Barton Road",
+                    classes: "govuk-input--width-20"
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Town/City",
+                      classes: "govuk-label--s"
+                    },
+                    id: "town-city",
+                    name: "town-city",
+                    value: "Exeter",
+                    classes: "govuk-input--width-20"
+                  }) }}
+                </div>
+              </div>
+              
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "County",
+                      classes: "govuk-label--s"
+                    },
+                    id: "county",
+                    name: "county",
+                    value: "Devon",
+                    classes: "govuk-input--width-20"
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-half">
+                  {{ govukInput({
+                    label: {
+                      text: "Postcode",
+                      classes: "govuk-label--s"
+                    },
+                    id: "postcode",
+                    name: "postcode",
+                    value: "EX4 7PQ",
+                    classes: "govuk-input--width-10"
+                  }) }}
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- TB Status and Details -->
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h3 class="govuk-fieldset__heading">TB Status Information</h3>
+              </legend>
+              
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+                  {{ govukSelect({
+                    id: "tb-status",
+                    name: "tb-status",
+                    label: {
+                      text: "TB Status",
+                      classes: "govuk-label--s"
+                    },
+                    items: [
+                      {
+                        value: "",
+                        text: "Select TB Status"
+                      },
+                      {
+                        value: "officially-tb-free",
+                        text: "Officially TB Free",
+                        selected: true
+                      },
+                      {
+                        value: "tb-withdrawn",
+                        text: "TB Withdrawn"
+                      },
+                      {
+                        value: "under-restriction",
+                        text: "Under Restriction"
+                      }
+                    ]
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-third">
+                  {{ govukDateInput({
+                    id: "status-date",
+                    namePrefix: "status-date",
+                    fieldset: {
+                      legend: {
+                        text: "Status Date",
+                        classes: "govuk-fieldset__legend--s"
+                      }
+                    },
+                    hint: {
+                      text: "For example, 27 3 2025"
+                    },
+                    items: [
+                      {
+                        name: "day",
+                        classes: "govuk-input--width-2",
+                        value: "15"
+                      },
+                      {
+                        name: "month", 
+                        classes: "govuk-input--width-2",
+                        value: "01"
+                      },
+                      {
+                        name: "year",
+                        classes: "govuk-input--width-4",
+                        value: "2025"
+                      }
+                    ]
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-third">
+                  {{ govukInput({
+                    label: {
+                      text: "Risk Area",
+                      classes: "govuk-label--s"
+                    },
+                    id: "risk-area",
+                    name: "risk-area",
+                    value: "High Risk Area - Zone 1",
+                    classes: "govuk-input--width-20"
+                  }) }}
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Case Management -->
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h3 class="govuk-fieldset__heading">Case Management</h3>
+              </legend>
+              
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+                  {{ govukInput({
+                    label: {
+                      text: "Allocated Officer",
+                      classes: "govuk-label--s"
+                    },
+                    id: "allocated-officer",
+                    name: "allocated-officer",
+                    value: "Dr. Sarah Wilson",
+                    classes: "govuk-input--width-20"
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-third">
+                  {{ govukInput({
+                    label: {
+                      text: "Case Priority",
+                      classes: "govuk-label--s"
+                    },
+                    id: "case-priority",
+                    name: "case-priority",
+                    value: "High",
+                    classes: "govuk-input--width-10"
+                  }) }}
+                </div>
+                <div class="govuk-grid-column-one-third">
+                  {{ govukDateInput({
+                    id: "case-opened",
+                    namePrefix: "case-opened",
+                    fieldset: {
+                      legend: {
+                        text: "Case Opened",
+                        classes: "govuk-fieldset__legend--s"
+                      }
+                    },
+                    items: [
+                      {
+                        name: "day",
+                        classes: "govuk-input--width-2",
+                        value: "10"
+                      },
+                      {
+                        name: "month",
+                        classes: "govuk-input--width-2", 
+                        value: "01"
+                      },
+                      {
+                        name: "year",
+                        classes: "govuk-input--width-4",
+                        value: "2025"
+                      }
+                    ]
+                  }) }}
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Additional Information -->
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h3 class="govuk-fieldset__heading">Additional Information</h3>
+              </legend>
+              
+              {{ govukTextarea({
+                name: "case-notes",
+                id: "case-notes",
+                label: {
+                  text: "Case Notes",
+                  classes: "govuk-label--s"
+                },
+                hint: {
+                  text: "Enter any additional information about this case"
+                },
+                value: "Initial reactor identified during routine testing. Further investigation required.",
+                rows: 4
+              }) }}
+            </fieldset>
+
+            <!-- Form Actions -->
+            <div class="govuk-button-group govuk-!-margin-top-6">
+              {{ govukButton({
+                text: "Save and continue",
+                type: "submit"
+              }) }}
+              
+              {{ govukButton({
+                text: "Save as draft",
+                classes: "govuk-button--secondary",
+                name: "action",
+                value: "draft"
+              }) }}
+            </div>
+        </form>
+      </div>
               
               <!-- Contact and Farm Information -->
               <div class="govuk-grid-row">

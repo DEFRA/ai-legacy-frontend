@@ -1,13 +1,44 @@
-# ai-legacy-frontend
+# ai-legacy-frontend - TB Case Management System (TBCMS)
 
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_ai-legacy-frontend&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=DEFRA_ai-legacy-frontend)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_ai-legacy-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_ai-legacy-frontend)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_ai-legacy-frontend&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_ai-legacy-frontend)
 
-Core delivery platform Node.js Frontend Template.
+A comprehensive web application for managing tuberculosis cases in cattle, built on the Core Delivery Platform Node.js Frontend Template. This system provides veterinary officers and farm administrators with tools to track, monitor, and manage TB cases from detection through resolution.
+
+## Features
+
+### TB Case Management Modules
+
+1. **Case Details** - Core case information management including keeper details, addresses, and TB status
+2. **Removals** - Reactor animal removal tracking with comprehensive workflow management
+3. **Eartags** - Animal identification and livestock management with import/export capabilities
+4. **Tracings** - Contact tracing for epidemiological investigation and risk assessment
+5. **Allocations** - Abattoir allocation management for reactor animals
+6. **GIS** - Geographic Information System with mapping and spatial analysis
+7. **DRFS** - Disease Reporting Forms with document management and submission tracking
+8. **Cons** - Compliance monitoring and regulatory requirement tracking
+9. **Radial Testing** - Surveillance testing management and scheduling
+10. **Post-Kill** - Post-mortem examination tracking and results management
+11. **Views** - Data visualization, reporting, and analytics dashboard
+
+### Key Capabilities
+
+- **Accessibility Compliant** - Fully compliant with GDS accessibility requirements
+- **Responsive Design** - Mobile-first responsive design following GOV.UK Design System
+- **Form Validation** - Comprehensive client and server-side validation
+- **Document Management** - File upload, storage, and management for supporting documents
+- **Data Export** - CSV export capabilities for data analysis and reporting
+- **Search and Filter** - Advanced search and filtering across all modules
+- **Audit Trail** - Complete audit logging for compliance and traceability
+- **Integration Ready** - API integration points for external systems
 
 - [Requirements](#requirements)
   - [Node.js](#nodejs)
+- [TB Case Management System](#tb-case-management-system)
+  - [System Overview](#system-overview)
+  - [User Workflows](#user-workflows)
+  - [Module Documentation](#module-documentation)
 - [Server-side Caching](#server-side-caching)
 - [Redis](#redis)
 - [Local Development](#local-development)
@@ -40,6 +71,104 @@ To use the correct version of Node.js for this application, via nvm:
 cd ai-legacy-frontend
 nvm use
 ```
+
+## TB Case Management System
+
+### System Overview
+
+The TB Case Management System (TBCMS) is a comprehensive web application designed for managing tuberculosis cases in cattle. It provides a complete workflow from initial case detection through final resolution, supporting veterinary officers, farm administrators, and regulatory authorities in their TB control activities.
+
+### User Workflows
+
+#### 1. New TB Case Creation
+
+1. **Case Details** - Enter basic case information, keeper details, and TB status
+2. **Eartags** - Record animal identification and livestock inventory
+3. **Tracings** - Conduct contact tracing investigations
+4. **Allocations** - Arrange abattoir allocations for reactor animals
+5. **Removals** - Track reactor animal removals and transportation
+
+#### 2. Ongoing Case Management
+
+1. **GIS** - Monitor geographic risk factors and neighboring holdings
+2. **Radial Testing** - Schedule and manage surveillance testing
+3. **DRFS** - Complete and submit disease reporting forms
+4. **Cons** - Monitor compliance with regulatory requirements
+5. **Post-Kill** - Track post-mortem examination results
+
+#### 3. Case Closure and Reporting
+
+1. **Views** - Generate comprehensive case reports and analytics
+2. **Document Management** - Archive all case-related documentation
+3. **Data Export** - Export data for regulatory reporting and analysis
+
+### Module Documentation
+
+#### Case Details Module (`/tbcase/case-details`)
+
+- **Purpose**: Core case information management
+- **Features**: Keeper details, address management, TB status tracking, case timeline
+- **Key Fields**: CPH, National Incident number, contact information, TB status, allocated officer
+
+#### Removals Module (`/tbcase/removals`)
+
+- **Purpose**: Reactor animal removal tracking
+- **Features**: Removal scheduling, transportation tracking, destination management
+- **Key Fields**: Eartag numbers, removal dates, destinations, removal methods
+
+#### Eartags Module (`/tbcase/eartags`)
+
+- **Purpose**: Animal identification and livestock management
+- **Features**: Individual animal records, bulk import/export, testing history
+- **Key Fields**: Eartag numbers, breed, date of birth, TB test results
+
+#### Tracings Module (`/tbcase/tracings`)
+
+- **Purpose**: Contact tracing and epidemiological investigation
+- **Features**: Movement tracking, risk assessment, investigation management
+- **Key Fields**: Contact holdings, movement dates, risk levels, investigation status
+
+#### Allocations Module (`/tbcase/allocations`)
+
+- **Purpose**: Abattoir allocation management
+- **Features**: Allocation scheduling, abattoir capacity management, priority handling
+- **Key Fields**: Abattoir details, allocation dates, animal counts, special requirements
+
+#### GIS Module (`/tbcase/gis`)
+
+- **Purpose**: Geographic information and spatial analysis
+- **Features**: Interactive mapping, buffer zone management, neighbor identification
+- **Key Fields**: Grid references, coordinates, risk zones, environmental factors
+
+#### DRFS Module (`/tbcase/drfs`)
+
+- **Purpose**: Disease Reporting Forms management
+- **Features**: Form generation, document upload, submission tracking
+- **Key Fields**: Form types, notification dates, laboratory references, clinical observations
+
+#### Cons Module (`/tbcase/cons`)
+
+- **Purpose**: Compliance monitoring and regulatory tracking
+- **Features**: Requirement tracking, deadline management, violation recording
+- **Key Fields**: Compliance status, deadlines, regulatory requirements, violation details
+
+#### Radial Testing Module (`/tbcase/radial-testing`)
+
+- **Purpose**: Surveillance testing management
+- **Features**: Test scheduling, area management, result tracking
+- **Key Fields**: Test areas, testing schedules, participating holdings, test results
+
+#### Post-Kill Module (`/tbcase/post-kill`)
+
+- **Purpose**: Post-mortem examination tracking
+- **Features**: Examination scheduling, result recording, lesion documentation
+- **Key Fields**: Examination dates, findings, laboratory results, lesion details
+
+#### Views Module (`/tbcase/views`)
+
+- **Purpose**: Data visualization and reporting
+- **Features**: Dashboard analytics, custom reports, data export
+- **Key Fields**: Case statistics, timeline visualization, performance metrics
 
 ## Server-side Caching
 
