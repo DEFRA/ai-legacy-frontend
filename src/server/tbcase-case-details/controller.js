@@ -27,11 +27,30 @@ export const tbCaseDetailsController = {
       const tbStatusResponse = await ApiClient.getTbStatuses()
       const tbStatuses = tbStatusResponse.data || []
 
+      // Prepare TB status items for the dropdown
+      const tbStatusItems = [{ value: '', text: 'Please select' }]
+      if (tbStatuses.length > 0) {
+        tbStatuses.forEach((status) => {
+          tbStatusItems.push({
+            value: status.status_abb,
+            text: `${status.status_abb} - ${status.status}`
+          })
+        })
+      } else {
+        // Fallback hard-coded options if API data is unavailable
+        tbStatusItems.push(
+          { value: 'CL', text: 'CL - Clear' },
+          { value: 'TB', text: 'TB - TB Confirmed' },
+          { value: 'SUS', text: 'SUS - Suspect' },
+          { value: 'WD', text: 'WD - Withdrawn' }
+        )
+      }
+
       return h.view('tbcase-case-details/case-details', {
         pageTitle: 'TB Case Form',
         heading: 'TB Case Form',
         caption: 'Exeter Reactor Removals - Landing Page',
-        tbStatuses,
+        tbStatusItems,
         selectedIncident
       })
     } catch (error) {
@@ -42,7 +61,13 @@ export const tbCaseDetailsController = {
         pageTitle: 'TB Case Form',
         heading: 'TB Case Form',
         caption: 'Exeter Reactor Removals - Landing Page',
-        tbStatuses: [],
+        tbStatusItems: [
+          { value: '', text: 'Please select' },
+          { value: 'CL', text: 'CL - Clear' },
+          { value: 'TB', text: 'TB - TB Confirmed' },
+          { value: 'SUS', text: 'SUS - Suspect' },
+          { value: 'WD', text: 'WD - Withdrawn' }
+        ],
         error: 'Unable to load reference data. Please try again later.'
       })
     }

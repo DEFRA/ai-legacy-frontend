@@ -199,14 +199,6 @@
               
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-quarter">
-                  {% set tbStatusItems = [
-                    { value: "", text: "Please select" },
-                    { value: "CL", text: "CL - Clear", selected: true },
-                    { value: "TB", text: "TB - TB Confirmed" },
-                    { value: "SUS", text: "SUS - Suspect" },
-                    { value: "WD", text: "WD - Withdrawn" }
-                  ] %}
-                  
                   {{ govukSelect({
                     id: "tb-status",
                     name: "tb-status",
