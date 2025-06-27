@@ -8,6 +8,9 @@ Core delivery platform Node.js Frontend Template for TB Case Management System (
 
 - [Requirements](#requirements)
   - [Node.js](#nodejs)
+- [TB Case Management System](#tb-case-management-system)
+  - [Features](#features)
+  - [TB Case Form Pages](#tb-case-form-pages)
 - [Development Standards](#development-standards)
   - [JavaScript Conventions](#javascript-conventions)
   - [Testing](#testing)
@@ -43,6 +46,44 @@ To use the correct version of Node.js for this application, via nvm:
 cd ai-legacy-frontend
 nvm use
 ```
+
+## TB Case Management System
+
+This application implements a comprehensive TB Case Management System (TBCMS) for managing tuberculosis cases in livestock. The system follows Government Digital Service (GDS) design patterns and accessibility standards.
+
+### Features
+
+- **Case Management**: Track and manage TB cases with detailed case information
+- **Multi-tab Interface**: Organized tabs for different aspects of case management
+- **GDS Compliance**: All pages follow GDS design system guidelines
+- **Accessibility**: WCAG 2.1 AA compliant with proper semantic HTML
+- **Modern Frontend**: Built with Hapi.js, Nunjucks templates, and GDS components
+
+### TB Case Form Pages
+
+The system includes the following TB Case Form tabs, each implementing specific functionality:
+
+| Page               | Description                               | Features                                       |
+| ------------------ | ----------------------------------------- | ---------------------------------------------- |
+| **Case Details**   | Main case information and overview        | Case summary, basic details                    |
+| **Allocations**    | Manage case allocations and assignments   | Calendar widget, allocation tracking, comments |
+| **Removals**       | Handle case removals and processing       | Removal tracking, batch operations             |
+| **Cons**           | Confirm and validate case information     | Confirmation workflows, validation             |
+| **DRFs**           | Data Recording Forms management           | Form tracking, comments, document handling     |
+| **Eartags**        | Livestock eartag management               | Tag tracking, validation, batch operations     |
+| **GIS**            | Geographic Information System integration | Mapping, location data, spatial analysis       |
+| **Post-Kill**      | Post-mortem case processing               | Results recording, follow-up actions           |
+| **Tracings**       | Contact tracing and investigation         | Trace tracking, investigation workflows        |
+| **Radial Testing** | Radial testing management                 | Test scheduling, results, analysis             |
+| **Views**          | Case visualization and reporting          | Data views, reports, export functionality      |
+
+All pages include:
+
+- **Tools section** with administrative functions
+- **Close form** button for navigation
+- **Proper form validation** and error handling
+- **Accessibility features** including proper labeling and hints
+- **GDS components** for consistent user experience
 
 ## Development Standards
 

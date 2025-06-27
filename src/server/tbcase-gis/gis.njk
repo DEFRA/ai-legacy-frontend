@@ -1,5 +1,13 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+
 {% set breadcrumbs = [
   {
     text: "Home",
@@ -10,8 +18,8 @@
     href: "/tbcase/case-details"
   },
   {
-    text: pageTitle,
-    href: request.path
+    text: "GIS",
+    href: "/tbcase/gis"
   }
 ] %}
 
@@ -22,22 +30,302 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{ caption }}</span>
-      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
       
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - GIS Mapping</h1>
+      
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              {{ govukInput({
+                label: {
+                  text: "CPH Number",
+                  classes: "govuk-label--s"
+                },
+                id: "cph-number",
+                name: "cph-number",
+                value: "10/071/0109",
+                classes: "govuk-!-margin-bottom-0"
+              }) }}
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Auto Populated Incident List</h3>
+              <ul class="govuk-list">
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=25/12345" class="govuk-link">
+                    <strong>25/12345</strong> (Current)
+                  </a>
+                </li>
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=24/98765" class="govuk-link">
+                    24/98765 (Previous)
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Service Navigation -->
+      {% set activePage = "gis" %}
       {% include "includes/tb-service-navigation.html" %}
       
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Information
-          </h2>
+      <!-- GIS Content -->
+      <div class="govuk-!-margin-top-6">
+        <form action="#" method="post">
+          
+          <!-- Actions Section -->
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Actions</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-third">
+                {{ govukSelect({
+                  id: "action",
+                  name: "action",
+                  label: { text: "Action", classes: "govuk-label--s" },
+                  hint: { text: "Select the action you want to perform" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "generate-map", text: "Generate Map" },
+                    { value: "update-coordinates", text: "Update Coordinates" },
+                    { value: "export-data", text: "Export Data" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukDateInput({
+                  id: "drf-target",
+                  namePrefix: "drf-target",
+                  fieldset: {
+                    legend: { text: "DRF Target", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Target date for DRF completion" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2", value: "06" },
+                    { name: "month", classes: "govuk-input--width-2", value: "02" },
+                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                <p class="govuk-label govuk-label--s">GIS Status</p>
+                <p class="govuk-body">GIS mapping available</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Mapping Details Section -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Mapping Information</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "tt2",
+                  namePrefix: "tt2",
+                  fieldset: {
+                    legend: { text: "TT2", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Second tuberculin test date" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2", value: "09" },
+                    { name: "month", classes: "govuk-input--width-2", value: "01" },
+                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukCheckboxes({
+                  idPrefix: "slh",
+                  name: "slh",
+                  fieldset: {
+                    legend: { text: "SLH", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Select if Stock Left on Holding" },
+                  items: [
+                    { value: "yes", text: "Stock Left on Holding" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "drf-vo-aho",
+                  name: "drf-vo-aho",
+                  label: { text: "DRF VO/AHO", classes: "govuk-label--s" },
+                  hint: { text: "DRF Veterinary Officer or Animal Health Officer" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "vo-andrews", text: "VO Andrews" },
+                    { value: "aho-wilson", text: "AHO Wilson" },
+                    { value: "vo-taylor", text: "VO Taylor" }
+                  ]
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "maps-done-by",
+                  name: "maps-done-by",
+                  label: { text: "Maps Done By", classes: "govuk-label--s" },
+                  hint: { text: "Person who completed the mapping" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "gis-officer-1", text: "GIS Officer 1" },
+                    { value: "gis-officer-2", text: "GIS Officer 2" },
+                    { value: "contractor", text: "External Contractor" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "slh-map-request-date",
+                  namePrefix: "slh-map-request-date",
+                  fieldset: {
+                    legend: { text: "SLH Map Request Date", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Date when SLH map was requested" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2" },
+                    { name: "month", classes: "govuk-input--width-2" },
+                    { name: "year", classes: "govuk-input--width-4" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "date-maps-done",
+                  namePrefix: "date-maps-done",
+                  fieldset: {
+                    legend: { text: "Date Maps Done", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Date when maps were completed" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2" },
+                    { name: "month", classes: "govuk-input--width-2" },
+                    { name: "year", classes: "govuk-input--width-4" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "Number of Maps", classes: "govuk-label--s" },
+                  hint: { text: "Total number of maps created" },
+                  id: "number-of-maps",
+                  name: "number-of-maps",
+                  type: "number"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "vo-aho-informed-by",
+                  name: "vo-aho-informed-by",
+                  label: { text: "VO/AHO Informed By", classes: "govuk-label--s" },
+                  hint: { text: "Method of informing VO/AHO" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "email", text: "Email" },
+                    { value: "phone", text: "Phone" },
+                    { value: "letter", text: "Letter" },
+                    { value: "in-person", text: "In Person" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "maps-ready-email-date",
+                  namePrefix: "maps-ready-email-date",
+                  fieldset: {
+                    legend: { text: "Maps Ready Email Date", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Date when maps ready email was sent" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2" },
+                    { name: "month", classes: "govuk-input--width-2" },
+                    { name: "year", classes: "govuk-input--width-4" }
+                  ]
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Comments Section -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">GIS Comments</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                {{ govukTextarea({
+                  name: "gis-comments",
+                  id: "gis-comments",
+                  label: { text: "GIS Comments", classes: "govuk-label--s" },
+                  hint: { text: "Record any comments about GIS mapping" },
+                  rows: 4
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+                {{ govukCheckboxes({
+                  idPrefix: "maps-not-required",
+                  name: "maps-not-required",
+                  fieldset: {
+                    legend: { text: "Maps Status", classes: "govuk-label--s" }
+                  },
+                  items: [
+                    { value: "not-required", text: "Maps Not Required" }
+                  ]
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+        </form>
+      </div>
+
+      <!-- Action Buttons and Tools Section -->
+      <div class="govuk-grid-row govuk-!-margin-top-6">
+        <div class="govuk-grid-column-two-thirds">
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Save Changes",
+              classes: "govuk-button"
+            }) }}
+            {{ govukButton({
+              text: "Generate Map",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
         </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            Form fields to be implemented based on Slide6.png requirements.
-          </p>
+        
+        <!-- Tools Section -->
+        <div class="govuk-grid-column-one-third">
+          <h2 class="govuk-heading-m">Tools</h2>
+          <p class="govuk-body-s">Tools depending on selected tab.</p>
         </div>
       </div>
     </div>

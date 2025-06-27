@@ -47,7 +47,7 @@
       </div>
       
       <span class="govuk-caption-l">TBCMS</span>
-      <h1 class="govuk-heading-l">TB Case Form - Removals</h1>
+      <h1 class="govuk-heading-l">TB Case Form - Exeter Reactor Removals</h1>
       
       <!-- Case Context Header -->
       <div class="govuk-summary-card govuk-!-margin-bottom-4">
@@ -64,7 +64,7 @@
                 },
                 id: "cph-number",
                 name: "cph-number",
-                value: "01/234/5678",
+                value: "10/971/0045",
                 classes: "govuk-!-margin-bottom-0"
               }) }}
             </div>
@@ -72,13 +72,13 @@
               <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Auto Populated Incident List</h3>
               <ul class="govuk-list">
                 <li class="govuk-!-margin-bottom-2">
-                  <a href="/tbcase/case-details?incident=25/12345" class="govuk-link">
-                    <strong>25/12345</strong> (Current)
+                  <a href="/tbcase/case-details?incident=24/95441" class="govuk-link">
+                    <strong>24/95441</strong> (Current)
                   </a>
                 </li>
                 <li class="govuk-!-margin-bottom-2">
-                  <a href="/tbcase/case-details?incident=24/98765" class="govuk-link">
-                    24/98765 (Previous)
+                  <a href="/tbcase/case-details?incident=23/12345" class="govuk-link">
+                    23/12345 (Previous)
                   </a>
                 </li>
               </ul>
@@ -95,109 +95,262 @@
       <div class="govuk-!-margin-top-6">
         <form action="#" method="post">
           
-          <!-- Removal Summary Section -->
+          <!-- Actions Section -->
           <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Reactor Removal Summary</h2>
+              <h2 class="govuk-fieldset__heading">Actions</h2>
             </legend>
             
             <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukInput({
-                  label: { text: "No. of Reactors", classes: "govuk-label--s" },
-                  id: "num-reactors",
-                  name: "num-reactors",
-                  value: "3"
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukInput({
-                  label: { text: "No. Priority Reactors", classes: "govuk-label--s" },
-                  id: "num-priority",
-                  name: "num-priority",
-                  value: "1"
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-grid-column-one-third">
                 {{ govukSelect({
-                  id: "abattoir",
-                  name: "abattoir",
-                  label: { text: "Abattoir/Knackery", classes: "govuk-label--s" },
+                  id: "action",
+                  name: "action",
+                  label: { text: "Action", classes: "govuk-label--s" },
+                  hint: { text: "Select the action you want to perform" },
                   items: [
                     { value: "", text: "Please select" },
-                    { value: "ab001", text: "Southwest Abattoir", selected: true },
-                    { value: "ab002", text: "Devon Processing" },
-                    { value: "ab003", text: "Cornwall Meat Co" }
+                    { value: "schedule-removal", text: "Schedule Removal" },
+                    { value: "record-removal", text: "Record Removal" },
+                    { value: "complete-removal", text: "Complete Removal" }
                   ]
                 }) }}
               </div>
-              <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-grid-column-one-third">
                 {{ govukInput({
-                  label: { text: "Abattoir Ref No", classes: "govuk-label--s" },
-                  id: "ab-ref",
-                  name: "ab-ref",
-                  value: "SW2025001"
+                  label: { text: "Nat Inc", classes: "govuk-label--s" },
+                  hint: { text: "National incident number" },
+                  id: "nat-inc",
+                  name: "nat-inc",
+                  value: "24/95441"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukInput({
+                  label: { text: "CPH", classes: "govuk-label--s" },
+                  hint: { text: "County Parish Holding number" },
+                  id: "cph",
+                  name: "cph",
+                  value: "10/971/0045"
                 }) }}
               </div>
             </div>
 
-            <!-- Removal Scheduling -->
             <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukDateInput({
-                  id: "removal-date",
-                  namePrefix: "removal-date",
-                  fieldset: {
-                    legend: { text: "Planned Removal Date", classes: "govuk-label--s" }
-                  },
-                  items: [
-                    { name: "day", classes: "govuk-input--width-2", value: "30" },
-                    { name: "month", classes: "govuk-input--width-2", value: "03" },
-                    { name: "year", classes: "govuk-input--width-4", value: "2025" }
-                  ]
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukSelect({
-                  id: "test-type",
-                  name: "test-type",
-                  label: { text: "Test Type", classes: "govuk-label--s" },
-                  items: [
-                    { value: "", text: "Please select" },
-                    { value: "skin", text: "Skin Test", selected: true },
-                    { value: "gamma", text: "Gamma Interferon" },
-                    { value: "blood", text: "Blood Test" }
-                  ]
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-quarter">
-                {{ govukSelect({
-                  id: "work-schedule",
-                  name: "work-schedule",
-                  label: { text: "Work Schedule", classes: "govuk-label--s" },
-                  items: [
-                    { value: "", text: "Please select" },
-                    { value: "ws001", text: "WS-2025-001", selected: true },
-                    { value: "ws002", text: "WS-2025-002" }
-                  ]
-                }) }}
-              </div>
-              <div class="govuk-grid-column-one-quarter">
+              <div class="govuk-grid-column-one-third">
                 {{ govukInput({
-                  label: { text: "Transport Ref", classes: "govuk-label--s" },
-                  id: "transport-ref",
-                  name: "transport-ref",
-                  value: "TR2025001"
+                  label: { text: "Case Vet", classes: "govuk-label--s" },
+                  hint: { text: "Case veterinarian" },
+                  id: "case-vet",
+                  name: "case-vet"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukInput({
+                  label: { text: "Case Admin", classes: "govuk-label--s" },
+                  hint: { text: "Case administrator" },
+                  id: "case-admin",
+                  name: "case-admin"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{ govukCheckboxes({
+                  idPrefix: "slh",
+                  name: "slh",
+                  fieldset: {
+                    legend: { text: "SLH", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Stock Left on Holding" },
+                  items: [
+                    { value: "yes", text: "SLH" }
+                  ]
                 }) }}
               </div>
             </div>
           </fieldset>
 
-          <!-- Individual Animal Removals Table -->
+          <!-- Test Status Section -->
           <fieldset class="govuk-fieldset govuk-!-margin-top-6">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              <h2 class="govuk-fieldset__heading">Animal Removal Details</h2>
+              <h2 class="govuk-fieldset__heading">Test Status</h2>
             </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "tb-status",
+                  name: "tb-status",
+                  label: { text: "TB Status", classes: "govuk-label--s" },
+                  hint: { text: "Tuberculosis status" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "otfs-c", text: "OTFS-C" },
+                    { value: "otfs-w", text: "OTFS-W" },
+                    { value: "reactor", text: "Reactor" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "incident-start-date",
+                  namePrefix: "incident-start-date",
+                  fieldset: {
+                    legend: { text: "Incident start date", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Date when incident started" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2", value: "27" },
+                    { name: "month", classes: "govuk-input--width-2", value: "09" },
+                    { name: "year", classes: "govuk-input--width-4", value: "2024" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "TB2 / TB181 Served", classes: "govuk-label--s" },
+                  hint: { text: "TB2 or TB181 served date" },
+                  id: "tb2-tb181-served",
+                  name: "tb2-tb181-served",
+                  value: "27/09/2024"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "Fin Unit", classes: "govuk-label--s" },
+                  hint: { text: "Final unit reference" },
+                  id: "fin-unit",
+                  name: "fin-unit"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "result",
+                  name: "result",
+                  label: { text: "Result", classes: "govuk-label--s" },
+                  hint: { text: "Test result" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "positive", text: "Positive" },
+                    { value: "negative", text: "Negative" },
+                    { value: "inconclusive", text: "Inconclusive" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "conf-date",
+                  namePrefix: "conf-date",
+                  fieldset: {
+                    legend: { text: "Conf Date", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Confirmation date" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2" },
+                    { name: "month", classes: "govuk-input--width-2" },
+                    { name: "year", classes: "govuk-input--width-4" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "BTS Sent (TB10 Pending)", classes: "govuk-label--s" },
+                  hint: { text: "BTS sent for TB10 processing" },
+                  id: "bts-sent",
+                  name: "bts-sent"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "TB10", classes: "govuk-label--s" },
+                  hint: { text: "TB10 reference" },
+                  id: "tb10",
+                  name: "tb10"
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "WSS", classes: "govuk-label--s" },
+                  hint: { text: "WSS reference" },
+                  id: "wss",
+                  name: "wss"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                <p class="govuk-label govuk-label--s">EMPR</p>
+                <p class="govuk-body">Status not available</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Comments Section -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Comments</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "comments",
+                  id: "comments",
+                  label: { text: "Comments", classes: "govuk-label--s" },
+                  hint: { text: "Record any comments about removals" },
+                  rows: 4
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "comments-dashboard-only",
+                  id: "comments-dashboard-only",
+                  label: { text: "Comments (Dashboard Only)", classes: "govuk-label--s" },
+                  hint: { text: "Internal comments visible only on dashboard" },
+                  rows: 4
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Exemption Section -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Exemption Status</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                <p class="govuk-body-s govuk-!-font-weight-bold">Scotland Only</p>
+                {{ govukCheckboxes({
+                  idPrefix: "gamma-exemption",
+                  name: "gamma-exemption",
+                  fieldset: {
+                    legend: { text: "Gamma Exemption", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Check if gamma exemption applies" },
+                  items: [
+                    { value: "yes", text: "Gamma exemption applies" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "exemption-comments",
+                  id: "exemption-comments",
+                  label: { text: "Exemption Comments", classes: "govuk-label--s" },
+                  hint: { text: "Comments about exemptions" },
+                  rows: 4
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+        </form>
+      </div>
 
             <div class="govuk-!-margin-bottom-4">
               <div class="govuk-button-group">

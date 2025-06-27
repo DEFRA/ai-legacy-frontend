@@ -27,7 +27,9 @@ export default defineConfig({
       'src/server/common/helpers/metrics.test.js',
       'src/server/common/helpers/redis-client.test.js',
       'src/server/common/helpers/session-cache/cache-engine.test.js',
-      'src/server/common/helpers/errors.test.js'
+      'src/server/common/helpers/errors.test.js',
+      // TB Case Management System tests
+      'src/server/tbcase-*/controller.test.js'
       // Temporarily excluding these tests while fixing complex mocking issues:
       // 'src/config/nunjucks/context/context.test.js',
       // 'src/server/common/helpers/secure-context/secure-context.test.js'
