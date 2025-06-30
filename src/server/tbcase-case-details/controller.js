@@ -1,24 +1,56 @@
 import { ApiClient } from '../common/helpers/api-client.js'
+import { validateStringParameter } from '../common/helpers/validation.js'
 
 /**
  * TBCMS TB Case Details controller.
+ * Handles GET requests for the TB case details form page
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbCaseDetailsController = {
+  /**
+   * Handler for TB case details page
+   * @param {object} request - Hapi request object
+   * @param {object} h - Hapi response toolkit
+   * @returns {Promise<object>} Rendered view or error response
+   */
   async handler(request, h) {
     try {
+      // Validate and extract query parameters
+      const { incident: selectedIncident } = request.query || {}
+
+      // Validate incident parameter if provided
+      if (selectedIncident) {
+        validateStringParameter(selectedIncident, 'incident')
+      }
+
       // Fetch TB status options from the backend API
       const tbStatusResponse = await ApiClient.getTbStatuses()
       const tbStatuses = tbStatusResponse.data || []
 
-      // Get selected incident if provided in query params
-      const selectedIncident = request.query.incident
+      // Prepare TB status items for the dropdown
+      const tbStatusItems = [{ value: '', text: 'Please select' }]
+      if (tbStatuses.length > 0) {
+        tbStatuses.forEach((status) => {
+          tbStatusItems.push({
+            value: status.status_abb,
+            text: `${status.status_abb} - ${status.status}`
+          })
+        })
+      } else {
+        // Fallback hard-coded options if API data is unavailable
+        tbStatusItems.push(
+          { value: 'CL', text: 'CL - Clear' },
+          { value: 'TB', text: 'TB - TB Confirmed' },
+          { value: 'SUS', text: 'SUS - Suspect' },
+          { value: 'WD', text: 'WD - Withdrawn' }
+        )
+      }
 
       return h.view('tbcase-case-details/case-details', {
         pageTitle: 'TB Case Form',
         heading: 'TB Case Form',
         caption: 'Exeter Reactor Removals - Landing Page',
-        tbStatuses,
+        tbStatusItems,
         selectedIncident
       })
     } catch (error) {
@@ -29,7 +61,13 @@ export const tbCaseDetailsController = {
         pageTitle: 'TB Case Form',
         heading: 'TB Case Form',
         caption: 'Exeter Reactor Removals - Landing Page',
-        tbStatuses: [],
+        tbStatusItems: [
+          { value: '', text: 'Please select' },
+          { value: 'CL', text: 'CL - Clear' },
+          { value: 'TB', text: 'TB - TB Confirmed' },
+          { value: 'SUS', text: 'SUS - Suspect' },
+          { value: 'WD', text: 'WD - Withdrawn' }
+        ],
         error: 'Unable to load reference data. Please try again later.'
       })
     }

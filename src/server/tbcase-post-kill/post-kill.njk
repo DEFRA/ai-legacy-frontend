@@ -1,5 +1,13 @@
 {% extends 'layouts/page.njk' %}
 
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+
 {% set breadcrumbs = [
   {
     text: "Home",
@@ -10,8 +18,8 @@
     href: "/tbcase/case-details"
   },
   {
-    text: pageTitle,
-    href: request.path
+    text: "Post-Kill",
+    href: "/tbcase/post-kill"
   }
 ] %}
 
@@ -22,22 +30,225 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{ caption }}</span>
-      <h1 class="govuk-heading-l">{{ heading }}</h1>
+      <!-- Close form button -->
+      <div class="govuk-!-text-align-right govuk-!-margin-bottom-4">
+        <a href="/" class="govuk-link" aria-label="Close TB Case Form">
+          <span aria-hidden="true">✕</span> Close form
+        </a>
+      </div>
       
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">TB Case Form - Post-Kill Testing</h1>
+      
+      <!-- Case Context Header -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-4">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Case Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              {{ govukInput({
+                label: {
+                  text: "CPH Number",
+                  classes: "govuk-label--s"
+                },
+                id: "cph-number",
+                name: "cph-number",
+                value: "10/071/0109",
+                classes: "govuk-!-margin-bottom-0"
+              }) }}
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Auto Populated Incident List</h3>
+              <ul class="govuk-list">
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=25/12345" class="govuk-link">
+                    <strong>25/12345</strong> (Current)
+                  </a>
+                </li>
+                <li class="govuk-!-margin-bottom-2">
+                  <a href="/tbcase/case-details?incident=24/98765" class="govuk-link">
+                    24/98765 (Previous)
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Service Navigation -->
+      {% set activePage = "post-kill" %}
       {% include "includes/tb-service-navigation.html" %}
       
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Information
-          </h2>
+      <!-- Post-Kill Content -->
+      <div class="govuk-!-margin-top-6">
+        <form action="#" method="post">
+          
+          <!-- Actions Section -->
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Actions</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-third">
+                {{ govukSelect({
+                  id: "action",
+                  name: "action",
+                  label: { text: "Action", classes: "govuk-label--s" },
+                  hint: { text: "Select the action you want to perform" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "schedule-testing", text: "Schedule Testing" },
+                    { value: "record-results", text: "Record Results" },
+                    { value: "complete-testing", text: "Complete Testing" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                <p class="govuk-label govuk-label--s">Post-Kill Status</p>
+                <p class="govuk-body">Testing pending</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Test Results Section -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Test Results</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "result",
+                  name: "result",
+                  label: { text: "Result", classes: "govuk-label--s" },
+                  hint: { text: "Test result" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "positive", text: "Positive" },
+                    { value: "negative", text: "Negative" },
+                    { value: "inconclusive", text: "Inconclusive" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "confirmation-date",
+                  namePrefix: "confirmation-date",
+                  fieldset: {
+                    legend: { text: "Confirmation Date", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Date of confirmation" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2" },
+                    { name: "month", classes: "govuk-input--width-2" },
+                    { name: "year", classes: "govuk-input--width-4" }
+                  ]
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukSelect({
+                  id: "post-kill-admin",
+                  name: "post-kill-admin",
+                  label: { text: "Post-Kill Admin", classes: "govuk-label--s" },
+                  hint: { text: "Administrative officer for post-kill testing" },
+                  items: [
+                    { value: "", text: "Please select" },
+                    { value: "admin-1", text: "Admin Officer 1" },
+                    { value: "admin-2", text: "Admin Officer 2" },
+                    { value: "admin-3", text: "Admin Officer 3" }
+                  ]
+                }) }}
+              </div>
+            </div>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukInput({
+                  label: { text: "TB10", classes: "govuk-label--s" },
+                  hint: { text: "TB10 form reference" },
+                  id: "tb10",
+                  name: "tb10"
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-quarter">
+                {{ govukDateInput({
+                  id: "fin-unit-completion-date",
+                  namePrefix: "fin-unit-completion-date",
+                  fieldset: {
+                    legend: { text: "Fin Unit Completion Date", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Date when final unit was completed" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2" },
+                    { name: "month", classes: "govuk-input--width-2" },
+                    { name: "year", classes: "govuk-input--width-4" }
+                  ]
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Comments Section -->
+          <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">Comments</h2>
+            </legend>
+            
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukTextarea({
+                  name: "post-kill-comments",
+                  id: "post-kill-comments",
+                  label: { text: "Post-Kill Comments", classes: "govuk-label--s" },
+                  hint: { text: "Comments about post-kill testing" },
+                  rows: 4
+                }) }}
+              </div>
+              <div class="govuk-grid-column-one-half">
+                {{ govukDateInput({
+                  id: "date-imt21-emailed",
+                  namePrefix: "date-imt21-emailed",
+                  fieldset: {
+                    legend: { text: "Date IMT21 Emailed to Central Records", classes: "govuk-label--s" }
+                  },
+                  hint: { text: "Date when IMT21 was emailed to central records" },
+                  items: [
+                    { name: "day", classes: "govuk-input--width-2" },
+                    { name: "month", classes: "govuk-input--width-2" },
+                    { name: "year", classes: "govuk-input--width-4" }
+                  ]
+                }) }}
+              </div>
+            </div>
+          </fieldset>
+
+        </form>
+      </div>
+
+      <!-- Action Buttons and Tools Section -->
+      <div class="govuk-grid-row govuk-!-margin-top-6">
+        <div class="govuk-grid-column-two-thirds">
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Save Changes",
+              classes: "govuk-button"
+            }) }}
+            {{ govukButton({
+              text: "Generate Letter",
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
         </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            Form fields to be implemented based on Slide6.png requirements.
-          </p>
+        
+        <!-- Tools Section -->
+        <div class="govuk-grid-column-one-third">
+          <h2 class="govuk-heading-m">Tools</h2>
+          <p class="govuk-body-s">Tools depending on selected tab.</p>
         </div>
       </div>
     </div>

@@ -98,8 +98,8 @@ export const tbCaseRemovalsPostController = {
         pageTitle: 'TB Case Removals - TBCMS',
         heading: 'TB Case Removals',
         caption: 'Exeter Reactor Removal',
-        formData: formData,
-        errors: errors,
+        formData,
+        errors,
         success: null
       })
     }
@@ -110,7 +110,7 @@ export const tbCaseRemovalsPostController = {
         pageTitle: 'TB Case Removals - TBCMS',
         heading: 'TB Case Removals',
         caption: 'Exeter Reactor Removal',
-        formData: formData,
+        formData,
         errors: null,
         success: 'Letter generation initiated successfully'
       })
@@ -121,7 +121,7 @@ export const tbCaseRemovalsPostController = {
       pageTitle: 'TB Case Removals - TBCMS',
       heading: 'TB Case Removals',
       caption: 'Exeter Reactor Removal',
-      formData: formData,
+      formData,
       errors: null,
       success: 'Removal record saved successfully'
     })

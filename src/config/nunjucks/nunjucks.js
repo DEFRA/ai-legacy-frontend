@@ -40,7 +40,9 @@ export const nunjucksConfig = {
          */
         compile(src, options) {
           const template = nunjucks.compile(src, options.environment)
-          return (ctx) => template.render(ctx)
+          return function renderTemplate(ctx) {
+            return template.render(ctx)
+          }
         }
       }
     },
@@ -54,11 +56,11 @@ export const nunjucksConfig = {
   }
 }
 
-Object.entries(globals).forEach(([name, global]) => {
+Object.entries(globals).forEach(function addGlobal([name, global]) {
   nunjucksEnvironment.addGlobal(name, global)
 })
 
-Object.entries(filters).forEach(([name, filter]) => {
+Object.entries(filters).forEach(function addFilter([name, filter]) {
   nunjucksEnvironment.addFilter(name, filter)
 })
 

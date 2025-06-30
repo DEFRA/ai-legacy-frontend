@@ -9,6 +9,12 @@ import { tbcaseEartags } from '~/src/server/tbcase-eartags/index.js'
 import { tbcaseCaseDetails } from '~/src/server/tbcase-case-details/index.js'
 import { tbcaseTracings } from '~/src/server/tbcase-tracings/index.js'
 import { tbcaseAllocations } from '~/src/server/tbcase-allocations/index.js'
+import { tbcaseDrfs } from '~/src/server/tbcase-drfs/index.js'
+import { tbcaseViews } from '~/src/server/tbcase-views/index.js'
+import { tbcaseCons } from '~/src/server/tbcase-cons/index.js'
+import { tbcaseGis } from '~/src/server/tbcase-gis/index.js'
+import { tbcaseRadialTesting } from '~/src/server/tbcase-radial-testing/index.js'
+import { tbcasePostKill } from '~/src/server/tbcase-post-kill/index.js'
 
 /**
  * @satisfies {ServerRegisterPluginObject<void>}
@@ -26,11 +32,17 @@ export const router = {
       await server.register([
         home,
         about,
+        tbcaseCaseDetails,
         tbcaseRemovals,
         tbcaseEartags,
-        tbcaseCaseDetails,
         tbcaseTracings,
-        tbcaseAllocations
+        tbcaseAllocations,
+        tbcaseGis,
+        tbcaseDrfs,
+        tbcaseCons,
+        tbcaseRadialTesting,
+        tbcasePostKill,
+        tbcaseViews
       ])
 
       // Static assets

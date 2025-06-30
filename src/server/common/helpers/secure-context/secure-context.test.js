@@ -1,27 +1,41 @@
+import {
+  vi,
+  describe,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  afterAll,
+  test,
+  expect
+} from 'vitest'
 import hapi from '@hapi/hapi'
 
 import { secureContext } from '~/src/server/common/helpers/secure-context/secure-context.js'
 import { requestLogger } from '~/src/server/common/helpers/logging/request-logger.js'
 import { config } from '~/src/config/config.js'
 
-const mockAddCACert = jest.fn()
-const mockTlsCreateSecureContext = jest
-  .fn()
-  .mockReturnValue({ context: { addCACert: mockAddCACert } })
-
-jest.mock('hapi-pino', () => ({
-  register: (server) => {
-    server.decorate('server', 'logger', {
-      info: jest.fn(),
-      error: jest.fn()
+vi.mock('hapi-pino', () => ({
+  default: {
+    register: (server) => {
+      server.decorate('server', 'logger', {
+        info: vi.fn(),
+        error: vi.fn()
+      })
+    },
+    name: 'mock-hapi-pino'
+  }
+}))
+vi.mock('node:tls', async () => {
+  const actual = await vi.importActual('node:tls')
+  return {
+    ...actual,
+    createSecureContext: vi.fn().mockReturnValue({
+      context: {
+        addCACert: vi.fn()
+      }
     })
-  },
-  name: 'mock-hapi-pino'
-}))
-jest.mock('node:tls', () => ({
-  ...jest.requireActual('node:tls'),
-  createSecureContext: (...args) => mockTlsCreateSecureContext(...args)
-}))
+  }
+})
 
 describe('#secureContext', () => {
   let server
@@ -72,12 +86,16 @@ describe('#secureContext', () => {
       process.env = PROCESS_ENV
     })
 
-    test('Original tls.createSecureContext should have been called', () => {
-      expect(mockTlsCreateSecureContext).toHaveBeenCalledWith({})
+    test('Original tls.createSecureContext should have been called', async () => {
+      const tls = await import('node:tls')
+      expect(tls.createSecureContext).toHaveBeenCalledWith({})
     })
 
-    test('addCACert should have been called', () => {
-      expect(mockAddCACert).toHaveBeenCalled()
+    test('addCACert should have been called', async () => {
+      const tls = await import('node:tls')
+      const mockCreateSecureContext = tls.createSecureContext
+      const mockResult = mockCreateSecureContext.mock.results[0]?.value
+      expect(mockResult?.context.addCACert).toHaveBeenCalled()
     })
 
     test('secureContext decorator should be available', () => {
