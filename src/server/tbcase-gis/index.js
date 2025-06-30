@@ -11,7 +11,7 @@ import { tbGisController } from '~/src/server/tbcase-gis/controller.js'
 export const tbcaseGis = {
   plugin: {
     name: 'tbcase-gis',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

@@ -11,7 +11,7 @@ import { tbViewsController } from '~/src/server/tbcase-views/controller.js'
 export const tbcaseViews = {
   plugin: {
     name: 'tbcase-views',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

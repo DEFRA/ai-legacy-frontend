@@ -1,4 +1,5 @@
-import { vi, describe, test, expect } from 'vitest'
+import { vi, describe, test, expect, afterAll, beforeAll } from 'vitest'
+
 import hapi from '@hapi/hapi'
 
 const mockLoggerInfo = vi.fn()

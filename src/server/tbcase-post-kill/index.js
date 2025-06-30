@@ -11,7 +11,7 @@ import { tbPostKillController } from '~/src/server/tbcase-post-kill/controller.j
 export const tbcasePostKill = {
   plugin: {
     name: 'tbcase-post-kill',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

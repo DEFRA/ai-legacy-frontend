@@ -11,7 +11,7 @@ import { tbCaseDetailsController } from '~/src/server/tbcase-case-details/contro
 export const tbcaseCaseDetails = {
   plugin: {
     name: 'tbcase-case-details',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

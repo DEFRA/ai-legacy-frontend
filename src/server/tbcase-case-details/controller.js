@@ -13,7 +13,7 @@ export const tbCaseDetailsController = {
    * @param {object} h - Hapi response toolkit
    * @returns {Promise<object>} Rendered view or error response
    */
-  async handler(request, h) {
+  async handler (request, h) {
     try {
       // Validate and extract query parameters
       const { incident: selectedIncident } = request.query || {}
@@ -27,13 +27,17 @@ export const tbCaseDetailsController = {
       const tbStatusResponse = await ApiClient.getTbStatuses()
       const tbStatuses = tbStatusResponse.data || []
 
+      // Fetch finishing unit options from the backend API
+      const finishingUnitResponse = await ApiClient.getFinishingUnits()
+      const finishingUnits = finishingUnitResponse.data || []
+
       // Prepare TB status items for the dropdown
       const tbStatusItems = [{ value: '', text: 'Please select' }]
       if (tbStatuses.length > 0) {
         tbStatuses.forEach((status) => {
           tbStatusItems.push({
-            value: status.status_abb,
-            text: `${status.status_abb} - ${status.status}`
+            value: status.code,
+            text: `${status.code} - ${status.description}`
           })
         })
       } else {
@@ -46,11 +50,31 @@ export const tbCaseDetailsController = {
         )
       }
 
+      // Prepare finishing unit items for the dropdown
+      const finishingUnitItems = [{ value: '', text: 'Please select' }]
+      if (finishingUnits.length > 0) {
+        finishingUnits.forEach((unit) => {
+          finishingUnitItems.push({
+            value: unit.unitType,
+            text: unit.unitType
+          })
+        })
+      } else {
+        // Fallback hard-coded options if API data is unavailable
+        finishingUnitItems.push(
+          { value: 'EMFP', text: 'EMFP' },
+          { value: 'Devon', text: 'Devon' },
+          { value: 'Cornwall', text: 'Cornwall' },
+          { value: 'Dorset', text: 'Dorset' }
+        )
+      }
+
       return h.view('tbcase-case-details/case-details', {
         pageTitle: 'TB Case Form',
         heading: 'TB Case Form',
         caption: 'Exeter Reactor Removals - Landing Page',
         tbStatusItems,
+        finishingUnitItems,
         selectedIncident
       })
     } catch (error) {
@@ -67,6 +91,13 @@ export const tbCaseDetailsController = {
           { value: 'TB', text: 'TB - TB Confirmed' },
           { value: 'SUS', text: 'SUS - Suspect' },
           { value: 'WD', text: 'WD - Withdrawn' }
+        ],
+        finishingUnitItems: [
+          { value: '', text: 'Please select' },
+          { value: 'EMFP', text: 'EMFP' },
+          { value: 'Devon', text: 'Devon' },
+          { value: 'Cornwall', text: 'Cornwall' },
+          { value: 'Dorset', text: 'Dorset' }
         ],
         error: 'Unable to load reference data. Please try again later.'
       })

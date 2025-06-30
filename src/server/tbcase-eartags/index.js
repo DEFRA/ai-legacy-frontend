@@ -14,7 +14,7 @@ import {
 export const tbcaseEartags = {
   plugin: {
     name: 'tbcase-eartags',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

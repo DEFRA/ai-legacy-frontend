@@ -2,7 +2,14 @@
  * @type {ESLint.ConfigData}
  */
 module.exports = {
-  ignorePatterns: ['.server', '.public', 'coverage'],
+  ignorePatterns: [
+    '.server/**',
+    '.public/**',
+    '.jest/**',
+    'coverage/**',
+    '**/*.min.js',
+    'node_modules/**'
+  ],
   overrides: [
     {
       extends: [
@@ -12,9 +19,8 @@ module.exports = {
         'plugin:jsdoc/recommended-typescript-flavor',
         'plugin:n/recommended',
         'plugin:promise/recommended',
-        'plugin:@typescript-eslint/recommended-type-checked',
-        'plugin:@typescript-eslint/stylistic-type-checked',
-        'prettier'
+        '@typescript-eslint/recommended-type-checked',
+        '@typescript-eslint/stylistic-type-checked'
       ],
       env: {
         browser: false
@@ -31,16 +37,9 @@ module.exports = {
         'import',
         'jsdoc',
         'n',
-        'promise',
-        'prettier'
+        'promise'
       ],
       rules: {
-        'prettier/prettier': [
-          'error',
-          {
-            endOfLine: 'auto'
-          }
-        ],
         'no-console': 'error',
 
         // Turn off strict type checking rules
@@ -123,25 +122,35 @@ module.exports = {
     },
     {
       env: {
-        'jest/globals': true
+        node: true
       },
-      extends: [
-        'plugin:jest-formatting/recommended',
-        'plugin:jest/recommended',
-        'plugin:jest/style'
-      ],
+      globals: {
+        jest: 'readonly'
+      },
+      files: ['.jest/**/*.js']
+    },
+    {
+      env: {
+        node: true
+      },
+      globals: {
+        describe: 'readonly',
+        test: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        vi: 'readonly'
+      },
       files: [
         '**/*.test.{cjs,js}',
         '**/__mocks__/**',
         'test/**/*.js',
         'vitest.config.js'
       ],
-      plugins: ['jest'],
       rules: {
-        // Allow Jest to assert on mocked unbound methods
-        '@typescript-eslint/unbound-method': 'off',
-        'jest/unbound-method': 'error',
-
         // Allow import devDependencies
         'n/no-unpublished-import': [
           'error',

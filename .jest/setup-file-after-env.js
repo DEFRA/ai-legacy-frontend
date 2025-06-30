@@ -1,2 +1,4 @@
+import { vi } from 'vitest'
+
 // Globally mock redis in tests
-jest.mock('ioredis')
+vi.mock('ioredis')

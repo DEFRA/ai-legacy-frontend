@@ -10,7 +10,7 @@ export const aboutController = {
    * @param {object} h - Hapi response toolkit
    * @returns {object} Rendered about page view with breadcrumbs
    */
-  handler(_request, h) {
+  handler (_request, h) {
     return h.view('about/index', {
       pageTitle: 'About',
       heading: 'About',

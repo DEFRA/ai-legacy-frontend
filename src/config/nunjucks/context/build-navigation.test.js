@@ -1,9 +1,10 @@
+import { describe, test, expect } from 'vitest'
 import { buildNavigation } from '~/src/config/nunjucks/context/build-navigation.js'
 
 /**
  * @param {Partial<Request>} [options]
  */
-function mockRequest(options) {
+function mockRequest (options) {
   return { ...options }
 }
 

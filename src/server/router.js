@@ -22,7 +22,7 @@ import { tbcasePostKill } from '~/src/server/tbcase-post-kill/index.js'
 export const router = {
   plugin: {
     name: 'router',
-    async register(server) {
+    async register (server) {
       await server.register([inert])
 
       // Health-check route. Used by platform to check if service is running, do not remove!

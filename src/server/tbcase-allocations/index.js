@@ -11,7 +11,7 @@ import { tbCaseAllocationsController } from '~/src/server/tbcase-allocations/con
 export const tbcaseAllocations = {
   plugin: {
     name: 'tbcase-allocations',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

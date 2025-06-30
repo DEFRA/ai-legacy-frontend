@@ -1,14 +1,14 @@
+import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest'
 import { formatDate } from '~/src/config/nunjucks/filters/format-date.js'
 
 describe('#formatDate', () => {
   beforeAll(() => {
-    jest.useFakeTimers({
-      now: new Date('2023-02-01')
-    })
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2023-02-01'))
   })
 
   afterAll(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   describe('With defaults', () => {

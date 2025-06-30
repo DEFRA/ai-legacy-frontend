@@ -11,7 +11,7 @@ import { tbRadialTestingController } from '~/src/server/tbcase-radial-testing/co
 export const tbcaseRadialTesting = {
   plugin: {
     name: 'tbcase-radial-testing',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

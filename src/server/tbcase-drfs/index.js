@@ -11,7 +11,7 @@ import { tbDrfsController } from '~/src/server/tbcase-drfs/controller.js'
 export const tbcaseDrfs = {
   plugin: {
     name: 'tbcase-drfs',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

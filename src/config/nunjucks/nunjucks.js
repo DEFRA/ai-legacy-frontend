@@ -38,9 +38,9 @@ export const nunjucksConfig = {
          * @param {{ environment: typeof nunjucksEnvironment }} options
          * @returns {(options: ReturnType<Awaited<typeof context>>) => string}
          */
-        compile(src, options) {
+        compile (src, options) {
           const template = nunjucks.compile(src, options.environment)
-          return function renderTemplate(ctx) {
+          return function renderTemplate (ctx) {
             return template.render(ctx)
           }
         }
@@ -56,11 +56,11 @@ export const nunjucksConfig = {
   }
 }
 
-Object.entries(globals).forEach(function addGlobal([name, global]) {
+Object.entries(globals).forEach(function addGlobal ([name, global]) {
   nunjucksEnvironment.addGlobal(name, global)
 })
 
-Object.entries(filters).forEach(function addFilter([name, filter]) {
+Object.entries(filters).forEach(function addFilter ([name, filter]) {
   nunjucksEnvironment.addFilter(name, filter)
 })
 

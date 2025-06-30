@@ -11,7 +11,7 @@ import { tbCaseTracingsController } from '~/src/server/tbcase-tracings/controlle
 export const tbcaseTracings = {
   plugin: {
     name: 'tbcase-tracings',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

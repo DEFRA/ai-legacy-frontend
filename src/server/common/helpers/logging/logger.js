@@ -4,7 +4,7 @@ import { loggerOptions } from '~/src/server/common/helpers/logging/logger-option
 
 const logger = pino(loggerOptions)
 
-function createLogger() {
+function createLogger () {
   return logger
 }
 

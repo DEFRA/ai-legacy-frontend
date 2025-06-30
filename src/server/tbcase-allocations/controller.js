@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbCaseAllocationsController = {
-  handler(_request, h) {
+  handler (_request, h) {
     return h.view('tbcase-allocations/allocations', {
       pageTitle: 'Allocations',
       heading: 'Allocations',

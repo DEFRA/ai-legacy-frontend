@@ -14,7 +14,7 @@ import {
 export const tbcaseRemovals = {
   plugin: {
     name: 'tbcase-removals',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

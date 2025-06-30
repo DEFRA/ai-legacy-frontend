@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbRadialTestingController = {
-  handler(request, h) {
+  handler (request, h) {
     try {
       return h.view('tbcase-radial-testing/radial-testing', {
         pageTitle: 'Radial Testing',

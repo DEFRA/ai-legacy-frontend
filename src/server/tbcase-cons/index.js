@@ -11,7 +11,7 @@ import { tbConsController } from '~/src/server/tbcase-cons/controller.js'
 export const tbcaseCons = {
   plugin: {
     name: 'tbcase-cons',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

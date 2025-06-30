@@ -10,7 +10,7 @@ export const homeController = {
    * @param {object} h - Hapi response toolkit
    * @returns {object} Rendered home page view
    */
-  handler(_request, h) {
+  handler (_request, h) {
     return h.view('home/index', {
       pageTitle: 'Home',
       heading: 'Home'
