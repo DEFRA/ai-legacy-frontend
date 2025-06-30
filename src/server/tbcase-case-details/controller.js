@@ -21,55 +21,55 @@ export const tbCaseDetailsController = {
       // Validate incident parameter if provided
       if (selectedIncident) {
         validateStringParameter(selectedIncident, 'incident')
-      }
-
-      // Fetch TB status options from the backend API
+      }      // Fetch TB status options from the backend API
       const tbStatusResponse = await ApiClient.getTbStatuses()
       const tbStatuses = tbStatusResponse.data || []
 
+      // Fetch TB result options from the backend API
+      const tbResultResponse = await ApiClient.getTbResults()
+      const tbResults = tbResultResponse.data || []
+
       // Prepare TB status items for the dropdown
       const tbStatusItems = [{ value: '', text: 'Please select' }]
-      if (tbStatuses.length > 0) {
-        tbStatuses.forEach((status) => {
-          tbStatusItems.push({
-            value: status.status_abb,
-            text: `${status.status_abb} - ${status.status}`
-          })
-        })
-      } else {
-        // Fallback hard-coded options if API data is unavailable
-        tbStatusItems.push(
-          { value: 'CL', text: 'CL - Clear' },
-          { value: 'TB', text: 'TB - TB Confirmed' },
-          { value: 'SUS', text: 'SUS - Suspect' },
-          { value: 'WD', text: 'WD - Withdrawn' }
-        )
+      
+      if (tbStatuses.length === 0) {
+        throw new Error('No TB status options available from API')
       }
+
+      tbStatuses.forEach((status) => {
+        tbStatusItems.push({
+          value: status.code,
+          text: status.code
+        })
+      })
+
+      // Prepare TB result items for the dropdown
+      const tbResultItems = [{ value: '', text: 'Please select' }]
+      
+      if (tbResults.length === 0) {
+        throw new Error('No TB result options available from API')
+      }
+
+      tbResults.forEach((result) => {
+        tbResultItems.push({
+          value: result.code,
+          text: result.code
+        })
+      })
 
       return h.view('tbcase-case-details/case-details', {
         pageTitle: 'TB Case Form',
         heading: 'TB Case Form',
         caption: 'Exeter Reactor Removals - Landing Page',
         tbStatusItems,
+        tbResultItems,
         selectedIncident
       })
     } catch (error) {
       request.logger.error('Error loading TB case details page:', error)
 
-      // Fallback to empty TB statuses if API call fails
-      return h.view('tbcase-case-details/case-details', {
-        pageTitle: 'TB Case Form',
-        heading: 'TB Case Form',
-        caption: 'Exeter Reactor Removals - Landing Page',
-        tbStatusItems: [
-          { value: '', text: 'Please select' },
-          { value: 'CL', text: 'CL - Clear' },
-          { value: 'TB', text: 'TB - TB Confirmed' },
-          { value: 'SUS', text: 'SUS - Suspect' },
-          { value: 'WD', text: 'WD - Withdrawn' }
-        ],
-        error: 'Unable to load reference data. Please try again later.'
-      })
+      // Re-throw the error instead of providing fallback data
+      throw error
     }
   }
 }

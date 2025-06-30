@@ -25,10 +25,58 @@ export class ApiClient {
 
   /**
    * Fetches TB status reference data
-   * @returns {Promise<object>} TB status options
+   * Retrieves all TB status options with optional region filtering
+   * @param {object} params - Query parameters for filtering TB statuses
+   * @param {string} [params.region] - Optional region filter (e.g., "Midlands", "South West")
+   * @returns {Promise<object>} Response object containing data array of TB status options
+   * @returns {Promise<{data: Array<{code: string, description: string, regions: string[]}>}>} TB status options
+   * @example
+   * // Get all TB statuses
+   * const allStatuses = await ApiClient.getTbStatuses()
+   * 
+   * // Get TB statuses for specific region
+   * const midlandsStatuses = await ApiClient.getTbStatuses({ region: 'Midlands' })
    */
-  static async getTbStatuses() {
-    return this.get('/api/v1/reference/tb-status')
+  static async getTbStatuses(params = {}) {
+    const searchParams = new URLSearchParams(params)
+    const query = searchParams.toString() ? `?${searchParams.toString()}` : ''
+    return this.get(`/api/v1/reference/tb-status${query}`)
+  }
+
+  /**
+   * Fetches TB result reference data
+   * @returns {Promise<object>} TB result options
+   */
+  static async getTbResults() {
+    return this.get('/api/v1/reference/tb-result')
+  }
+
+  /**
+   * Fetches allocation booking method reference data
+   * @returns {Promise<object>} Allocation booking method options
+   */
+  static async getAllocationBookingMethods() {
+    return this.get('/api/v1/reference/allocation-booking-method')
+  }
+
+  /**
+   * Fetches allocation skip reason reference data
+   * @returns {Promise<object>} Allocation skip reason options
+   */
+  static async getAllocationSkipReasons() {
+    return this.get('/api/v1/reference/allocation-skip-reason')
+  }
+
+  /**
+   * Fetches finishing unit reference data
+   * @param {object} params - Query parameters for filtering finishing units
+   * @param {string} [params.region] - Optional region filter
+   * @returns {Promise<object>} Finishing unit options
+   */
+  static async getFinishingUnits(params = {}) {
+    const searchParams = new URLSearchParams(params)
+    const query = searchParams.toString() ? `?${searchParams.toString()}` : ''
+    return this.get(`/api/v1/reference/finishing-unit${query}`)
   }
 
   /**
