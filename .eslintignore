@@ -1,0 +1,6 @@
+.server/
+.public/
+.jest/
+coverage/
+**/*.min.js
+node_modules/
