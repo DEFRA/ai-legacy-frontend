@@ -14,9 +14,15 @@ export const cphSearchController = {
    */
   async handler (request, h) {
     try {
-      const { cph } = request.query || {}
+      const { cph, created } = request.query || {}
       let holding = null
       let errorMessage = null
+      let successMessage = null
+
+      // Check if this is a redirect from successful creation
+      if (created === 'true' && cph) {
+        successMessage = `Holding with CPH ${cph} was created successfully`
+      }
 
       // If CPH is provided, attempt to search for it
       // CPH validation is handled in the route pre-handler
@@ -47,7 +53,8 @@ export const cphSearchController = {
         ],
         cph,
         holding,
-        errorMessage
+        errorMessage,
+        successMessage
       })
     } catch (error) {
       request.logger.error('Error in CPH search controller:', error)
@@ -63,7 +70,8 @@ export const cphSearchController = {
             text: 'Search for Holding'
           }
         ],
-        errorMessage: 'An unexpected error occurred. Please try again.'
+        errorMessage: 'An unexpected error occurred. Please try again.',
+        successMessage: null
       })
     }
   }

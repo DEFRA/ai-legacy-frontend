@@ -43,7 +43,8 @@ export const cphSearch = {
           options: {
             validate: {
               query: Joi.object({
-                cph: cphSchema.optional()
+                cph: cphSchema.optional(),
+                created: Joi.string().valid('true').optional()
               }),
               failAction: async (request, h, error) => {
                 const validationError = error.details?.[0]?.message || 'Invalid CPH format'

@@ -125,4 +125,27 @@ export class ApiClient {
   static async getHoldingByCph (cph) {
     return this.get(`/api/v1/holding/${encodeURIComponent(cph)}`)
   }
+
+  /**
+   * Creates a new holding
+   * @param {object} holdingData - The holding data to create
+   * @returns {Promise<object>} Created holding data from the API
+   */
+  static async createHolding (holdingData) {
+    const response = await fetch(`${BACKEND_API_URL}/api/v1/holding`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(holdingData)
+    })
+
+    if (!response.ok) {
+      throw new Error(
+        `API request failed: ${response.status} ${response.statusText}`
+      )
+    }
+
+    return await response.json()
+  }
 }

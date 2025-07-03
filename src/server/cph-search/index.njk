@@ -49,6 +49,15 @@
         }) }}
       </form>
 
+      {% if successMessage %}
+        <div class="govuk-!-margin-top-6">
+          {{ govukNotificationBanner({
+            type: "success",
+            text: successMessage
+          }) }}
+        </div>
+      {% endif %}
+
       {% if errorMessage and not holding %}
         <div class="govuk-!-margin-top-6">
           {{ govukNotificationBanner({

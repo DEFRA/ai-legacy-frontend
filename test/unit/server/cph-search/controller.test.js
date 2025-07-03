@@ -44,7 +44,8 @@ describe('CPH Search Controller', () => {
         ],
         cph: undefined,
         holding: null,
-        errorMessage: null
+        errorMessage: null,
+        successMessage: null
       })
       expect(result).toBe('mocked view response')
     })
@@ -75,7 +76,40 @@ describe('CPH Search Controller', () => {
         ],
         cph: '12/123/1234',
         holding: mockHolding,
-        errorMessage: null
+        errorMessage: null,
+        successMessage: null
+      })
+      expect(result).toBe('mocked view response')
+    })
+
+    it('should display success message when redirected from create', async () => {
+      const mockHolding = {
+        cph: '12/123/1234',
+        name: 'Test Farm',
+        address: 'Test Address'
+      }
+      ApiClient.getHoldingByCph.mockResolvedValue(mockHolding)
+      mockRequest.query = { cph: '12/123/1234', created: 'true' }
+
+      const result = await cphSearchController.handler(mockRequest, mockH)
+
+      expect(ApiClient.getHoldingByCph).toHaveBeenCalledWith('12/123/1234')
+      expect(mockH.view).toHaveBeenCalledWith('cph-search/index', {
+        pageTitle: 'Search for Holding',
+        heading: 'Search for Holding',
+        breadcrumbs: [
+          {
+            text: 'Home',
+            href: '/'
+          },
+          {
+            text: 'Search for Holding'
+          }
+        ],
+        cph: '12/123/1234',
+        holding: mockHolding,
+        errorMessage: null,
+        successMessage: 'Holding with CPH 12/123/1234 was created successfully'
       })
       expect(result).toBe('mocked view response')
     })
@@ -102,7 +136,8 @@ describe('CPH Search Controller', () => {
         ],
         cph: '99/999/9999',
         holding: null,
-        errorMessage: 'No holding found with CPH number 99/999/9999'
+        errorMessage: 'No holding found with CPH number 99/999/9999',
+        successMessage: null
       })
       expect(result).toBe('mocked view response')
     })
@@ -129,7 +164,8 @@ describe('CPH Search Controller', () => {
         ],
         cph: '12/123/1234',
         holding: null,
-        errorMessage: 'An error occurred while searching for the holding. Please try again.'
+        errorMessage: 'An error occurred while searching for the holding. Please try again.',
+        successMessage: null
       })
       expect(result).toBe('mocked view response')
     })

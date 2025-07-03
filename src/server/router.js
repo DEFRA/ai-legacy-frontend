@@ -16,6 +16,7 @@ import { tbcaseGis } from './tbcase-gis/index.js'
 import { tbcaseRadialTesting } from './tbcase-radial-testing/index.js'
 import { tbcasePostKill } from './tbcase-post-kill/index.js'
 import { cphSearch } from './cph-search/index.js'
+import { cphCreate } from './cph-create/index.js'
 
 /**
  * @satisfies {ServerRegisterPluginObject<void>}
@@ -34,6 +35,7 @@ export const router = {
         home,
         about,
         cphSearch,
+        cphCreate,
         tbcaseCaseDetails,
         tbcaseRemovals,
         tbcaseEartags,
