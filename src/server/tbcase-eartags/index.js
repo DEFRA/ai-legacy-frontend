@@ -1,7 +1,7 @@
 import {
   tbCaseEartagsController,
   tbCaseEartagsPostController
-} from '~/src/server/tbcase-eartags/controller.js'
+} from './controller.js'
 
 /**
  * Sets up the routes used in the TB case eartags page.
@@ -14,7 +14,7 @@ import {
 export const tbcaseEartags = {
   plugin: {
     name: 'tbcase-eartags',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

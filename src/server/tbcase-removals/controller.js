@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbCaseRemovalsController = {
-  handler(request, h) {
+  handler (request, h) {
     // Default form data structure
     const defaultFormData = {
       cphNumber: '01/234/5678',
@@ -61,7 +61,7 @@ export const tbCaseRemovalsController = {
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbCaseRemovalsPostController = {
-  handler(request, h) {
+  handler (request, h) {
     const formData = request.payload
     const errors = {}
     let hasErrors = false

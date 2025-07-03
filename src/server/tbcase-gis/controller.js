@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbGisController = {
-  handler(_request, h) {
+  handler (_request, h) {
     return h.view('tbcase-gis/gis', {
       pageTitle: 'GIS',
       heading: 'GIS',

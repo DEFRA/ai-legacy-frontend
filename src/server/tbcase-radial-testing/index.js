@@ -1,4 +1,4 @@
-import { tbRadialTestingController } from '~/src/server/tbcase-radial-testing/controller.js'
+import { tbRadialTestingController } from './controller.js'
 
 /**
  * Sets up the routes used in the TB case Radial Testing page.
@@ -11,7 +11,7 @@ import { tbRadialTestingController } from '~/src/server/tbcase-radial-testing/co
 export const tbcaseRadialTesting = {
   plugin: {
     name: 'tbcase-radial-testing',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

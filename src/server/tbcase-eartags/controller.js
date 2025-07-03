@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbCaseEartagsController = {
-  handler(request, h) {
+  handler (request, h) {
     // Default form data structure for eartags
     const defaultFormData = {
       cphNumber: '01/234/5678',
@@ -123,7 +123,7 @@ export const tbCaseEartagsController = {
 /**
  * Helper function to validate eartags form data
  */
-function validateEartagsForm(formData) {
+function validateEartagsForm (formData) {
   const errors = {}
 
   if (!formData.cphNumber || formData.cphNumber.trim() === '') {
@@ -144,7 +144,7 @@ function validateEartagsForm(formData) {
 /**
  * Helper function to get success message based on action
  */
-function getActionSuccessMessage(action, selectedCount) {
+function getActionSuccessMessage (action, selectedCount) {
   const messages = {
     generate: 'Report/letter generation initiated successfully',
     delete:
@@ -171,7 +171,7 @@ function getActionSuccessMessage(action, selectedCount) {
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbCaseEartagsPostController = {
-  handler(request, h) {
+  handler (request, h) {
     const formData = request.payload
     const errors = validateEartagsForm(formData)
     const hasErrors = Object.keys(errors).length > 0

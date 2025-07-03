@@ -1,7 +1,7 @@
 import {
   tbCaseRemovalsController,
   tbCaseRemovalsPostController
-} from '~/src/server/tbcase-removals/controller.js'
+} from './controller.js'
 
 /**
  * Sets up the routes used in the TB case removals page.
@@ -14,7 +14,7 @@ import {
 export const tbcaseRemovals = {
   plugin: {
     name: 'tbcase-removals',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

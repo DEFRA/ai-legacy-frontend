@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbConsController = {
-  handler(_request, h) {
+  handler (_request, h) {
     return h.view('tbcase-cons/cons', {
       pageTitle: 'Cons',
       heading: 'Cons',

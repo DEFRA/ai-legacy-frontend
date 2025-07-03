@@ -3,8 +3,8 @@ import path from 'path'
 import nunjucks from 'nunjucks'
 import { load } from 'cheerio'
 import { camelCase } from 'lodash'
-import * as filters from '~/src/config/nunjucks/filters/filters.js'
-import * as globals from '~/src/config/nunjucks/globals/globals.js'
+import * as filters from './config/nunjucks/filters/filters.js'
+import * as globals from './config/nunjucks/globals/globals.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const nunjucksTestEnv = nunjucks.configure(
@@ -32,7 +32,7 @@ Object.entries(filters).forEach(([name, filter]) => {
  * @param {object} params
  * @param {string} [callBlock]
  */
-export function renderComponent(componentName, params, callBlock) {
+export function renderComponent (componentName, params, callBlock) {
   const macroPath = `${componentName}/macro.njk`
   const macroName = `app${
     componentName.charAt(0).toUpperCase() + camelCase(componentName.slice(1))

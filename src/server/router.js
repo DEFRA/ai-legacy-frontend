@@ -1,20 +1,20 @@
 import inert from '@hapi/inert'
 
-import { health } from '~/src/server/health/index.js'
-import { home } from '~/src/server/home/index.js'
-import { serveStaticFiles } from '~/src/server/common/helpers/serve-static-files.js'
-import { about } from '~/src/server/about/index.js'
-import { tbcaseRemovals } from '~/src/server/tbcase-removals/index.js'
-import { tbcaseEartags } from '~/src/server/tbcase-eartags/index.js'
-import { tbcaseCaseDetails } from '~/src/server/tbcase-case-details/index.js'
-import { tbcaseTracings } from '~/src/server/tbcase-tracings/index.js'
-import { tbcaseAllocations } from '~/src/server/tbcase-allocations/index.js'
-import { tbcaseDrfs } from '~/src/server/tbcase-drfs/index.js'
-import { tbcaseViews } from '~/src/server/tbcase-views/index.js'
-import { tbcaseCons } from '~/src/server/tbcase-cons/index.js'
-import { tbcaseGis } from '~/src/server/tbcase-gis/index.js'
-import { tbcaseRadialTesting } from '~/src/server/tbcase-radial-testing/index.js'
-import { tbcasePostKill } from '~/src/server/tbcase-post-kill/index.js'
+import { health } from './health/index.js'
+import { home } from './home/index.js'
+import { serveStaticFiles } from './common/helpers/serve-static-files.js'
+import { about } from './about/index.js'
+import { tbcaseRemovals } from './tbcase-removals/index.js'
+import { tbcaseEartags } from './tbcase-eartags/index.js'
+import { tbcaseCaseDetails } from './tbcase-case-details/index.js'
+import { tbcaseTracings } from './tbcase-tracings/index.js'
+import { tbcaseAllocations } from './tbcase-allocations/index.js'
+import { tbcaseDrfs } from './tbcase-drfs/index.js'
+import { tbcaseViews } from './tbcase-views/index.js'
+import { tbcaseCons } from './tbcase-cons/index.js'
+import { tbcaseGis } from './tbcase-gis/index.js'
+import { tbcaseRadialTesting } from './tbcase-radial-testing/index.js'
+import { tbcasePostKill } from './tbcase-post-kill/index.js'
 
 /**
  * @satisfies {ServerRegisterPluginObject<void>}
@@ -22,7 +22,7 @@ import { tbcasePostKill } from '~/src/server/tbcase-post-kill/index.js'
 export const router = {
   plugin: {
     name: 'router',
-    async register(server) {
+    async register (server) {
       await server.register([inert])
 
       // Health-check route. Used by platform to check if service is running, do not remove!

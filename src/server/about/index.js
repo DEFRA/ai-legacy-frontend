@@ -1,4 +1,4 @@
-import { aboutController } from '~/src/server/about/controller.js'
+import { aboutController } from './controller.js'
 
 /**
  * Sets up the routes used in the /about page.
@@ -8,7 +8,7 @@ import { aboutController } from '~/src/server/about/controller.js'
 export const about = {
   plugin: {
     name: 'about',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

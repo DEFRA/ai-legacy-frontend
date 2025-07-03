@@ -13,7 +13,7 @@ export class ApiClient {
    * @returns {Promise<object>} The JSON response from the API
    * @throws {Error} When the API request fails
    */
-  static async get(endpoint) {
+  static async get (endpoint) {
     const response = await fetch(`${BACKEND_API_URL}${endpoint}`)
     if (!response.ok) {
       throw new Error(
@@ -33,11 +33,11 @@ export class ApiClient {
    * @example
    * // Get all TB statuses
    * const allStatuses = await ApiClient.getTbStatuses()
-   * 
+   *
    * // Get TB statuses for specific region
    * const midlandsStatuses = await ApiClient.getTbStatuses({ region: 'Midlands' })
    */
-  static async getTbStatuses(params = {}) {
+  static async getTbStatuses (params = {}) {
     const searchParams = new URLSearchParams(params)
     const query = searchParams.toString() ? `?${searchParams.toString()}` : ''
     return this.get(`/api/v1/reference/tb-status${query}`)
@@ -47,7 +47,7 @@ export class ApiClient {
    * Fetches TB result reference data
    * @returns {Promise<object>} TB result options
    */
-  static async getTbResults() {
+  static async getTbResults () {
     return this.get('/api/v1/reference/tb-result')
   }
 
@@ -55,7 +55,7 @@ export class ApiClient {
    * Fetches allocation booking method reference data
    * @returns {Promise<object>} Allocation booking method options
    */
-  static async getAllocationBookingMethods() {
+  static async getAllocationBookingMethods () {
     return this.get('/api/v1/reference/allocation-booking-method')
   }
 
@@ -63,7 +63,7 @@ export class ApiClient {
    * Fetches allocation skip reason reference data
    * @returns {Promise<object>} Allocation skip reason options
    */
-  static async getAllocationSkipReasons() {
+  static async getAllocationSkipReasons () {
     return this.get('/api/v1/reference/allocation-skip-reason')
   }
 
@@ -73,7 +73,7 @@ export class ApiClient {
    * @param {string} [params.region] - Optional region filter
    * @returns {Promise<object>} Finishing unit options
    */
-  static async getFinishingUnits(params = {}) {
+  static async getFinishingUnits (params = {}) {
     const searchParams = new URLSearchParams(params)
     const query = searchParams.toString() ? `?${searchParams.toString()}` : ''
     return this.get(`/api/v1/reference/finishing-unit${query}`)
@@ -84,7 +84,7 @@ export class ApiClient {
    * @param {object} params - Query parameters for filtering cases
    * @returns {Promise<object>} TB cases data
    */
-  static async getCases(params = {}) {
+  static async getCases (params = {}) {
     const searchParams = new URLSearchParams(params)
     const query = searchParams.toString() ? `?${searchParams.toString()}` : ''
     return this.get(`/api/v1/cases${query}`)
@@ -95,7 +95,7 @@ export class ApiClient {
    * @param {string} natInc - The national incident number
    * @returns {Promise<object>} TB case data
    */
-  static async getCaseByIncident(natInc) {
+  static async getCaseByIncident (natInc) {
     return this.get(`/api/v1/cases/${natInc}`)
   }
 
@@ -104,7 +104,7 @@ export class ApiClient {
    * @param {string} natInc - The national incident number
    * @returns {Promise<object>} Detailed TB case data
    */
-  static async getCaseDetails(natInc) {
+  static async getCaseDetails (natInc) {
     return this.get(`/api/v1/cases/${natInc}/details`)
   }
 
@@ -113,7 +113,7 @@ export class ApiClient {
    * @param {string} cph - The CPH identifier
    * @returns {Promise<object>} CPH data
    */
-  static async getCphData(cph) {
+  static async getCphData (cph) {
     return this.get(`/api/v1/cph/${cph}`)
   }
 }

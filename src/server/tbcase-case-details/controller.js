@@ -13,7 +13,7 @@ export const tbCaseDetailsController = {
    * @param {object} h - Hapi response toolkit
    * @returns {Promise<object>} Rendered view or error response
    */
-  async handler(request, h) {
+  async handler (request, h) {
     try {
       // Validate and extract query parameters
       const { incident: selectedIncident } = request.query || {}
@@ -31,7 +31,7 @@ export const tbCaseDetailsController = {
 
       // Prepare TB status items for the dropdown
       const tbStatusItems = [{ value: '', text: 'Please select' }]
-      
+
       if (tbStatuses.length === 0) {
         throw new Error('No TB status options available from API')
       }
@@ -45,7 +45,7 @@ export const tbCaseDetailsController = {
 
       // Prepare TB result items for the dropdown
       const tbResultItems = [{ value: '', text: 'Please select' }]
-      
+
       if (tbResults.length === 0) {
         throw new Error('No TB result options available from API')
       }
