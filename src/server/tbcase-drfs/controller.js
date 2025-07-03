@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbDrfsController = {
-  handler(_request, h) {
+  handler (_request, h) {
     return h.view('tbcase-drfs/drfs', {
       pageTitle: 'DRFs',
       heading: 'DRFs',

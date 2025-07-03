@@ -1,4 +1,4 @@
-import { tbConsController } from '~/src/server/tbcase-cons/controller.js'
+import { tbConsController } from './controller.js'
 
 /**
  * Sets up the routes used in the TB case cons page.
@@ -11,7 +11,7 @@ import { tbConsController } from '~/src/server/tbcase-cons/controller.js'
 export const tbcaseCons = {
   plugin: {
     name: 'tbcase-cons',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

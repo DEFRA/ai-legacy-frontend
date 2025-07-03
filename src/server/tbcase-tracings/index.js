@@ -1,4 +1,4 @@
-import { tbCaseTracingsController } from '~/src/server/tbcase-tracings/controller.js'
+import { tbCaseTracingsController } from './controller.js'
 
 /**
  * Sets up the routes used in the TB case tracings page.
@@ -11,7 +11,7 @@ import { tbCaseTracingsController } from '~/src/server/tbcase-tracings/controlle
 export const tbcaseTracings = {
   plugin: {
     name: 'tbcase-tracings',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

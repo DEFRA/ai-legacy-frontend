@@ -10,7 +10,7 @@
  * @returns {boolean} True if valid, throws error if invalid
  * @throws {Error} When validation fails
  */
-export function validateStringParameter(value, paramName) {
+export function validateStringParameter (value, paramName) {
   if (value !== undefined && typeof value !== 'string') {
     throw new Error(`Invalid ${paramName} parameter: must be a string`)
   }
@@ -29,7 +29,7 @@ export function validateStringParameter(value, paramName) {
  * @returns {boolean} True if valid, throws error if invalid
  * @throws {Error} When validation fails
  */
-export function validateNumericParameter(value, paramName) {
+export function validateNumericParameter (value, paramName) {
   if (
     value !== undefined &&
     (isNaN(value) || typeof Number(value) !== 'number')
@@ -47,7 +47,7 @@ export function validateNumericParameter(value, paramName) {
  * @returns {boolean} True if all required fields are present
  * @throws {Error} When required fields are missing
  */
-export function validateRequiredParameters(params, requiredFields) {
+export function validateRequiredParameters (params, requiredFields) {
   const missingFields = requiredFields.filter(
     (field) => params[field] === undefined || params[field] === null
   )

@@ -1,4 +1,4 @@
-import { healthController } from '~/src/server/health/controller.js'
+import { healthController } from './controller.js'
 
 /**
  * @satisfies {ServerRegisterPluginObject<void>}
@@ -6,7 +6,7 @@ import { healthController } from '~/src/server/health/controller.js'
 export const health = {
   plugin: {
     name: 'health',
-    register(server) {
+    register (server) {
       server.route({
         method: 'GET',
         path: '/health',

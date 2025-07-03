@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbCaseTracingsController = {
-  handler(_request, h) {
+  handler (_request, h) {
     return h.view('tbcase-tracings/tracings', {
       pageTitle: 'Tracings',
       heading: 'Tracings',

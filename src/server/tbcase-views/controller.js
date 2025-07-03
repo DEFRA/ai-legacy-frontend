@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbViewsController = {
-  handler(request, h) {
+  handler (request, h) {
     try {
       return h.view('tbcase-views/views', {
         pageTitle: 'Views - TB Case Views',

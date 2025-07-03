@@ -3,7 +3,7 @@
  * @satisfies {Partial<ServerRoute>}
  */
 export const tbPostKillController = {
-  handler(_request, h) {
+  handler (_request, h) {
     return h.view('tbcase-post-kill/post-kill', {
       pageTitle: 'Post-Kill',
       heading: 'Post-Kill',

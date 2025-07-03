@@ -1,4 +1,4 @@
-import { tbPostKillController } from '~/src/server/tbcase-post-kill/controller.js'
+import { tbPostKillController } from './controller.js'
 
 /**
  * Sets up the routes used in the TB case post kill page.
@@ -11,7 +11,7 @@ import { tbPostKillController } from '~/src/server/tbcase-post-kill/controller.j
 export const tbcasePostKill = {
   plugin: {
     name: 'tbcase-post-kill',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

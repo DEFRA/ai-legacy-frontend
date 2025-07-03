@@ -1,4 +1,4 @@
-import { tbCaseDetailsController } from '~/src/server/tbcase-case-details/controller.js'
+import { tbCaseDetailsController } from './controller.js'
 
 /**
  * Sets up the routes used in the TB case details page.
@@ -11,7 +11,7 @@ import { tbCaseDetailsController } from '~/src/server/tbcase-case-details/contro
 export const tbcaseCaseDetails = {
   plugin: {
     name: 'tbcase-case-details',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',

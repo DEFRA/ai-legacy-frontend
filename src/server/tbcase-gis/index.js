@@ -1,4 +1,4 @@
-import { tbGisController } from '~/src/server/tbcase-gis/controller.js'
+import { tbGisController } from './controller.js'
 
 /**
  * Sets up the routes used in the TB case GIS page.
@@ -11,7 +11,7 @@ import { tbGisController } from '~/src/server/tbcase-gis/controller.js'
 export const tbcaseGis = {
   plugin: {
     name: 'tbcase-gis',
-    register(server) {
+    register (server) {
       server.route([
         {
           method: 'GET',
