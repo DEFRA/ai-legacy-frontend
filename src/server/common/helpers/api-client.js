@@ -116,4 +116,13 @@ export class ApiClient {
   static async getCphData (cph) {
     return this.get(`/api/v1/cph/${cph}`)
   }
+
+  /**
+   * Fetches holding data by CPH number
+   * @param {string} cph - The CPH identifier (format: XX/XXX/XXXX)
+   * @returns {Promise<object>} Holding data from the API
+   */
+  static async getHoldingByCph (cph) {
+    return this.get(`/api/v1/holding/${encodeURIComponent(cph)}`)
+  }
 }

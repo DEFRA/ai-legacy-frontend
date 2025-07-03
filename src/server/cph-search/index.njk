@@ -1,0 +1,166 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% block beforeContent %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ appHeading({
+        text: heading,
+        caption: "TB Case Management System"
+      }) }}
+
+      <p class="govuk-body">Enter a County Parish Holding (CPH) number to search for holding information.</p>
+
+      <form method="get" action="/cph-search">
+        {{ govukInput({
+          label: {
+            text: "CPH Number",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "Enter the CPH number in format XX/XXX/XXXX (for example 12/123/1234)"
+          },
+          id: "cph",
+          name: "cph",
+          type: "text",
+          value: cph,
+          classes: "govuk-input--width-20",
+          spellcheck: false,
+          autocomplete: "off",
+          pattern: "[0-9]{2}/[0-9]{3}/[0-9]{4}",
+          errorMessage: {
+            text: errorMessage
+          } if errorMessage and not holding
+        }) }}
+
+        {{ govukButton({
+          text: "Search",
+          type: "submit"
+        }) }}
+      </form>
+
+      {% if errorMessage and not holding %}
+        <div class="govuk-!-margin-top-6">
+          {{ govukNotificationBanner({
+            type: "error",
+            text: errorMessage
+          }) }}
+          
+          <p class="govuk-body">
+            <a href="/cph-create" class="govuk-link">Create a new CPH</a> if you cannot find the holding you're looking for.
+          </p>
+        </div>
+      {% endif %}
+
+      {% if holding %}
+        <div class="govuk-!-margin-top-6">
+          {{ govukNotificationBanner({
+            type: "success",
+            text: "Holding found successfully"
+          }) }}
+          
+          <h2 class="govuk-heading-m">Holding Details</h2>
+          
+          {{ govukSummaryList({
+            rows: [
+              {
+                key: {
+                  text: "CPH Number"
+                },
+                value: {
+                  text: holding.data.holding.details.cph
+                }
+              },
+              {
+                key: {
+                  text: "Holding Name"
+                },
+                value: {
+                  text: holding.data.holding.details.name
+                }
+              },
+              {
+                key: {
+                  text: "Description"
+                },
+                value: {
+                  text: holding.data.holding.details.description or "No description available"
+                }
+              },
+              {
+                key: {
+                  text: "Address"
+                },
+                value: {
+                  html: [
+                    holding.data.holding.details.address.street,
+                    holding.data.holding.details.address.locality,
+                    holding.data.holding.details.address.town,
+                    holding.data.holding.details.address.county,
+                    holding.data.holding.details.address.postcode
+                  ] | reject("equalto", null) | reject("equalto", "") | join("<br>")
+                }
+              },
+              {
+                key: {
+                  text: "Map Reference"
+                },
+                value: {
+                  text: holding.data.holding.details.geolocation.mapReference or "Not available"
+                }
+              } if holding.data.holding.details.geolocation,
+              {
+                key: {
+                  text: "Easting"
+                },
+                value: {
+                  text: holding.data.holding.details.geolocation.easting or "Not available"
+                }
+              } if holding.data.holding.details.geolocation,
+              {
+                key: {
+                  text: "Northing"
+                },
+                value: {
+                  text: holding.data.holding.details.geolocation.northing or "Not available"
+                }
+              } if holding.data.holding.details.geolocation,
+              {
+                key: {
+                  text: "Contact Information"
+                },
+                value: {
+                  html: (holding.data.holding.details.contacts | length) + " contact(s) available" if holding.data.holding.details.contacts | length > 0 else "No contact information available"
+                }
+              },
+              {
+                key: {
+                  text: "Last Updated"
+                },
+                value: {
+                  text: holding.data.holding.updatedAt | formatDate if holding.data.holding.updatedAt else "Not available"
+                }
+              }
+            ]
+          }) }}
+        </div>
+      {% endif %}
+
+      {% if cph and not holding and not errorMessage %}
+        {{ govukInsetText({
+          text: "Searching for CPH number " + cph + "..."
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

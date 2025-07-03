@@ -58,3 +58,37 @@ export function validateRequiredParameters (params, requiredFields) {
 
   return true
 }
+
+/**
+ * Validates that a CPH parameter matches the correct format
+ * @param {any} value - The CPH value to validate
+ * @returns {boolean} True if valid
+ * @throws {Error} When validation fails
+ */
+export function validateCphFormat (value) {
+  if (value === undefined || value === null) {
+    return true // Optional parameter
+  }
+
+  if (typeof value !== 'string') {
+    throw new Error('CPH number must be a string')
+  }
+
+  // CPH format: XX/XXX/XXXX - exactly 2 digits, slash, 3 digits, slash, 4 digits
+  const parts = value.split('/')
+  if (parts.length !== 3) {
+    throw new Error('CPH number must be in format XX/XXX/XXXX (e.g. 12/123/1234)')
+  }
+
+  const [first, second, third] = parts
+  if (first.length !== 2 || second.length !== 3 || third.length !== 4) {
+    throw new Error('CPH number must be in format XX/XXX/XXXX (e.g. 12/123/1234)')
+  }
+
+  // Check each part contains only digits
+  if (!/^\d+$/.test(first) || !/^\d+$/.test(second) || !/^\d+$/.test(third)) {
+    throw new Error('CPH number must be in format XX/XXX/XXXX (e.g. 12/123/1234)')
+  }
+
+  return true
+}
