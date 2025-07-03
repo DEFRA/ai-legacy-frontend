@@ -71,7 +71,7 @@ export const config = convict({
   backendApiUrl: {
     doc: 'Backend API base URL',
     format: String,
-    default: 'http://localhost:3002',
+    default: 'http://host.docker.internal:3002',
     env: 'BACKEND_API_URL'
   },
   log: {

@@ -24,6 +24,7 @@ export const cphSearchController = {
         try {
           holding = await ApiClient.getHoldingByCph(cph)
         } catch (error) {
+          request.logger.error('Error fetching holding by CPH:', error)
           if (error.message.includes('404')) {
             errorMessage = `No holding found with CPH number ${cph}`
           } else {
