@@ -35,10 +35,6 @@ describe('CPH Search Controller', () => {
         heading: 'Search for Holding',
         breadcrumbs: [
           {
-            text: 'Home',
-            href: '/'
-          },
-          {
             text: 'Search for Holding'
           }
         ],
@@ -66,10 +62,6 @@ describe('CPH Search Controller', () => {
         pageTitle: 'Search for Holding',
         heading: 'Search for Holding',
         breadcrumbs: [
-          {
-            text: 'Home',
-            href: '/'
-          },
           {
             text: 'Search for Holding'
           }
@@ -99,10 +91,6 @@ describe('CPH Search Controller', () => {
         heading: 'Search for Holding',
         breadcrumbs: [
           {
-            text: 'Home',
-            href: '/'
-          },
-          {
             text: 'Search for Holding'
           }
         ],
@@ -127,10 +115,6 @@ describe('CPH Search Controller', () => {
         heading: 'Search for Holding',
         breadcrumbs: [
           {
-            text: 'Home',
-            href: '/'
-          },
-          {
             text: 'Search for Holding'
           }
         ],
@@ -154,10 +138,6 @@ describe('CPH Search Controller', () => {
         pageTitle: 'Search for Holding',
         heading: 'Search for Holding',
         breadcrumbs: [
-          {
-            text: 'Home',
-            href: '/'
-          },
           {
             text: 'Search for Holding'
           }

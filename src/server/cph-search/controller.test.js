@@ -34,7 +34,6 @@ describe('CPH Search Controller', () => {
         pageTitle: 'Search for Holding',
         heading: 'Search for Holding',
         breadcrumbs: [
-          { text: 'Home', href: '/' },
           { text: 'Search for Holding' }
         ],
         cph: undefined,
@@ -73,7 +72,6 @@ describe('CPH Search Controller', () => {
         pageTitle: 'Search for Holding',
         heading: 'Search for Holding',
         breadcrumbs: [
-          { text: 'Home', href: '/' },
           { text: 'Search for Holding' }
         ],
         cph: '12/123/1234',
@@ -92,7 +90,6 @@ describe('CPH Search Controller', () => {
         pageTitle: 'Search for Holding',
         heading: 'Search for Holding',
         breadcrumbs: [
-          { text: 'Home', href: '/' },
           { text: 'Search for Holding' }
         ],
         cph: '12/123/1234',
@@ -111,7 +108,6 @@ describe('CPH Search Controller', () => {
         pageTitle: 'Search for Holding',
         heading: 'Search for Holding',
         breadcrumbs: [
-          { text: 'Home', href: '/' },
           { text: 'Search for Holding' }
         ],
         cph: '12/123/1234',
@@ -133,7 +129,6 @@ describe('CPH Search Controller', () => {
         pageTitle: 'Search for Holding',
         heading: 'Search for Holding',
         breadcrumbs: [
-          { text: 'Home', href: '/' },
           { text: 'Search for Holding' }
         ],
         errorMessage: 'An unexpected error occurred. Please try again.'

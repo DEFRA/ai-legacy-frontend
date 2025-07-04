@@ -44,10 +44,6 @@ export const cphSearchController = {
         heading: 'Search for Holding',
         breadcrumbs: [
           {
-            text: 'Home',
-            href: '/'
-          },
-          {
             text: 'Search for Holding'
           }
         ],
@@ -62,10 +58,6 @@ export const cphSearchController = {
         pageTitle: 'Search for Holding',
         heading: 'Search for Holding',
         breadcrumbs: [
-          {
-            text: 'Home',
-            href: '/'
-          },
           {
             text: 'Search for Holding'
           }
