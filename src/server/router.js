@@ -17,6 +17,7 @@ import { tbcaseRadialTesting } from './tbcase-radial-testing/index.js'
 import { tbcasePostKill } from './tbcase-post-kill/index.js'
 import { cphSearch } from './cph-search/index.js'
 import { cphCreate } from './cph-create/index.js'
+import { holdingDetails } from './holding-details/index.js'
 
 /**
  * @satisfies {ServerRegisterPluginObject<void>}
@@ -36,6 +37,7 @@ export const router = {
         about,
         cphSearch,
         cphCreate,
+        holdingDetails,
         tbcaseCaseDetails,
         tbcaseRemovals,
         tbcaseEartags,
