@@ -1,11 +1,3 @@
-#CONTEXT
-Within the input_prompts/tbcms-screenshots/tb-case-forms folder is a PNG screenshot of each tab that I want to implement on a single webpage.
-
-#ANALYSIS
-For each webpage, I want you to analyse the PNG screenshot to determine the required elements, fields, and structure. Generate a checklist of all visible elements.
-
-#IMPLEMENTATION
-Important: Only implement elements and fields that are explicitly visible in the screenshots , create the elements in keeping with:
 
 - Adheres to GDS gov.uk design system referenced here: https://design-system.service.gov.uk Get started – GOV.UK Design System
 - Meets GDS accessibility requirements referenced here: https://design-system.service.gov.uk/accessibility/ – GOV.UK Design System
@@ -23,6 +15,7 @@ Important: Only implement elements and fields that are explicitly visible in the
 - Use kebab case for filenames
 - Use ES Modules
 - Use Vitest for testing
+- Tests should be in a `test` directory at the root of the project
 - Avoid bloated routes
 - Use JSDoc to describe areas of complexity
 - Proactively maintain documentation
@@ -41,3 +34,9 @@ Important: Only implement elements and fields that are explicitly visible in the
 # Up to date README.md
 
 Generate updated README.md documentation and keeping it in sync with the code changes.
+
+# Starting up the frontend
+To start the frontend, run the following command:
+```bash
+docker compose up
+```

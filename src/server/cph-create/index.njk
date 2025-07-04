@@ -1,0 +1,352 @@
+{% extends 'layouts/page.njk' %}
+
+{% block content %}
+  {{ appHeading({ text: heading }) }}
+
+  {% if errorMessage %}
+    <div class="govuk-error-summary" data-module="govuk-error-summary">
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">
+          There is a problem
+        </h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li>
+              <a href="#cph">{{ errorMessage }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      
+      <p class="govuk-body">
+        Use this form to create a new holding record. All required fields must be completed.
+      </p>
+
+      <form class="form" method="post" action="/cph-create" novalidate>
+        
+        {# CPH Number Section #}
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+              Holding Identification
+            </h2>
+          </legend>
+
+          <div class="govuk-form-group{% if errors['details.cph'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="cph">
+              County Parish Holding (CPH) number
+            </label>
+            <div id="cph-hint" class="govuk-hint">
+              Enter the CPH number in format XX/XXX/XXXX, for example 12/123/1234
+            </div>
+            {% if errors['details.cph'] %}
+              <p id="cph-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.cph'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input{% if errors['details.cph'] %} govuk-input--error{% endif %}" 
+                   id="cph" 
+                   name="cph" 
+                   type="text" 
+                   spellcheck="false" 
+                   autocomplete="off"
+                   pattern="^\d{2}/\d{3}/\d{4}$"
+                   placeholder="XX/XXX/XXXX"
+                   value="{{ formData.details.cph if formData.details and formData.details.cph }}"
+                   aria-describedby="cph-hint{% if errors['details.cph'] %} cph-error{% endif %}">
+          </div>
+
+          <div class="govuk-form-group{% if errors['details.name'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="name">
+              Holding name
+            </label>
+            <div id="name-hint" class="govuk-hint">
+              Enter the name of the farm or holding
+            </div>
+            {% if errors['details.name'] %}
+              <p id="name-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.name'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input{% if errors['details.name'] %} govuk-input--error{% endif %}" 
+                   id="name" 
+                   name="name" 
+                   type="text" 
+                   spellcheck="false"
+                   maxlength="255"
+                   value="{{ formData.details.name if formData.details and formData.details.name }}"
+                   aria-describedby="name-hint{% if errors['details.name'] %} name-error{% endif %}">
+          </div>
+
+          <div class="govuk-form-group{% if errors['details.description'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="description">
+              Description (optional)
+            </label>
+            <div id="description-hint" class="govuk-hint">
+              Provide additional details about the holding, such as the type of farming operation
+            </div>
+            {% if errors['details.description'] %}
+              <p id="description-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.description'] }}
+              </p>
+            {% endif %}
+            <textarea class="govuk-textarea{% if errors['details.description'] %} govuk-textarea--error{% endif %}" 
+                      id="description" 
+                      name="description" 
+                      rows="3"
+                      maxlength="1000"
+                      aria-describedby="description-hint{% if errors['details.description'] %} description-error{% endif %}">{{ formData.details.description if formData.details and formData.details.description }}</textarea>
+          </div>
+        </fieldset>
+
+        {# Address Section #}
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+              Address
+            </h2>
+          </legend>
+
+          <div class="govuk-form-group{% if errors['details.address.street'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="street">
+              Street address (optional)
+            </label>
+            {% if errors['details.address.street'] %}
+              <p id="street-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.address.street'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input{% if errors['details.address.street'] %} govuk-input--error{% endif %}" 
+                   id="street" 
+                   name="street" 
+                   type="text"
+                   maxlength="255"
+                   value="{{ formData.details.address.street if formData.details and formData.details.address and formData.details.address.street }}"
+                   {% if errors['details.address.street'] %}aria-describedby="street-error"{% endif %}>
+          </div>
+
+          <div class="govuk-form-group{% if errors['details.address.locality'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="locality">
+              Locality (optional)
+            </label>
+            <div id="locality-hint" class="govuk-hint">
+              Village or local area name
+            </div>
+            {% if errors['details.address.locality'] %}
+              <p id="locality-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.address.locality'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input{% if errors['details.address.locality'] %} govuk-input--error{% endif %}" 
+                   id="locality" 
+                   name="locality" 
+                   type="text"
+                   maxlength="255"
+                   value="{{ formData.details.address.locality if formData.details and formData.details.address and formData.details.address.locality }}"
+                   aria-describedby="locality-hint{% if errors['details.address.locality'] %} locality-error{% endif %}">
+          </div>
+
+          <div class="govuk-form-group{% if errors['details.address.town'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="town">
+              Town or city
+            </label>
+            {% if errors['details.address.town'] %}
+              <p id="town-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.address.town'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input{% if errors['details.address.town'] %} govuk-input--error{% endif %}" 
+                   id="town" 
+                   name="town" 
+                   type="text"
+                   maxlength="255"
+                   value="{{ formData.details.address.town if formData.details and formData.details.address and formData.details.address.town }}"
+                   {% if errors['details.address.town'] %}aria-describedby="town-error"{% endif %}>
+          </div>
+
+          <div class="govuk-form-group{% if errors['details.address.county'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="county">
+              County
+            </label>
+            {% if errors['details.address.county'] %}
+              <p id="county-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.address.county'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input{% if errors['details.address.county'] %} govuk-input--error{% endif %}" 
+                   id="county" 
+                   name="county" 
+                   type="text"
+                   maxlength="255"
+                   value="{{ formData.details.address.county if formData.details and formData.details.address and formData.details.address.county }}"
+                   {% if errors['details.address.county'] %}aria-describedby="county-error"{% endif %}>
+          </div>
+
+          <div class="govuk-form-group{% if errors['details.address.postcode'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="postcode">
+              Postcode
+            </label>
+            {% if errors['details.address.postcode'] %}
+              <p id="postcode-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.address.postcode'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input govuk-input--width-10{% if errors['details.address.postcode'] %} govuk-input--error{% endif %}" 
+                   id="postcode" 
+                   name="postcode" 
+                   type="text"
+                   maxlength="10"
+                   autocomplete="postal-code"
+                   value="{{ formData.details.address.postcode if formData.details and formData.details.address and formData.details.address.postcode }}"
+                   {% if errors['details.address.postcode'] %}aria-describedby="postcode-error"{% endif %}>
+          </div>
+        </fieldset>
+
+        {# Geolocation Section #}
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+              Location coordinates (optional)
+            </h2>
+          </legend>
+
+          <div class="govuk-form-group{% if errors['details.geolocation.mapReference'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="mapReference">
+              Map reference
+            </label>
+            <div id="mapReference-hint" class="govuk-hint">
+              Ordnance Survey grid reference, for example SS123456
+            </div>
+            {% if errors['details.geolocation.mapReference'] %}
+              <p id="mapReference-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.geolocation.mapReference'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input govuk-input--width-10{% if errors['details.geolocation.mapReference'] %} govuk-input--error{% endif %}" 
+                   id="mapReference" 
+                   name="mapReference" 
+                   type="text"
+                   maxlength="50"
+                   value="{{ formData.details.geolocation.mapReference if formData.details and formData.details.geolocation and formData.details.geolocation.mapReference }}"
+                   aria-describedby="mapReference-hint{% if errors['details.geolocation.mapReference'] %} mapReference-error{% endif %}">
+          </div>
+
+          <div class="govuk-form-group{% if errors['details.geolocation.easting'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="easting">
+              Easting
+            </label>
+            <div id="easting-hint" class="govuk-hint">
+              Easting coordinate (0-999999)
+            </div>
+            {% if errors['details.geolocation.easting'] %}
+              <p id="easting-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.geolocation.easting'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input govuk-input--width-10{% if errors['details.geolocation.easting'] %} govuk-input--error{% endif %}" 
+                   id="easting" 
+                   name="easting" 
+                   type="number"
+                   min="0"
+                   max="999999"
+                   value="{{ formData.details.geolocation.easting if formData.details and formData.details.geolocation and formData.details.geolocation.easting }}"
+                   aria-describedby="easting-hint{% if errors['details.geolocation.easting'] %} easting-error{% endif %}">
+          </div>
+
+          <div class="govuk-form-group{% if errors['details.geolocation.northing'] %} govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--s" for="northing">
+              Northing
+            </label>
+            <div id="northing-hint" class="govuk-hint">
+              Northing coordinate (0-999999)
+            </div>
+            {% if errors['details.geolocation.northing'] %}
+              <p id="northing-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ errors['details.geolocation.northing'] }}
+              </p>
+            {% endif %}
+            <input class="govuk-input govuk-input--width-10{% if errors['details.geolocation.northing'] %} govuk-input--error{% endif %}" 
+                   id="northing" 
+                   name="northing" 
+                   type="number"
+                   min="0"
+                   max="999999"
+                   value="{{ formData.details.geolocation.northing if formData.details and formData.details.geolocation and formData.details.geolocation.northing }}"
+                   aria-describedby="northing-hint{% if errors['details.geolocation.northing'] %} northing-error{% endif %}">
+          </div>
+        </fieldset>
+
+        {# Contact Information Section #}
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+              Contact information (optional)
+            </h2>
+          </legend>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label govuk-label--s" for="landline">
+              Landline telephone
+            </label>
+            <div id="landline-hint" class="govuk-hint">
+              Include area code, for example 01234 567890
+            </div>
+            <input class="govuk-input govuk-input--width-20" 
+                   id="landline" 
+                   name="landline" 
+                   type="tel"
+                   autocomplete="tel"
+                   value="{{ formData.details.contacts[0].value if formData.details and formData.details.contacts and formData.details.contacts[0] and formData.details.contacts[0].type == 'landline' }}"
+                   aria-describedby="landline-hint">
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label govuk-label--s" for="mobile">
+              Mobile telephone
+            </label>
+            <div id="mobile-hint" class="govuk-hint">
+              For example 07700 900123
+            </div>
+            <input class="govuk-input govuk-input--width-20" 
+                   id="mobile" 
+                   name="mobile" 
+                   type="tel"
+                   autocomplete="tel"
+                   value="{{ formData.details.contacts[1].value if formData.details and formData.details.contacts and formData.details.contacts[1] and formData.details.contacts[1].type == 'mobile' }}"
+                   aria-describedby="mobile-hint">
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label govuk-label--s" for="email">
+              Email address
+            </label>
+            <div id="email-hint" class="govuk-hint">
+              For example farmer@example.com
+            </div>
+            <input class="govuk-input govuk-input--width-20" 
+                   id="email" 
+                   name="email" 
+                   type="email"
+                   spellcheck="false"
+                   autocomplete="email"
+                   value="{{ formData.details.contacts[2].value if formData.details and formData.details.contacts and formData.details.contacts[2] and formData.details.contacts[2].type == 'email' }}"
+                   aria-describedby="email-hint">
+          </div>
+        </fieldset>
+
+        <div class="govuk-button-group">
+          <button class="govuk-button" data-module="govuk-button" type="submit">
+            Create holding
+          </button>
+          <a class="govuk-link" href="/cph-search">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

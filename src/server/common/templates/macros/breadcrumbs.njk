@@ -1,0 +1,17 @@
+{% macro breadcrumbs(items) %}
+  {% if items and items.length > 0 %}
+    <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+      <ol class="govuk-breadcrumbs__list">
+        {% for item in items %}
+          <li class="govuk-breadcrumbs__list-item">
+            {% if item.href %}
+              <a class="govuk-breadcrumbs__link" href="{{ item.href }}">{{ item.text }}</a>
+            {% else %}
+              {{ item.text }}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </nav>
+  {% endif %}
+{% endmacro %}

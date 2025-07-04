@@ -116,4 +116,36 @@ export class ApiClient {
   static async getCphData (cph) {
     return this.get(`/api/v1/cph/${cph}`)
   }
+
+  /**
+   * Fetches holding data by CPH number
+   * @param {string} cph - The CPH identifier (format: XX/XXX/XXXX)
+   * @returns {Promise<object>} Holding data from the API
+   */
+  static async getHoldingByCph (cph) {
+    return this.get(`/api/v1/holding/${encodeURIComponent(cph)}`)
+  }
+
+  /**
+   * Creates a new holding
+   * @param {object} holdingData - The holding data to create
+   * @returns {Promise<object>} Created holding data from the API
+   */
+  static async createHolding (holdingData) {
+    const response = await fetch(`${BACKEND_API_URL}/api/v1/holding`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(holdingData)
+    })
+
+    if (!response.ok) {
+      throw new Error(
+        `API request failed: ${response.status} ${response.statusText}`
+      )
+    }
+
+    return await response.json()
+  }
 }

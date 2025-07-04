@@ -54,10 +54,28 @@ This application implements a comprehensive TB Case Management System (TBCMS) fo
 ### Features
 
 - **Case Management**: Track and manage TB cases with detailed case information
+- **CPH Search**: Search for holdings using County Parish Holding (CPH) numbers
 - **Multi-tab Interface**: Organized tabs for different aspects of case management
 - **GDS Compliance**: All pages follow GDS design system guidelines
 - **Accessibility**: WCAG 2.1 AA compliant with proper semantic HTML
 - **Modern Frontend**: Built with Hapi.js, Nunjucks templates, and GDS components
+
+### CPH Search
+
+The CPH Search functionality allows users to search for holdings using their County Parish Holding (CPH) numbers:
+
+- **Format validation**: CPH numbers must be in format XX/XXX/XXXX (e.g., 12/123/1234)
+- **Real-time search**: Submit search queries to the backend API
+- **Error handling**: Comprehensive error handling for invalid formats and missing holdings
+- **Accessible form**: Fully keyboard navigable with proper semantic HTML
+- **Link to creation**: When no CPH is found, users are prompted to create a new one
+
+The search page includes:
+- Input field with validation and helpful hints
+- Clear error messages following GDS standards
+- Detailed holding information display when found
+- Proper breadcrumb navigation
+- Responsive design for all screen sizes
 
 ### TB Case Form Pages
 
