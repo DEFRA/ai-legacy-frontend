@@ -1,0 +1,147 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/task-list/macro.njk" import govukTaskList %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set breadcrumbs = [
+  {
+    text: "Home",
+    href: "/"
+  },
+  {
+    text: "Holding " + holdingData.cph,
+    href: "/holding/" + (holdingData.cph | urlencode)
+  },
+  {
+    text: "TB Case Management"
+  }
+] %}
+
+{% block beforeContent %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-l">TBCMS</span>
+      <h1 class="govuk-heading-l">
+        TB Case Management
+        {% if incidentData %}
+          <span class="govuk-!-font-size-27 govuk-!-font-weight-regular govuk-!-display-block govuk-!-margin-top-2">
+            Incident {{ incidentData.incidentId }}
+          </span>
+        {% endif %}
+      </h1>
+
+      <!-- Holding summary -->
+      <div class="govuk-summary-card govuk-!-margin-bottom-6">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Holding Information</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          {{ govukSummaryList({
+            rows: [
+              {
+                key: { text: "CPH" },
+                value: { text: holdingData.cph }
+              },
+              {
+                key: { text: "Farm name" },
+                value: { text: holdingData.farmName }
+              },
+              {
+                key: { text: "Contact" },
+                value: { text: holdingData.contactName }
+              },
+              {
+                key: { text: "TB Status" },
+                value: { 
+                  html: '<strong class="govuk-tag govuk-tag--red">' + holdingData.tbStatus + '</strong>'
+                }
+              }
+            ]
+          }) }}
+        </div>
+      </div>
+
+      {% if incidentData %}
+        <!-- Incident summary -->
+        <div class="govuk-summary-card govuk-!-margin-bottom-6">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title">Current Incident</h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            {{ govukSummaryList({
+              rows: [
+                {
+                  key: { text: "Incident ID" },
+                  value: { text: incidentData.incidentId }
+                },
+                {
+                  key: { text: "Start date" },
+                  value: { text: incidentData.startDate }
+                },
+                {
+                  key: { text: "Test type" },
+                  value: { text: incidentData.testType }
+                },
+                {
+                  key: { text: "Result" },
+                  value: { 
+                    html: '<strong class="govuk-tag govuk-tag--red">' + incidentData.result + '</strong>'
+                  }
+                }
+              ]
+            }) }}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Task list -->
+      <h2 class="govuk-heading-m">Complete the TB case management tasks</h2>
+      <p class="govuk-body">You have completed 1 of 11 sections.</p>
+
+      {{ govukTaskList({
+        items: tasks
+      }) }}
+
+      <!-- Action buttons -->
+      <div class="govuk-button-group govuk-!-margin-top-6">
+        {{ govukButton({
+          text: "Back to holding",
+          href: "/holding/" + (holdingData.cph | urlencode),
+          classes: "govuk-button--secondary"
+        }) }}
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <aside class="app-related-items" role="complementary">
+        <h2 class="govuk-heading-m" id="subsection-title">
+          Related content
+        </h2>
+        <nav role="navigation" aria-labelledby="subsection-title">
+          <ul class="govuk-list govuk-!-font-size-16">
+            <li>
+              <a class="govuk-link" href="/holding/{{ holdingData.cph | urlencode }}">
+                View holding details
+              </a>
+            </li>
+            <li>
+              <a class="govuk-link" href="/">
+                Search for another holding
+              </a>
+            </li>
+            <li>
+              <a class="govuk-link" href="#" onclick="window.print(); return false;">
+                Print this page
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  </div>
+{% endblock %}

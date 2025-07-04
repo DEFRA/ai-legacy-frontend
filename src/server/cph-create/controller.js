@@ -40,7 +40,7 @@ export const cphCreateController = {
       if (request.method === 'post') {
         // Process form submission
         const formData = request.payload
-        
+
         // Transform flat form data to nested structure for API
         const transformedData = {
           details: {
@@ -62,7 +62,7 @@ export const cphCreateController = {
             contacts: []
           }
         }
-        
+
         // Add contacts if they have values
         if (formData.landline && formData.landline.trim()) {
           transformedData.details.contacts.push({
@@ -82,7 +82,7 @@ export const cphCreateController = {
             value: formData.email.trim()
           })
         }
-        
+
         request.logger.info('Creating CPH holding', { cph: formData.cph })
 
         try {

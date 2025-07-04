@@ -4,6 +4,8 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% block beforeContent %}
   {{ super() }}
@@ -132,27 +134,144 @@
         }) }}
 
         <div class="govuk-!-margin-top-6">
-          <h2 class="govuk-heading-m">Actions</h2>
-          <p class="govuk-body">What would you like to do with this holding?</p>
+          <h2 class="govuk-heading-m">TB Incidents</h2>
+          <p class="govuk-body">Current and recent TB incidents associated with this holding.</p>
           
-          <div class="govuk-button-group">
-            {{ govukButton({
-              text: "Manage TB Cases",
-              href: "/tbcase/case-details?cph=" + cph,
-              classes: "govuk-button--secondary"
-            }) }}
+          {% if incidents and incidents.length > 0 %}
+            {% for incident in incidents %}
+              <div class="govuk-summary-card">
+                <div class="govuk-summary-card__title-wrapper">
+                  <h3 class="govuk-summary-card__title">TB Incident #{{ incident.id }}</h3>
+                  <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link" href="/holding/{{ holding.data.holding.details.cph | urlencode }}/tasks?incident={{ incident.id }}">
+                        View details<span class="govuk-visually-hidden"> for {{ incident.id }}</span>
+                      </a>
+                    </li>
+                    {% if incident.hasManageAction %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link" href="/holding/{{ holding.data.holding.details.cph | urlencode }}/tasks?incident={{ incident.id }}">
+                          Manage case<span class="govuk-visually-hidden"> for {{ incident.id }}</span>
+                        </a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
+                <div class="govuk-summary-card__content">
+                  {{ govukSummaryList({
+                    rows: [
+                      {
+                        key: {
+                          text: "Status"
+                        },
+                        value: {
+                          html: '<strong class="govuk-tag ' + incident.statusClass + '">' + incident.status + '</strong>'
+                        }
+                      },
+                      {
+                        key: {
+                          text: "Date reported"
+                        },
+                        value: {
+                          text: incident.dateReported
+                        }
+                      },
+                      {
+                        key: {
+                          text: "Date resolved"
+                        },
+                        value: {
+                          text: incident.dateResolved
+                        }
+                      } if incident.dateResolved,
+                      {
+                        key: {
+                          text: "Incident type"
+                        },
+                        value: {
+                          text: incident.incidentType
+                        }
+                      },
+                      {
+                        key: {
+                          text: "Animals affected"
+                        },
+                        value: {
+                          text: incident.animalsAffected
+                        }
+                      },
+                      {
+                        key: {
+                          text: "Last test date"
+                        },
+                        value: {
+                          text: incident.lastTestDate
+                        }
+                      } if incident.lastTestDate,
+                      {
+                        key: {
+                          text: "Expected results"
+                        },
+                        value: {
+                          text: incident.expectedResults
+                        }
+                      } if incident.expectedResults,
+                      {
+                        key: {
+                          text: "Next action due"
+                        },
+                        value: {
+                          text: incident.nextActionDue
+                        }
+                      } if incident.nextActionDue,
+                      {
+                        key: {
+                          text: "Final outcome"
+                        },
+                        value: {
+                          text: incident.finalOutcome
+                        }
+                      } if incident.finalOutcome
+                    ]
+                  }) }}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="govuk-inset-text">
+              <p>No TB incidents recorded for this holding.</p>
+            </div>
+          {% endif %}
+
+          <div class="govuk-!-margin-top-6">
+            <h2 class="govuk-heading-m">Actions</h2>
+            <p class="govuk-body">What would you like to do with this holding?</p>
             
-            {{ govukButton({
-              text: "Edit Holding Details",
-              href: "/cph-create?cph=" + cph,
-              classes: "govuk-button--secondary"
-            }) }}
-            
-            {{ govukButton({
-              text: "Search Another Holding",
-              href: "/",
-              classes: "govuk-button--secondary"
-            }) }}
+            <div class="govuk-button-group">
+              {{ govukButton({
+                text: "Report New Incident",
+                href: "/tbcase/case-details?cph=" + cph + "&action=new",
+                classes: "govuk-button"
+              }) }}
+              
+              {{ govukButton({
+                text: "View All Cases",
+                href: "/tbcase/case-details?cph=" + cph,
+                classes: "govuk-button--secondary"
+              }) }}
+              
+              {{ govukButton({
+                text: "Edit Holding Details",
+                href: "/cph-create?cph=" + cph,
+                classes: "govuk-button--secondary"
+              }) }}
+              
+              {{ govukButton({
+                text: "Search Another Holding",
+                href: "/",
+                classes: "govuk-button--secondary"
+              }) }}
+            </div>
           </div>
         </div>
       {% endif %}

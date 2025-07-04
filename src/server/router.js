@@ -18,6 +18,7 @@ import { tbcasePostKill } from './tbcase-post-kill/index.js'
 import { cphSearch } from './cph-search/index.js'
 import { cphCreate } from './cph-create/index.js'
 import { holdingDetails } from './holding-details/index.js'
+import { holdingTasks } from './holding-tasks/index.js'
 
 /**
  * @satisfies {ServerRegisterPluginObject<void>}
@@ -38,6 +39,7 @@ export const router = {
         cphSearch,
         cphCreate,
         holdingDetails,
+        holdingTasks,
         tbcaseCaseDetails,
         tbcaseRemovals,
         tbcaseEartags,

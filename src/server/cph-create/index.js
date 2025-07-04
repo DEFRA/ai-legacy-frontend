@@ -149,17 +149,17 @@ export const cphCreate = {
                     const path = detail.path.join('.')
                     // Map flat field names to the original nested paths for template compatibility
                     const fieldMap = {
-                      'cph': 'details.cph',
-                      'name': 'details.name', 
-                      'description': 'details.description',
-                      'street': 'details.address.street',
-                      'locality': 'details.address.locality',
-                      'town': 'details.address.town',
-                      'county': 'details.address.county',
-                      'postcode': 'details.address.postcode',
-                      'mapReference': 'details.geolocation.mapReference',
-                      'easting': 'details.geolocation.easting',
-                      'northing': 'details.geolocation.northing'
+                      cph: 'details.cph',
+                      name: 'details.name',
+                      description: 'details.description',
+                      street: 'details.address.street',
+                      locality: 'details.address.locality',
+                      town: 'details.address.town',
+                      county: 'details.address.county',
+                      postcode: 'details.address.postcode',
+                      mapReference: 'details.geolocation.mapReference',
+                      easting: 'details.geolocation.easting',
+                      northing: 'details.geolocation.northing'
                     }
                     const mappedPath = fieldMap[path] || path
                     validationErrors[mappedPath] = detail.message

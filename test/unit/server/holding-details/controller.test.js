@@ -74,6 +74,15 @@ describe('Holding Details Controller', () => {
         ],
         cph: '12/123/1234',
         holding: mockHolding,
+        incidents: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            status: expect.any(String),
+            statusClass: expect.any(String),
+            dateReported: expect.any(String),
+            incidentType: expect.any(String)
+          })
+        ]),
         errorMessage: null
       })
       expect(result).toBe('mocked view response')
@@ -101,6 +110,12 @@ describe('Holding Details Controller', () => {
         ],
         cph: '99/999/9999',
         holding: null,
+        incidents: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            status: expect.any(String)
+          })
+        ]),
         errorMessage: 'No holding found with CPH number 99/999/9999'
       })
       expect(result).toBe('mocked view response')
@@ -128,6 +143,12 @@ describe('Holding Details Controller', () => {
         ],
         cph: '12/123/1234',
         holding: null,
+        incidents: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            status: expect.any(String)
+          })
+        ]),
         errorMessage: 'An error occurred while retrieving the holding details. Please try again.'
       })
       expect(result).toBe('mocked view response')
