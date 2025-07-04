@@ -1,0 +1,280 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% block beforeContent %}
+  {{ super() }}
+  {{ govukBackLink({
+    text: "Back to search",
+    href: "/"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ appHeading({
+        text: heading,
+        caption: "TB Case Management System"
+      }) }}
+
+      {% if errorMessage %}
+        <div class="govuk-!-margin-bottom-6">
+          {{ govukNotificationBanner({
+            type: "error",
+            text: errorMessage
+          }) }}
+          
+          <p class="govuk-body">
+            <a href="/cph-create" class="govuk-link">Create a new CPH</a> if you cannot find the holding you're looking for.
+          </p>
+          
+          <p class="govuk-body">
+            <a href="/" class="govuk-link">Search for a different holding</a>
+          </p>
+        </div>
+      {% endif %}
+
+      {% if holding %}
+        <div class="govuk-!-margin-bottom-6">
+          {{ govukNotificationBanner({
+            type: "success",
+            text: "Holding found successfully"
+          }) }}
+        </div>
+        
+        <h2 class="govuk-heading-m">Holding Information</h2>
+        
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "CPH Number"
+              },
+              value: {
+                text: holding.data.holding.details.cph
+              }
+            },
+            {
+              key: {
+                text: "Holding Name"
+              },
+              value: {
+                text: holding.data.holding.details.name
+              }
+            },
+            {
+              key: {
+                text: "Description"
+              },
+              value: {
+                text: holding.data.holding.details.description or "No description available"
+              }
+            },
+            {
+              key: {
+                text: "Address"
+              },
+              value: {
+                html: [
+                  holding.data.holding.details.address.street,
+                  holding.data.holding.details.address.locality,
+                  holding.data.holding.details.address.town,
+                  holding.data.holding.details.address.county,
+                  holding.data.holding.details.address.postcode
+                ] | reject("equalto", null) | reject("equalto", "") | join("<br>")
+              }
+            },
+            {
+              key: {
+                text: "Map Reference"
+              },
+              value: {
+                text: holding.data.holding.details.geolocation.mapReference or "Not available"
+              }
+            } if holding.data.holding.details.geolocation,
+            {
+              key: {
+                text: "Easting"
+              },
+              value: {
+                text: holding.data.holding.details.geolocation.easting or "Not available"
+              }
+            } if holding.data.holding.details.geolocation,
+            {
+              key: {
+                text: "Northing"
+              },
+              value: {
+                text: holding.data.holding.details.geolocation.northing or "Not available"
+              }
+            } if holding.data.holding.details.geolocation,
+            {
+              key: {
+                text: "Contact Information"
+              },
+              value: {
+                html: (holding.data.holding.details.contacts | length) + " contact(s) available" if holding.data.holding.details.contacts | length > 0 else "No contact information available"
+              }
+            },
+            {
+              key: {
+                text: "Last Updated"
+              },
+              value: {
+                text: holding.data.holding.updatedAt | formatDate if holding.data.holding.updatedAt else "Not available"
+              }
+            }
+          ]
+        }) }}
+
+        <div class="govuk-!-margin-top-6">
+          <h2 class="govuk-heading-m">TB Incidents</h2>
+          <p class="govuk-body">Current and recent TB incidents associated with this holding.</p>
+          
+          {% if incidents and incidents.length > 0 %}
+            {% for incident in incidents %}
+              <div class="govuk-summary-card">
+                <div class="govuk-summary-card__title-wrapper">
+                  <h3 class="govuk-summary-card__title">TB Incident #{{ incident.id }}</h3>
+                  <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link" href="/holding/{{ holding.data.holding.details.cph | urlencode }}/tasks?incident={{ incident.id }}">
+                        View details<span class="govuk-visually-hidden"> for {{ incident.id }}</span>
+                      </a>
+                    </li>
+                    {% if incident.hasManageAction %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link" href="/holding/{{ holding.data.holding.details.cph | urlencode }}/tasks?incident={{ incident.id }}">
+                          Manage case<span class="govuk-visually-hidden"> for {{ incident.id }}</span>
+                        </a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
+                <div class="govuk-summary-card__content">
+                  {{ govukSummaryList({
+                    rows: [
+                      {
+                        key: {
+                          text: "Status"
+                        },
+                        value: {
+                          html: '<strong class="govuk-tag ' + incident.statusClass + '">' + incident.status + '</strong>'
+                        }
+                      },
+                      {
+                        key: {
+                          text: "Date reported"
+                        },
+                        value: {
+                          text: incident.dateReported
+                        }
+                      },
+                      {
+                        key: {
+                          text: "Date resolved"
+                        },
+                        value: {
+                          text: incident.dateResolved
+                        }
+                      } if incident.dateResolved,
+                      {
+                        key: {
+                          text: "Incident type"
+                        },
+                        value: {
+                          text: incident.incidentType
+                        }
+                      },
+                      {
+                        key: {
+                          text: "Animals affected"
+                        },
+                        value: {
+                          text: incident.animalsAffected
+                        }
+                      },
+                      {
+                        key: {
+                          text: "Last test date"
+                        },
+                        value: {
+                          text: incident.lastTestDate
+                        }
+                      } if incident.lastTestDate,
+                      {
+                        key: {
+                          text: "Expected results"
+                        },
+                        value: {
+                          text: incident.expectedResults
+                        }
+                      } if incident.expectedResults,
+                      {
+                        key: {
+                          text: "Next action due"
+                        },
+                        value: {
+                          text: incident.nextActionDue
+                        }
+                      } if incident.nextActionDue,
+                      {
+                        key: {
+                          text: "Final outcome"
+                        },
+                        value: {
+                          text: incident.finalOutcome
+                        }
+                      } if incident.finalOutcome
+                    ]
+                  }) }}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="govuk-inset-text">
+              <p>No TB incidents recorded for this holding.</p>
+            </div>
+          {% endif %}
+
+          <div class="govuk-!-margin-top-6">
+            <h2 class="govuk-heading-m">Actions</h2>
+            <p class="govuk-body">What would you like to do with this holding?</p>
+            
+            <div class="govuk-button-group">
+              {{ govukButton({
+                text: "Report New Incident",
+                href: "/tbcase/case-details?cph=" + cph + "&action=new",
+                classes: "govuk-button"
+              }) }}
+              
+              {{ govukButton({
+                text: "View All Cases",
+                href: "/tbcase/case-details?cph=" + cph,
+                classes: "govuk-button--secondary"
+              }) }}
+              
+              {{ govukButton({
+                text: "Edit Holding Details",
+                href: "/cph-create?cph=" + cph,
+                classes: "govuk-button--secondary"
+              }) }}
+              
+              {{ govukButton({
+                text: "Search Another Holding",
+                href: "/",
+                classes: "govuk-button--secondary"
+              }) }}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

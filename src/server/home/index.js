@@ -1,7 +1,8 @@
-import { homeController } from './controller.js'
+import { cphSearchController } from '../cph-search/controller.js'
 
 /**
  * Sets up the routes used in the home page.
+ * Now serves the CPH search functionality as the main landing page.
  * These routes are registered in src/server/router.js.
  */
 
@@ -16,7 +17,7 @@ export const home = {
         {
           method: 'GET',
           path: '/',
-          ...homeController
+          ...cphSearchController
         }
       ])
     }
