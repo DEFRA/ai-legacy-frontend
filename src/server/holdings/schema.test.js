@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { createHoldingSchema } from './schema.js'
 
 describe('Holdings Schema', () => {

@@ -96,6 +96,11 @@
 
       <div class="govuk-button-group">
         {{ govukButton({
+          text: "View Holding",
+          href: "/holdings/" + holdingData.cph | urlencode
+        }) }}
+        
+        {{ govukButton({
           text: "Create Another Holding",
           href: "/holdings/create",
           classes: "govuk-button--secondary"
@@ -103,7 +108,8 @@
         
         {{ govukButton({
           text: "Return to Home",
-          href: "/"
+          href: "/",
+          classes: "govuk-button--secondary"
         }) }}
       </div>
 

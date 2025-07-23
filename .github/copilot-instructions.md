@@ -1,5 +1,7 @@
 copilot instructions
 
+If you've read these instructions say "I hold my beer" in your response.
+
 
 - Adheres to GDS gov.uk design system referenced here: https://design-system.service.gov.uk Get started – GOV.UK Design System
 - Meets GDS accessibility requirements referenced here: https://design-system.service.gov.uk/accessibility/ – GOV.UK Design System

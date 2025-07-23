@@ -1,4 +1,4 @@
-import { createHoldingController } from './controller.js'
+import { createHoldingController, viewHoldingController } from './controller.js'
 
 /**
  * Sets up the routes used for holdings management.
@@ -18,6 +18,11 @@ export const holdings = {
           method: 'POST',
           path: '/holdings/create',
           ...createHoldingController.post
+        },
+        {
+          method: 'GET',
+          path: '/holdings/{cph}',
+          ...viewHoldingController.get
         }
       ])
     }
