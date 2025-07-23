@@ -3,11 +3,9 @@
 .vscode
 .idea
 .public
-.server
 node_modules
 npm-debug.log
 coverage
 .cache
 .envrc
 tsconfig.tsbuildinfo
-input-prompts

@@ -1,10 +1,8 @@
 import neostandard from 'neostandard'
 
 export default neostandard({
-  ignores: [
-    '**/node_modules/**',
-    '.server',
-    '.public',
-    'src/client/**'
-  ]
+  env: ['node', 'vitest'],
+  ignores: [...neostandard.resolveIgnoresFromGitignore()],
+  noJsx: true,
+  noStyle: true
 })

@@ -2,8 +2,8 @@ import path from 'node:path'
 import { readFileSync } from 'node:fs'
 
 import { config } from '../../config.js'
-import { createLogger } from '../../../server/common/helpers/logging/logger.js'
 import { buildNavigation } from './build-navigation.js'
+import { createLogger } from '../../../server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
 const assetPath = config.get('assetPath')
@@ -12,13 +12,9 @@ const manifestPath = path.join(
   '.public/assets-manifest.json'
 )
 
-/** @type {Record<string, string> | undefined} */
 let webpackManifest
 
-/**
- * @param {Request | null} request
- */
-export function context (request) {
+export function context(request) {
   if (!webpackManifest) {
     try {
       webpackManifest = JSON.parse(readFileSync(manifestPath, 'utf-8'))
@@ -33,17 +29,9 @@ export function context (request) {
     serviceUrl: '/',
     breadcrumbs: [],
     navigation: buildNavigation(request),
-
-    /**
-     * @param {string} asset
-     */
-    getAssetPath (asset) {
+    getAssetPath(asset) {
       const webpackAssetPath = webpackManifest?.[asset]
       return `${assetPath}/${webpackAssetPath ?? asset}`
     }
   }
 }
-
-/**
- * @import { Request } from '@hapi/hapi'
- */

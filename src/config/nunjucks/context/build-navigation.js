@@ -1,7 +1,4 @@
-/**
- * @param {Partial<Request> | null} request
- */
-export function buildNavigation (request) {
+export function buildNavigation(request) {
   return [
     {
       text: 'Home',
@@ -15,7 +12,3 @@ export function buildNavigation (request) {
     }
   ]
 }
-
-/**
- * @import { Request } from '@hapi/hapi'
- */

@@ -1,19 +1,13 @@
-# ai-legacy-frontend
+# CDP Node.js Frontend Template
 
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_ai-legacy-frontend&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=DEFRA_ai-legacy-frontend)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_ai-legacy-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_ai-legacy-frontend)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_ai-legacy-frontend&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_ai-legacy-frontend)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_cdp-node-frontend-template&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=DEFRA_cdp-node-frontend-template)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_cdp-node-frontend-template&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_cdp-node-frontend-template)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_cdp-node-frontend-template&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_cdp-node-frontend-template)
 
-Core delivery platform Node.js Frontend Template for TB Case Management System (TBCMS).
+Core delivery platform Node.js Frontend Template.
 
 - [Requirements](#requirements)
   - [Node.js](#nodejs)
-- [TB Case Management System](#tb-case-management-system)
-  - [Features](#features)
-  - [TB Case Form Pages](#tb-case-form-pages)
-- [Development Standards](#development-standards)
-  - [JavaScript Conventions](#javascript-conventions)
-  - [Testing](#testing)
 - [Server-side Caching](#server-side-caching)
 - [Redis](#redis)
 - [Local Development](#local-development)
@@ -37,98 +31,15 @@ Core delivery platform Node.js Frontend Template for TB Case Management System (
 
 ### Node.js
 
-Please install [Node.js](http://nodejs.org/) `>= v22.13.1` and [npm](https://nodejs.org/) `>= v9`. You will find it
+Please install [Node.js](http://nodejs.org/) `>= v22` and [npm](https://nodejs.org/) `>= v9`. You will find it
 easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
 
 To use the correct version of Node.js for this application, via nvm:
 
 ```bash
-cd ai-legacy-frontend
+cd cdp-node-frontend-template
 nvm use
 ```
-
-## TB Case Management System
-
-This application implements a comprehensive TB Case Management System (TBCMS) for managing tuberculosis cases in livestock. The system follows Government Digital Service (GDS) design patterns and accessibility standards.
-
-### Features
-
-- **Case Management**: Track and manage TB cases with detailed case information
-- **CPH Search**: Search for holdings using County Parish Holding (CPH) numbers
-- **Multi-tab Interface**: Organized tabs for different aspects of case management
-- **GDS Compliance**: All pages follow GDS design system guidelines
-- **Accessibility**: WCAG 2.1 AA compliant with proper semantic HTML
-- **Modern Frontend**: Built with Hapi.js, Nunjucks templates, and GDS components
-
-### CPH Search
-
-The CPH Search functionality allows users to search for holdings using their County Parish Holding (CPH) numbers:
-
-- **Format validation**: CPH numbers must be in format XX/XXX/XXXX (e.g., 12/123/1234)
-- **Real-time search**: Submit search queries to the backend API
-- **Error handling**: Comprehensive error handling for invalid formats and missing holdings
-- **Accessible form**: Fully keyboard navigable with proper semantic HTML
-- **Link to creation**: When no CPH is found, users are prompted to create a new one
-
-The search page includes:
-- Input field with validation and helpful hints
-- Clear error messages following GDS standards
-- Detailed holding information display when found
-- Proper breadcrumb navigation
-- Responsive design for all screen sizes
-
-### TB Case Form Pages
-
-The system includes the following TB Case Form tabs, each implementing specific functionality:
-
-| Page               | Description                               | Features                                       |
-| ------------------ | ----------------------------------------- | ---------------------------------------------- |
-| **Case Details**   | Main case information and overview        | Case summary, basic details                    |
-| **Allocations**    | Manage case allocations and assignments   | Calendar widget, allocation tracking, comments |
-| **Removals**       | Handle case removals and processing       | Removal tracking, batch operations             |
-| **Cons**           | Confirm and validate case information     | Confirmation workflows, validation             |
-| **DRFs**           | Data Recording Forms management           | Form tracking, comments, document handling     |
-| **Eartags**        | Livestock eartag management               | Tag tracking, validation, batch operations     |
-| **GIS**            | Geographic Information System integration | Mapping, location data, spatial analysis       |
-| **Post-Kill**      | Post-mortem case processing               | Results recording, follow-up actions           |
-| **Tracings**       | Contact tracing and investigation         | Trace tracking, investigation workflows        |
-| **Radial Testing** | Radial testing management                 | Test scheduling, results, analysis             |
-| **Views**          | Case visualization and reporting          | Data views, reports, export functionality      |
-
-All pages include:
-
-- **Tools section** with administrative functions
-- **Close form** button for navigation
-- **Proper form validation** and error handling
-- **Accessibility features** including proper labeling and hints
-- **GDS components** for consistent user experience
-
-## Development Standards
-
-### JavaScript Conventions
-
-This project follows strict JavaScript conventions to maintain code quality and consistency:
-
-- **Named functions over arrow functions**: All functions use the `function` keyword instead of arrow functions
-- **Kebab-case filenames**: All file names use kebab-case convention (e.g., `case-details.js`)
-- **ES Modules**: All imports/exports use ES Module syntax
-- **JSDoc documentation**: All functions and classes include comprehensive JSDoc comments
-- **Request validation**: All route handlers validate input parameters
-- **Single responsibility**: Each function has one clear purpose
-- **Maximum 3 parameters**: Functions accept no more than three parameters
-- **No barrel exports**: Avoid index.js files that only re-export from other files
-- **Immutable code patterns**: Write code that avoids mutation where possible
-
-### Testing
-
-- **Vitest**: Uses Vitest as the testing framework for fast, modern JavaScript testing
-- **Behavior coverage**: Focus on testing behavior rather than achieving line coverage targets
-- **Test-Driven Development (TDD)**: Follow TDD principles when developing new features
-- **Test commands**:
-  ```bash
-  npm test           # Run all tests with coverage
-  npm run test:watch # Run tests in watch mode
-  ```
 
 ## Server-side Caching
 
@@ -147,13 +58,15 @@ to how services might have a database (or MongoDB). All frontend services are gi
 matches the service name. e.g. `my-service` will have access to everything in Redis that is prefixed with `my-service`.
 
 If your service does not require a session cache to be shared between instances or if you don't require Redis, you can
-disable setting `SESSION_CACHE_ENGINE=false` or changing the default value in `~/src/config/index.js`.
+disable setting `SESSION_CACHE_ENGINE=false` or changing the default value in `src/config/index.js`.
 
 ## Proxy
 
-We are using forward-proxy which is set up by default. To make use of this: `import { fetch } from 'undici'` then because of the `setGlobalDispatcher(new ProxyAgent(proxyUrl))` calls will use the ProxyAgent Dispatcher
+We are using forward-proxy which is set up by default. To make use of this: `import { fetch } from 'undici'` then
+because of the `setGlobalDispatcher(new ProxyAgent(proxyUrl))` calls will use the ProxyAgent Dispatcher
 
-If you are not using Wreck, Axios or Undici or a similar http that uses `Request`. Then you may have to provide the proxy dispatcher:
+If you are not using Wreck, Axios or Undici or a similar http that uses `Request`. Then you may have to provide the
+proxy dispatcher:
 
 To add the dispatcher to your own client:
 
@@ -229,16 +142,20 @@ git config --global core.autocrlf false
 
 ### Development image
 
+> [!TIP]
+> For Apple Silicon users, you may need to add `--platform linux/amd64` to the `docker run` command to ensure
+> compatibility fEx: `docker build --platform=linux/arm64 --no-cache --tag cdp-node-frontend-template`
+
 Build:
 
 ```bash
-docker build --target development --no-cache --tag ai-legacy-frontend:development .
+docker build --target development --no-cache --tag cdp-node-frontend-template:development .
 ```
 
 Run:
 
 ```bash
-docker run -p 3000:3000 ai-legacy-frontend:development
+docker run -p 3000:3000 cdp-node-frontend-template:development
 ```
 
 ### Production image
@@ -246,13 +163,13 @@ docker run -p 3000:3000 ai-legacy-frontend:development
 Build:
 
 ```bash
-docker build --no-cache --tag ai-legacy-frontend .
+docker build --no-cache --tag cdp-node-frontend-template .
 ```
 
 Run:
 
 ```bash
-docker run -p 3000:3000 ai-legacy-frontend
+docker run -p 3000:3000 cdp-node-frontend-template
 ```
 
 ### Docker Compose

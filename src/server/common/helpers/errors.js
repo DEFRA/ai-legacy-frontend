@@ -1,9 +1,6 @@
 import { statusCodes } from '../constants/status-codes.js'
 
-/**
- * @param {number} statusCode
- */
-function statusCodeMessage (statusCode) {
+function statusCodeMessage(statusCode) {
   switch (statusCode) {
     case statusCodes.notFound:
       return 'Page not found'
@@ -18,11 +15,7 @@ function statusCodeMessage (statusCode) {
   }
 }
 
-/**
- * @param { Request } request
- * @param { ResponseToolkit } h
- */
-export function catchAll (request, h) {
+export function catchAll(request, h) {
   const { response } = request
 
   if (!('isBoom' in response)) {
@@ -44,7 +37,3 @@ export function catchAll (request, h) {
     })
     .code(statusCode)
 }
-
-/**
- * @import { Request, ResponseToolkit } from '@hapi/hapi'
- */
