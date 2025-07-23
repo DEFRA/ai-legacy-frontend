@@ -1,0 +1,295 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block content %}
+  {{ appHeading({
+    text: heading,
+    caption: "Create a new holding record for TB incident management"
+  }) }}
+
+  {% if errorSummary %}
+    {{ govukErrorSummary(errorSummary) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="/holdings/create" method="post" novalidate>
+        
+        {% call govukFieldset({
+          legend: {
+            text: "Core Information",
+            classes: "govuk-fieldset__legend--l",
+            isPageHeading: false
+          }
+        }) %}
+          
+          {{ govukInput({
+            label: {
+              text: "CPH Number",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "County Parish Holding number in format XX/XXX/XXXX (e.g., 12/345/6789)"
+            },
+            classes: "govuk-input--width-20",
+            id: "cph",
+            name: "cph",
+            type: "text",
+            pattern: "\\d{2}/\\d{3}/\\d{4}",
+            spellcheck: false,
+            value: values.cph if values,
+            errorMessage: errors.cph if errors.cph
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "Farm Name",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "The name of the farm or holding (maximum 100 characters)"
+            },
+            classes: "govuk-input--width-30",
+            id: "name",
+            name: "name",
+            type: "text",
+            value: values.name if values,
+            errorMessage: errors.name if errors.name
+          }) }}
+
+          {{ govukTextarea({
+            label: {
+              text: "Farm Description",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Brief description of the farm type and activities (maximum 500 characters, optional)"
+            },
+            id: "description",
+            name: "description",
+            rows: 3,
+            value: values.description if values,
+            errorMessage: errors.description if errors.description
+          }) }}
+
+        {% endcall %}
+
+        {% call govukFieldset({
+          legend: {
+            text: "Contact Information",
+            classes: "govuk-fieldset__legend--l",
+            isPageHeading: false
+          }
+        }) %}
+
+          {{ govukInput({
+            label: {
+              text: "Telephone Number",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "UK landline or mobile number (e.g., 01234 567890 or 07123 456789)"
+            },
+            classes: "govuk-input--width-20",
+            id: "telephone",
+            name: "telephone",
+            type: "tel",
+            autocomplete: "tel",
+            value: values.telephone if values,
+            errorMessage: errors.telephone if errors.telephone
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "Email Address",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Email address for farm contact (e.g., farmer@example.com)"
+            },
+            classes: "govuk-input--width-30",
+            id: "email",
+            name: "email",
+            type: "email",
+            autocomplete: "email",
+            spellcheck: false,
+            value: values.email if values,
+            errorMessage: errors.email if errors.email
+          }) }}
+
+        {% endcall %}
+
+        {% call govukFieldset({
+          legend: {
+            text: "Address",
+            classes: "govuk-fieldset__legend--l",
+            isPageHeading: false
+          }
+        }) %}
+
+          {{ govukInput({
+            label: {
+              text: "Street Address",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Building name or number and street name"
+            },
+            classes: "govuk-input--width-30",
+            id: "street",
+            name: "street",
+            type: "text",
+            autocomplete: "address-line1",
+            value: values.street if values,
+            errorMessage: errors.street if errors.street
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "Locality",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Village or area (optional)"
+            },
+            classes: "govuk-input--width-30",
+            id: "locality",
+            name: "locality",
+            type: "text",
+            autocomplete: "address-line2",
+            value: values.locality if values,
+            errorMessage: errors.locality if errors.locality
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "Town",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Town or city"
+            },
+            classes: "govuk-input--width-30",
+            id: "town",
+            name: "town",
+            type: "text",
+            autocomplete: "address-level2",
+            value: values.town if values,
+            errorMessage: errors.town if errors.town
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "County",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "County or administrative area"
+            },
+            classes: "govuk-input--width-30",
+            id: "county",
+            name: "county",
+            type: "text",
+            autocomplete: "address-level1",
+            value: values.county if values,
+            errorMessage: errors.county if errors.county
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "Postcode",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "UK postcode (e.g., GL7 4AB)"
+            },
+            classes: "govuk-input--width-10",
+            id: "postcode",
+            name: "postcode",
+            type: "text",
+            autocomplete: "postal-code",
+            spellcheck: false,
+            value: values.postcode if values,
+            errorMessage: errors.postcode if errors.postcode
+          }) }}
+
+        {% endcall %}
+
+        {% call govukFieldset({
+          legend: {
+            text: "Geolocation",
+            classes: "govuk-fieldset__legend--l",
+            isPageHeading: false
+          }
+        }) %}
+
+          {{ govukInput({
+            label: {
+              text: "OS Grid Reference",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Ordnance Survey grid reference (e.g., SP123456)"
+            },
+            classes: "govuk-input--width-10",
+            id: "mapRef",
+            name: "mapRef",
+            type: "text",
+            spellcheck: false,
+            value: values.mapRef if values,
+            errorMessage: errors.mapRef if errors.mapRef
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "Easting",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Easting coordinate (0 to 800,000)"
+            },
+            classes: "govuk-input--width-10",
+            id: "easting",
+            name: "easting",
+            type: "number",
+            min: "0",
+            max: "800000",
+            value: values.easting if values,
+            errorMessage: errors.easting if errors.easting
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "Northing",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Northing coordinate (0 to 1,400,000)"
+            },
+            classes: "govuk-input--width-10",
+            id: "northing",
+            name: "northing",
+            type: "number",
+            min: "0",
+            max: "1400000",
+            value: values.northing if values,
+            errorMessage: errors.northing if errors.northing
+          }) }}
+
+        {% endcall %}
+
+        {{ govukButton({
+          text: "Create Holding",
+          type: "submit"
+        }) }}
+
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

@@ -14,6 +14,16 @@ services:
       USE_SINGLE_INSTANCE_CACHE: true
     networks:
       - cdp-tenant
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: sync
+          path: ./package.json
+          target: /app/package.json
+        - action: rebuild
+          path: ./package-lock.json
 
 volumes:
   mongodb-data:

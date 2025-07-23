@@ -1,0 +1,113 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  {{ govukPanel({
+    titleText: "Holding created successfully",
+    html: "CPH Number<br><strong>" + holdingData.cph + "</strong>"
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      
+      <h2 class="govuk-heading-l">What happens next</h2>
+      
+      <p class="govuk-body">
+        The new holding record has been created and is now available in the system for TB incident management.
+      </p>
+
+      <h3 class="govuk-heading-m">Holding Details</h3>
+      
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "CPH Number"
+            },
+            value: {
+              text: holdingData.cph
+            }
+          },
+          {
+            key: {
+              text: "Farm Name"
+            },
+            value: {
+              text: holdingData.name
+            }
+          },
+          {
+            key: {
+              text: "Description"
+            },
+            value: {
+              text: holdingData.description if holdingData.description else "Not provided"
+            }
+          },
+          {
+            key: {
+              text: "Telephone"
+            },
+            value: {
+              text: holdingData.telephone
+            }
+          },
+          {
+            key: {
+              text: "Email"
+            },
+            value: {
+              text: holdingData.email
+            }
+          },
+          {
+            key: {
+              text: "Address"
+            },
+            value: {
+              html: holdingData.street + "<br>" +
+                   (holdingData.locality + "<br>" if holdingData.locality else "") +
+                   holdingData.town + "<br>" +
+                   holdingData.county + "<br>" +
+                   holdingData.postcode
+            }
+          },
+          {
+            key: {
+              text: "OS Grid Reference"
+            },
+            value: {
+              text: holdingData.mapRef
+            }
+          },
+          {
+            key: {
+              text: "Coordinates"
+            },
+            value: {
+              text: "Easting: " + holdingData.easting + ", Northing: " + holdingData.northing
+            }
+          }
+        ]
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Create Another Holding",
+          href: "/holdings/create",
+          classes: "govuk-button--secondary"
+        }) }}
+        
+        {{ govukButton({
+          text: "Return to Home",
+          href: "/"
+        }) }}
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}
