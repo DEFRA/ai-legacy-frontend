@@ -1,7 +1,9 @@
 version: '3.4'
 services:
   ai-legacy-frontend:
-    build: ./
+    build: 
+      context: .
+      target: development
     ports:
       - '3000:3000'
     env_file:
@@ -12,16 +14,17 @@ services:
       REDIS_HOST: redis
       LOCALSTACK_ENDPOINT: http://localstack:4566
       USE_SINGLE_INSTANCE_CACHE: true
+      API_URL: http://host.docker.internal:3010
     networks:
       - cdp-tenant
     develop:
       watch:
         - action: sync
           path: ./src
-          target: /app/src
+          target: /home/node/src
         - action: sync
           path: ./package.json
-          target: /app/package.json
+          target: /home/node/package.json
         - action: rebuild
           path: ./package-lock.json
 

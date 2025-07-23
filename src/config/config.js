@@ -35,6 +35,12 @@ export const config = convict({
     default: 3000,
     env: 'PORT'
   },
+  apiUrl: {
+    doc: 'Backend API base URL',
+    format: 'url',
+    default: 'http://localhost:3001',
+    env: 'API_URL'
+  },
   staticCacheTimeout: {
     doc: 'Static cache timeout in milliseconds',
     format: Number,
