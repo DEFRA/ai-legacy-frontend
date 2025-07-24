@@ -1,13 +1,33 @@
 import Joi from 'joi'
 
 /**
+ * CPH validation pattern - reusable across schemas
+ */
+const cphPattern = /^\d{2}\/\d{3}\/\d{4}$/
+
+/**
+ * Joi schema for searching holdings by CPH
+ * Validates CPH format for search functionality
+ */
+export const searchHoldingSchema = Joi.object({
+  cph: Joi.string()
+    .pattern(cphPattern)
+    .required()
+    .messages({
+      'string.pattern.base': 'CPH number must be in the format XX/XXX/XXXX (for example, 12/345/6789)',
+      'any.required': 'Enter a CPH number to search for',
+      'string.empty': 'Enter a CPH number to search for'
+    })
+})
+
+/**
  * Joi schema for creating a new holding
  * Validates all required fields according to DEFRA standards
  */
 export const createHoldingSchema = Joi.object({
   // Core Information
   cph: Joi.string()
-    .pattern(/^\d{2}\/\d{3}\/\d{4}$/)
+    .pattern(cphPattern)
     .required()
     .messages({
       'string.pattern.base': 'CPH number must be in the format XX/XXX/XXXX (e.g., 12/345/6789)',

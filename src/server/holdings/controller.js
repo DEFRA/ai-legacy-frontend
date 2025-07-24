@@ -1,4 +1,4 @@
-import { createHoldingSchema } from './schema.js'
+import { createHoldingSchema, searchHoldingSchema } from './schema.js'
 import { holdingsService } from './holdings-service.js'
 
 /**
@@ -104,6 +104,132 @@ export const createHoldingController = {
         ],
         holdingData: payload
       })
+    }
+  }
+}
+
+export const searchHoldingController = {
+  get: {
+    handler(_request, h) {
+      return h.view('holdings/search', {
+        pageTitle: 'Search Holdings',
+        heading: 'Search Holdings',
+        breadcrumbs: [
+          {
+            text: 'Home',
+            href: '/'
+          },
+          {
+            text: 'Search Holdings'
+          }
+        ]
+      })
+    }
+  },
+
+  post: {
+    options: {
+      validate: {
+        payload: searchHoldingSchema,
+        failAction: async (request, h, err) => {
+          const { errors, errorSummary } = transformJoiErrors(err)
+          
+          return h.view('holdings/search', {
+            pageTitle: 'Search Holdings',
+            heading: 'Search Holdings',
+            breadcrumbs: [
+              {
+                text: 'Home',
+                href: '/'
+              },
+              {
+                text: 'Search Holdings'
+              }
+            ],
+            errors,
+            values: request.payload,
+            errorSummary
+          }).takeover()
+        }
+      }
+    },
+    async handler(request, h) {
+      const { cph } = request.payload
+      
+      try {
+        // Search for holding using the service
+        const holdingData = await holdingsService.getHoldingByCph(cph)
+        
+        if (!holdingData) {
+          // No holding found - show error on search page
+          return h.view('holdings/search', {
+            pageTitle: 'Search Holdings',
+            heading: 'Search Holdings',
+            breadcrumbs: [
+              {
+                text: 'Home',
+                href: '/'
+              },
+              {
+                text: 'Search Holdings'
+              }
+            ],
+            errors: {
+              cph: {
+                text: `No holding found with CPH number '${cph}'. Check the number and try again.`
+              }
+            },
+            values: request.payload,
+            errorSummary: {
+              titleText: 'There is a problem',
+              errorList: [
+                {
+                  text: `No holding found with CPH number '${cph}'. Check the number and try again.`,
+                  href: '#cph'
+                }
+              ]
+            }
+          })
+        }
+        
+        // Holding found - redirect to view page
+        const encodedCph = encodeURIComponent(cph)
+        return h.redirect(`/holdings/${encodedCph}`)
+        
+      } catch (error) {
+        // Log error for debugging
+        request.logger?.error('Failed to search for holding', { cph, error: error.message })
+        
+        // Show generic error on search page
+        return h.view('holdings/search', {
+          pageTitle: 'Search Holdings',
+          heading: 'Search Holdings',
+          breadcrumbs: [
+            {
+              text: 'Home',
+              href: '/'
+            },
+            {
+              text: 'Search Holdings'
+            }
+          ],
+          errors: {
+            cph: {
+              text: 'Unable to search for holdings at this time. Please try again later.'
+            }
+          },
+          values: request.payload,
+          errorSummary: {
+            titleText: 'There is a problem',
+            errorList: [
+              {
+                text: 'Unable to search for holdings at this time. Please try again later.',
+                href: '#cph'
+              }
+            ]
+          }
+        })
+      }
     }
   }
 }

@@ -1,0 +1,63 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block content %}
+  {{ appHeading({
+    text: heading,
+    caption: "Search for holding information using CPH number"
+  }) }}
+
+  {% if errorSummary %}
+    {{ govukErrorSummary(errorSummary) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      
+      <form method="post" action="/holdings/search" novalidate>
+        
+        {{ govukInput({
+          label: {
+            text: "CPH Number",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "Enter the full CPH number in format XX/XXX/XXXX (for example, 12/345/6789)"
+          },
+          id: "cph",
+          name: "cph",
+          type: "text",
+          classes: "govuk-input--width-10",
+          value: values.cph if values,
+          errorMessage: errors.cph if errors,
+          attributes: {
+            "aria-describedby": "cph-hint" + (" cph-error" if errors.cph else "")
+          }
+        }) }}
+
+        {{ govukButton({
+          text: "Search for holding",
+          type: "submit"
+        }) }}
+
+      </form>
+
+      <div class="govuk-inset-text">
+        <p class="govuk-body-s">
+          <strong>Need help finding a CPH number?</strong><br>
+          CPH numbers are 9-digit codes in the format XX/XXX/XXXX where:
+        </p>
+        <ul class="govuk-list govuk-list--bullet govuk-body-s">
+          <li>First 2 digits: County code</li>
+          <li>Next 3 digits: Parish code</li> 
+          <li>Last 4 digits: Holding number</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}
