@@ -42,24 +42,26 @@ describe('Holdings Service', () => {
         expect.objectContaining({
           method: 'GET',
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json'
           }
         })
       )
 
-      expect(result).toEqual(expect.objectContaining({
-        cph: '12/345/6789',
-        name: 'Test Farm',
-        contacts: {
-          telephone: '01234567890',
-          email: 'test@example.com'
-        },
-        metadata: expect.objectContaining({
-          created: '2024-01-01T00:00:00Z',
-          lastUpdated: '2024-01-02T00:00:00Z'
+      expect(result).toEqual(
+        expect.objectContaining({
+          cph: '12/345/6789',
+          name: 'Test Farm',
+          contacts: {
+            telephone: '01234567890',
+            email: 'test@example.com'
+          },
+          metadata: expect.objectContaining({
+            created: '2024-01-01T00:00:00Z',
+            lastUpdated: '2024-01-02T00:00:00Z'
+          })
         })
-      }))
+      )
     })
 
     test('Should return null for 404 response', async () => {
@@ -80,13 +82,17 @@ describe('Holdings Service', () => {
         text: async () => 'Internal Server Error'
       })
 
-      await expect(holdingsService.getHoldingByCph('12/345/6789')).rejects.toThrow('API request failed with status 500')
+      await expect(
+        holdingsService.getHoldingByCph('12/345/6789')
+      ).rejects.toThrow('API request failed with status 500')
     })
 
     test('Should handle network errors', async () => {
       fetch.mockRejectedValueOnce(new Error('Network error'))
 
-      await expect(holdingsService.getHoldingByCph('12/345/6789')).rejects.toThrow('Failed to fetch holding data: Network error')
+      await expect(
+        holdingsService.getHoldingByCph('12/345/6789')
+      ).rejects.toThrow('Failed to fetch holding data: Network error')
     })
   })
 

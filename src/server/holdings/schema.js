@@ -10,14 +10,12 @@ const cphPattern = /^\d{2}\/\d{3}\/\d{4}$/
  * Validates CPH format for search functionality
  */
 export const searchHoldingSchema = Joi.object({
-  cph: Joi.string()
-    .pattern(cphPattern)
-    .required()
-    .messages({
-      'string.pattern.base': 'CPH number must be in the format XX/XXX/XXXX (for example, 12/345/6789)',
-      'any.required': 'Enter a CPH number to search for',
-      'string.empty': 'Enter a CPH number to search for'
-    })
+  cph: Joi.string().pattern(cphPattern).required().messages({
+    'string.pattern.base':
+      'CPH number must be in the format XX/XXX/XXXX (for example, 12/345/6789)',
+    'any.required': 'Enter a CPH number to search for',
+    'string.empty': 'Enter a CPH number to search for'
+  })
 })
 
 /**
@@ -26,29 +24,20 @@ export const searchHoldingSchema = Joi.object({
  */
 export const createHoldingSchema = Joi.object({
   // Core Information
-  cph: Joi.string()
-    .pattern(cphPattern)
-    .required()
-    .messages({
-      'string.pattern.base': 'CPH number must be in the format XX/XXX/XXXX (e.g., 12/345/6789)',
-      'any.required': 'CPH number is required'
-    }),
+  cph: Joi.string().pattern(cphPattern).required().messages({
+    'string.pattern.base':
+      'CPH number must be in the format XX/XXX/XXXX (e.g., 12/345/6789)',
+    'any.required': 'CPH number is required'
+  }),
 
-  name: Joi.string()
-    .max(100)
-    .required()
-    .messages({
-      'string.max': 'Farm name must be 100 characters or less',
-      'any.required': 'Farm name is required'
-    }),
+  name: Joi.string().max(100).required().messages({
+    'string.max': 'Farm name must be 100 characters or less',
+    'any.required': 'Farm name is required'
+  }),
 
-  description: Joi.string()
-    .max(500)
-    .allow('')
-    .optional()
-    .messages({
-      'string.max': 'Farm description must be 500 characters or less'
-    }),
+  description: Joi.string().max(500).allow('').optional().messages({
+    'string.max': 'Farm description must be 500 characters or less'
+  }),
 
   // Contact Information
   telephone: Joi.string()
@@ -59,36 +48,25 @@ export const createHoldingSchema = Joi.object({
       'any.required': 'Telephone number is required'
     }),
 
-  email: Joi.string()
-    .email()
-    .required()
-    .messages({
-      'string.email': 'Enter a valid email address',
-      'any.required': 'Email address is required'
-    }),
+  email: Joi.string().email().required().messages({
+    'string.email': 'Enter a valid email address',
+    'any.required': 'Email address is required'
+  }),
 
   // Address
-  street: Joi.string()
-    .required()
-    .messages({
-      'any.required': 'Street address is required'
-    }),
+  street: Joi.string().required().messages({
+    'any.required': 'Street address is required'
+  }),
 
-  locality: Joi.string()
-    .allow('')
-    .optional(),
+  locality: Joi.string().allow('').optional(),
 
-  town: Joi.string()
-    .required()
-    .messages({
-      'any.required': 'Town is required'
-    }),
+  town: Joi.string().required().messages({
+    'any.required': 'Town is required'
+  }),
 
-  county: Joi.string()
-    .required()
-    .messages({
-      'any.required': 'County is required'
-    }),
+  county: Joi.string().required().messages({
+    'any.required': 'County is required'
+  }),
 
   postcode: Joi.string()
     .pattern(/^[A-Z]{1,2}\d[A-Z\d]? \d[A-Z]{2}$/i)
@@ -99,35 +77,23 @@ export const createHoldingSchema = Joi.object({
     }),
 
   // Geolocation
-  mapRef: Joi.string()
-    .required()
-    .messages({
-      'any.required': 'OS Grid Reference is required'
-    }),
+  mapRef: Joi.string().required().messages({
+    'any.required': 'OS Grid Reference is required'
+  }),
 
-  easting: Joi.number()
-    .integer()
-    .min(0)
-    .max(800000)
-    .required()
-    .messages({
-      'number.base': 'Easting must be a number',
-      'number.integer': 'Easting must be a whole number',
-      'number.min': 'Easting must be between 0 and 800,000',
-      'number.max': 'Easting must be between 0 and 800,000',
-      'any.required': 'Easting coordinate is required'
-    }),
+  easting: Joi.number().integer().min(0).max(800000).required().messages({
+    'number.base': 'Easting must be a number',
+    'number.integer': 'Easting must be a whole number',
+    'number.min': 'Easting must be between 0 and 800,000',
+    'number.max': 'Easting must be between 0 and 800,000',
+    'any.required': 'Easting coordinate is required'
+  }),
 
-  northing: Joi.number()
-    .integer()
-    .min(0)
-    .max(1400000)
-    .required()
-    .messages({
-      'number.base': 'Northing must be a number',
-      'number.integer': 'Northing must be a whole number',
-      'number.min': 'Northing must be between 0 and 1,400,000',
-      'number.max': 'Northing must be between 0 and 1,400,000',
-      'any.required': 'Northing coordinate is required'
-    })
+  northing: Joi.number().integer().min(0).max(1400000).required().messages({
+    'number.base': 'Northing must be a number',
+    'number.integer': 'Northing must be a whole number',
+    'number.min': 'Northing must be between 0 and 1,400,000',
+    'number.max': 'Northing must be between 0 and 1,400,000',
+    'any.required': 'Northing coordinate is required'
+  })
 })

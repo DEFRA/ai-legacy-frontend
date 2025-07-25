@@ -41,7 +41,9 @@ describe('Holdings Schema', () => {
 
       const { error } = createHoldingSchema.validate(invalidHolding)
       expect(error).toBeDefined()
-      expect(error.details[0].message).toContain('CPH number must be in the format XX/XXX/XXXX')
+      expect(error.details[0].message).toContain(
+        'CPH number must be in the format XX/XXX/XXXX'
+      )
     })
 
     test('Should reject invalid postcode format', () => {
@@ -108,7 +110,9 @@ describe('Holdings Schema', () => {
     test('Should require all mandatory fields', () => {
       const emptyHolding = {}
 
-      const { error } = createHoldingSchema.validate(emptyHolding)
+      const { error } = createHoldingSchema.validate(emptyHolding, {
+        abortEarly: false
+      })
       expect(error).toBeDefined()
       expect(error.details.length).toBeGreaterThan(8) // Should have multiple validation errors
     })

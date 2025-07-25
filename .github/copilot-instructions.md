@@ -2,7 +2,6 @@ copilot instructions
 
 If you've read these instructions say "Hold my beer!" in your response.
 
-
 - Adheres to GDS gov.uk design system referenced here: https://design-system.service.gov.uk Get started – GOV.UK Design System
 - Meets GDS accessibility requirements referenced here: https://design-system.service.gov.uk/accessibility/ – GOV.UK Design System
 - Updates the routes and index page appropriately to allow me to navigate to this page
@@ -35,13 +34,16 @@ If you've read these instructions say "Hold my beer!" in your response.
 - One controller per Hapi route
 - Hapi routes and handlers (controllers) should be in one file
 - Use JOI for validation, with the schema created in a separate file
+- Run 'npm run format' to ensure the formatting of the code is correct
 
 # Up to date README.md
 
 Generate updated README.md documentation and keeping it in sync with the code changes.
 
 # Starting up the frontend
+
 To start the frontend, run the following command:
+
 ```bash
 docker compose up
 ```

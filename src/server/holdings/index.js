@@ -1,4 +1,8 @@
-import { createHoldingController, searchHoldingController, viewHoldingController } from './controller.js'
+import {
+  createHoldingController,
+  searchHoldingController,
+  viewHoldingController
+} from './controller.js'
 
 /**
  * Sets up the routes used for holdings management.

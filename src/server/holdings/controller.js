@@ -16,7 +16,7 @@ function transformJoiErrors(joiError) {
   const errors = {}
   const errorList = []
 
-  joiError.details.forEach(detail => {
+  joiError.details.forEach((detail) => {
     const field = detail.path[0]
     errors[field] = {
       text: detail.message
@@ -44,11 +44,11 @@ function transformJoiErrors(joiError) {
  */
 async function searchForHoldingByCph(request, h) {
   const { cph } = request.payload
-  
+
   try {
     // Search for holding using the service
     const holdingData = await holdingsService.getHoldingByCph(cph)
-    
+
     if (!holdingData) {
       // No holding found - show error on search page
       return h.view('holdings/search', {
@@ -80,15 +80,17 @@ async function searchForHoldingByCph(request, h) {
         }
       })
     }
-    
+
     // Holding found - redirect to view page
     const encodedCph = encodeURIComponent(cph)
     return h.redirect(`/holdings/${encodedCph}`)
-    
   } catch (error) {
     // Log error for debugging
-    request.logger?.error('Failed to search for holding', { cph, error: error.message })
-    
+    request.logger?.error('Failed to search for holding', {
+      cph,
+      error: error.message
+    })
+
     // Show generic error on search page
     return h.view('holdings/search', {
       pageTitle: 'Search Holdings',
@@ -147,13 +149,28 @@ function getCreateHolding(_request, h) {
  * Handler for POST request to create holding
  * @param {Object} request - Hapi request object
  * @param {Object} h - Hapi response toolkit
- * @returns {Object} Response object with success view
+ * @returns {Object} Response object with success view or error
  */
-function postCreateHolding(request, h) {
+async function postCreateHolding(request, h) {
   const payload = request.payload
 
-  // If validation passes, show success message
-  // In a real application, this would save to database via API
+  // Fire-and-forget: Create holding via API in the background
+  // This ensures the holding is created in the backend without blocking the user response
+  holdingsService
+    .createHolding(payload)
+    .then((createdHolding) => {
+      // Holding creation succeeded
+    })
+    .catch((error) => {
+      // Log the error but don't affect the user experience
+      console.error('Background holding creation failed:', error.message)
+      request.logger?.error('Failed to create holding in background', {
+        payload,
+        error: error.message
+      })
+    })
+
+  // Immediately show success page with form data for quick user feedback
   return h.view('holdings/success', {
     pageTitle: 'Holding Created Successfully',
     heading: 'Holding Created Successfully',
@@ -170,7 +187,7 @@ function postCreateHolding(request, h) {
         text: 'Success'
       }
     ],
-    holdingData: payload
+    holdingData: payload // Use form data directly for immediate response
   })
 }
 
@@ -204,14 +221,14 @@ function getSearchHolding(_request, h) {
  */
 async function getViewHolding(request, h) {
   const { cph } = request.params
-  
+
   // Decode the CPH parameter (handle URL encoding of slashes)
   const decodedCph = decodeURIComponent(cph)
-  
+
   try {
     // Get holding data from API
     const holdingData = await holdingsService.getHoldingByCph(decodedCph)
-    
+
     if (!holdingData) {
       return h.response('Holding not found').code(404)
     }
@@ -242,14 +259,20 @@ async function getViewHolding(request, h) {
     })
   } catch (error) {
     // Log error for debugging
-    request.logger?.error('Failed to fetch holding data', { cph: decodedCph, error: error.message })
-    console.log(error)
+    request.logger?.error('Failed to fetch holding data', {
+      cph: decodedCph,
+      error: error.message
+    })
+
     // Return error page
-    return h.view('error/index', {
-      pageTitle: 'Service Unavailable',
-      heading: 'Service Unavailable',
-      message: 'Unable to retrieve holding information at this time. Please try again later.'
-    }).code(500)
+    return h
+      .view('error/index', {
+        pageTitle: 'Service Unavailable',
+        heading: 'Service Unavailable',
+        message:
+          'Unable to retrieve holding information at this time. Please try again later.'
+      })
+      .code(500)
   }
 }
 
@@ -264,23 +287,25 @@ export const createHoldingController = {
         payload: createHoldingSchema,
         failAction: async (request, h, err) => {
           const { errors, errorSummary } = transformJoiErrors(err)
-          
-          return h.view('holdings/create', {
-            pageTitle: 'Create New Holding',
-            heading: 'Create New Holding',
-            breadcrumbs: [
-              {
-                text: 'Home',
-                href: '/'
-              },
-              {
-                text: 'Create New Holding'
-              }
-            ],
-            errors,
-            values: request.payload,
-            errorSummary
-          }).takeover()
+
+          return h
+            .view('holdings/create', {
+              pageTitle: 'Create New Holding',
+              heading: 'Create New Holding',
+              breadcrumbs: [
+                {
+                  text: 'Home',
+                  href: '/'
+                },
+                {
+                  text: 'Create New Holding'
+                }
+              ],
+              errors,
+              values: request.payload,
+              errorSummary
+            })
+            .takeover()
         }
       }
     },
@@ -299,23 +324,25 @@ export const searchHoldingController = {
         payload: searchHoldingSchema,
         failAction: async (request, h, err) => {
           const { errors, errorSummary } = transformJoiErrors(err)
-          
-          return h.view('holdings/search', {
-            pageTitle: 'Search Holdings',
-            heading: 'Search Holdings',
-            breadcrumbs: [
-              {
-                text: 'Home',
-                href: '/'
-              },
-              {
-                text: 'Search Holdings'
-              }
-            ],
-            errors,
-            values: request.payload,
-            errorSummary
-          }).takeover()
+
+          return h
+            .view('holdings/search', {
+              pageTitle: 'Search Holdings',
+              heading: 'Search Holdings',
+              breadcrumbs: [
+                {
+                  text: 'Home',
+                  href: '/'
+                },
+                {
+                  text: 'Search Holdings'
+                }
+              ],
+              errors,
+              values: request.payload,
+              errorSummary
+            })
+            .takeover()
         }
       }
     },

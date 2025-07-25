@@ -28,7 +28,7 @@ class HoldingsService {
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json'
         },
         timeout: 10000 // 10 second timeout
@@ -40,7 +40,9 @@ class HoldingsService {
 
       if (!response.ok) {
         const errorBody = await response.text()
-        throw new Error(`API request failed with status ${response.status}: ${errorBody}`)
+        throw new Error(
+          `API request failed with status ${response.status}: ${errorBody}`
+        )
       }
 
       const holdingData = await response.json()
@@ -66,7 +68,7 @@ class HoldingsService {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(holdingData),
@@ -75,7 +77,9 @@ class HoldingsService {
 
       if (!response.ok) {
         const errorBody = await response.text()
-        throw new Error(`API request failed with status ${response.status}: ${errorBody}`)
+        throw new Error(
+          `API request failed with status ${response.status}: ${errorBody}`
+        )
       }
 
       const createdHolding = await response.json()
@@ -97,7 +101,7 @@ class HoldingsService {
     // Transform contacts array to object for easier template access
     const contacts = {}
     if (apiData.contacts && Array.isArray(apiData.contacts)) {
-      apiData.contacts.forEach(contact => {
+      apiData.contacts.forEach((contact) => {
         contacts[contact.type] = contact.value
       })
     }
