@@ -1,22 +1,22 @@
 import path from 'path'
 import hapi from '@hapi/hapi'
 
-import { config } from '../config/config.js'
-import { createLogger } from './common/helpers/logging/logger.js'
-import { nunjucksConfig } from '../config/nunjucks/nunjucks.js'
 import { router } from './router.js'
-import { requestLogger } from './common/helpers/logging/request-logger.js'
+import { config } from '../config/config.js'
+import { pulse } from './common/helpers/pulse.js'
 import { catchAll } from './common/helpers/errors.js'
-import { secureContext } from './common/helpers/secure-context/index.js'
+import { nunjucksConfig } from '../config/nunjucks/nunjucks.js'
+import { setupProxy } from './common/helpers/proxy/setup-proxy.js'
+import { requestTracing } from './common/helpers/request-tracing.js'
+import { requestLogger } from './common/helpers/logging/request-logger.js'
 import { sessionCache } from './common/helpers/session-cache/session-cache.js'
 import { getCacheEngine } from './common/helpers/session-cache/cache-engine.js'
-import { pulse } from './common/helpers/pulse.js'
-import { requestTracing } from './common/helpers/request-tracing.js'
-import { setupProxy } from './common/helpers/proxy/setup-proxy.js'
+import { secureContext } from './common/helpers/secure-context/secure-context.js'
 
-export async function createServer () {
+export async function createServer() {
   setupProxy()
   const server = hapi.server({
+    host: config.get('host'),
     port: config.get('port'),
     routes: {
       validate: {
@@ -44,9 +44,7 @@ export async function createServer () {
     cache: [
       {
         name: config.get('session.cache.name'),
-        engine: getCacheEngine(
-          /** @type {Engine} */ (config.get('session.cache.engine'))
-        )
+        engine: getCacheEngine(config.get('session.cache.engine'))
       }
     ],
     state: {
@@ -60,32 +58,10 @@ export async function createServer () {
     pulse,
     sessionCache,
     nunjucksConfig,
-    router
+    router // Register all the controllers/routes defined in src/server/router.js
   ])
 
   server.ext('onPreResponse', catchAll)
 
   return server
 }
-
-async function startServer () {
-  let server
-
-  try {
-    server = await createServer()
-    await server.start()
-
-    server.logger.info('Server started successfully')
-    server.logger.info(
-      `Access your frontend on http://localhost:${config.get('port')}`
-    )
-  } catch (error) {
-    const logger = createLogger()
-    logger.info('Server failed to start :(')
-    logger.error(error)
-  }
-
-  return server
-}
-
-export { startServer }

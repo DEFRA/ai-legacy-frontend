@@ -2,6 +2,8 @@ import convict from 'convict'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import convictFormatWithValidator from 'convict-format-with-validator'
+
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const fourHoursMs = 14400000
@@ -11,6 +13,8 @@ const isProduction = process.env.NODE_ENV === 'production'
 const isTest = process.env.NODE_ENV === 'test'
 const isDevelopment = process.env.NODE_ENV === 'development'
 
+convict.addFormats(convictFormatWithValidator)
+
 export const config = convict({
   serviceVersion: {
     doc: 'The service version, this variable is injected into your docker container in CDP environments',
@@ -19,17 +23,23 @@ export const config = convict({
     default: null,
     env: 'SERVICE_VERSION'
   },
-  env: {
-    doc: 'The application environment.',
-    format: ['production', 'development', 'test'],
-    default: 'development',
-    env: 'NODE_ENV'
+  host: {
+    doc: 'The IP address to bind',
+    format: 'ipaddress',
+    default: '0.0.0.0',
+    env: 'HOST'
   },
   port: {
     doc: 'The port to bind.',
     format: 'port',
     default: 3000,
     env: 'PORT'
+  },
+  apiUrl: {
+    doc: 'Backend API base URL',
+    format: 'url',
+    default: 'http://localhost:3001',
+    env: 'API_URL'
   },
   staticCacheTimeout: {
     doc: 'Static cache timeout in milliseconds',
@@ -40,7 +50,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'ai-legacy-frontend'
+    default: 'cdp-node-frontend-template'
   },
   root: {
     doc: 'Project root',
@@ -67,12 +77,6 @@ export const config = convict({
     doc: 'If this application running in the test environment',
     format: Boolean,
     default: isTest
-  },
-  backendApiUrl: {
-    doc: 'Backend API base URL',
-    format: String,
-    default: 'http://host.docker.internal:3002',
-    env: 'BACKEND_API_URL'
   },
   log: {
     enabled: {
@@ -101,13 +105,13 @@ export const config = convict({
         : []
     }
   },
-  httpProxy: /** @type {SchemaObj<string | null>} */ ({
+  httpProxy: {
     doc: 'HTTP Proxy',
     format: String,
     nullable: true,
     default: null,
     env: 'HTTP_PROXY'
-  }),
+  },
   isSecureContextEnabled: {
     doc: 'Enable Secure Context',
     format: Boolean,
@@ -163,7 +167,7 @@ export const config = convict({
       }
     }
   },
-  redis: /** @type {Schema<RedisConfig>} */ ({
+  redis: {
     host: {
       doc: 'Redis cache host',
       format: String,
@@ -186,7 +190,7 @@ export const config = convict({
     keyPrefix: {
       doc: 'Redis cache key prefix name used to isolate the cached results across multiple clients',
       format: String,
-      default: 'ai-legacy-frontend:',
+      default: 'cdp-node-frontend-template:',
       env: 'REDIS_KEY_PREFIX'
     },
     useSingleInstanceCache: {
@@ -201,7 +205,7 @@ export const config = convict({
       default: isProduction,
       env: 'REDIS_TLS'
     }
-  }),
+  },
   nunjucks: {
     watch: {
       doc: 'Reload templates when they are changed.',
@@ -225,8 +229,3 @@ export const config = convict({
 })
 
 config.validate({ allowed: 'strict' })
-
-/**
- * @import { Schema, SchemaObj } from 'convict'
- * @import { RedisConfig } from './server/common/helpers/redis-client.js'
- */

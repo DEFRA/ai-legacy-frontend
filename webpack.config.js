@@ -4,7 +4,7 @@ import path from 'path'
 import CopyPlugin from 'copy-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
-import WebpackAssetsManifest from 'webpack-assets-manifest'
+import { WebpackAssetsManifest } from 'webpack-assets-manifest'
 
 const { NODE_ENV = 'development' } = process.env
 
@@ -17,9 +17,6 @@ const govukFrontendPath = path.dirname(
 
 const ruleTypeAssetResource = 'asset/resource'
 
-/**
- * @type {Configuration}
- */
 export default {
   context: path.resolve(dirname, 'src/client'),
   entry: {
@@ -63,6 +60,20 @@ export default {
         test: /\.(js|mjs|scss)$/,
         loader: 'source-map-loader',
         enforce: 'pre'
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        options: {
+          browserslistEnv: 'javascripts',
+          cacheDirectory: true,
+          extends: path.join(dirname, 'babel.config.cjs'),
+          presets: [['@babel/preset-env']]
+        },
+
+        // Flag loaded modules as side effect free
+        sideEffects: false
       },
       {
         test: /\.scss$/,
@@ -152,6 +163,16 @@ export default {
       patterns: [
         {
           from: path.join(govukFrontendPath, 'dist/govuk/assets'),
+          to: 'assets',
+          globOptions: {
+            ignore: [
+              path.join(govukFrontendPath, 'dist/govuk/assets/rebrand'),
+              path.join(govukFrontendPath, 'dist/govuk/assets/images')
+            ]
+          }
+        },
+        {
+          from: path.join(govukFrontendPath, 'dist/govuk/assets/rebrand'),
           to: 'assets'
         }
       ]
@@ -164,7 +185,3 @@ export default {
   },
   target: 'browserslist:javascripts'
 }
-
-/**
- * @import { Configuration } from 'webpack'
- */

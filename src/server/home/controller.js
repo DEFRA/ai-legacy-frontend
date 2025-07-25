@@ -1,23 +1,9 @@
 /**
- * Home page controller for the TB Case Management System
- * Renders the main landing page following GDS design patterns
- * @satisfies {Partial<ServerRoute>}
+ * Home page controller that redirects to the holdings management page.
+ * This makes the holdings management the main landing page for users.
  */
 export const homeController = {
-  /**
-   * Handler for the home page route
-   * @param {object} _request - Hapi request object (unused)
-   * @param {object} h - Hapi response toolkit
-   * @returns {object} Rendered home page view
-   */
-  handler (_request, h) {
-    return h.view('home/index', {
-      pageTitle: 'Home',
-      heading: 'Home'
-    })
+  handler(_request, h) {
+    return h.redirect('/holdings')
   }
 }
-
-/**
- * @import { ServerRoute } from '@hapi/hapi'
- */

@@ -1,0 +1,92 @@
+{% extends 'layouts/page.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{% block content %}
+  {{ appHeading({
+    text: heading,
+    caption: "Search for existing holdings or create new ones"
+  }) }}
+
+  {% if errorSummary %}
+    {{ govukErrorSummary(errorSummary) }}
+  {% endif %}
+
+  {% if showCreateOption %}
+    {% set notificationHtml %}
+      <h3 class="govuk-notification-banner__heading">
+        No holding found with CPH number '{{ searchedCph }}'
+      </h3>
+      <p class="govuk-body">The CPH number you searched for does not exist in our records.</p>
+      <p class="govuk-body">You can:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>Check the CPH number and search again</li>
+        <li>Create a new holding with this CPH number</li>
+      </ul>
+      {{ govukButton({
+        text: "Create new holding",
+        href: "/holdings/create?cph=" + searchedCph,
+        classes: "govuk-button--secondary"
+      }) }}
+    {% endset %}
+
+    {{ govukNotificationBanner({
+      html: notificationHtml,
+      type: "important"
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      
+      <form method="post" action="/holdings/search" novalidate>
+        
+        {{ govukInput({
+          label: {
+            text: "CPH Number",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "Enter the full CPH number in format XX/XXX/XXXX (for example, 12/345/6789)"
+          },
+          id: "cph",
+          name: "cph",
+          type: "text",
+          classes: "govuk-input--width-10",
+          value: values.cph if values,
+          errorMessage: errors.cph if errors,
+          attributes: {
+            "aria-describedby": "cph-hint" + (" cph-error" if errors.cph else "")
+          }
+        }) }}
+
+        {{ govukButton({
+          text: "Search for holding",
+          type: "submit"
+        }) }}
+
+      </form>
+
+      <div class="govuk-inset-text">
+        <p class="govuk-body-s">
+          <strong>Need help finding a CPH number?</strong><br>
+          CPH numbers are 9-digit codes in the format XX/XXX/XXXX where:
+        </p>
+        <ul class="govuk-list govuk-list--bullet govuk-body-s">
+          <li>First 2 digits: County code</li>
+          <li>Next 3 digits: Parish code</li> 
+          <li>Last 4 digits: Unique keeper code</li>
+        </ul>
+        <p class="govuk-body-s">
+          <strong>Don't see your holding?</strong> If a holding doesn't exist, you'll be offered the option to create a new one.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}
