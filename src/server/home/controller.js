@@ -1,12 +1,9 @@
 /**
- * A GDS styled example home page controller.
- * Provided as an example, remove or modify as required.
+ * Home page controller that redirects to the holdings management page.
+ * This makes the holdings management the main landing page for users.
  */
 export const homeController = {
   handler(_request, h) {
-    return h.view('home/index', {
-      pageTitle: 'Home',
-      heading: 'Home'
-    })
+    return h.redirect('/holdings')
   }
 }

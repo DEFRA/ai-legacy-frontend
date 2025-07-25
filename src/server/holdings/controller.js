@@ -50,34 +50,18 @@ async function searchForHoldingByCph(request, h) {
     const holdingData = await holdingsService.getHoldingByCph(cph)
 
     if (!holdingData) {
-      // No holding found - show error on search page
+      // No holding found - show search page with option to create
       return h.view('holdings/search', {
-        pageTitle: 'Search Holdings',
-        heading: 'Search Holdings',
+        pageTitle: 'Holdings Management',
+        heading: 'Holdings Management',
         breadcrumbs: [
           {
-            text: 'Home',
-            href: '/'
-          },
-          {
-            text: 'Search Holdings'
+            text: 'Holdings Management'
           }
         ],
-        errors: {
-          cph: {
-            text: `No holding found with CPH number '${cph}'. Check the number and try again.`
-          }
-        },
-        values: request.payload,
-        errorSummary: {
-          titleText: 'There is a problem',
-          errorList: [
-            {
-              text: `No holding found with CPH number '${cph}'. Check the number and try again.`,
-              href: '#cph'
-            }
-          ]
-        }
+        showCreateOption: true,
+        searchedCph: cph,
+        values: request.payload
       })
     }
 
@@ -93,15 +77,11 @@ async function searchForHoldingByCph(request, h) {
 
     // Show generic error on search page
     return h.view('holdings/search', {
-      pageTitle: 'Search Holdings',
-      heading: 'Search Holdings',
+      pageTitle: 'Holdings Management',
+      heading: 'Holdings Management',
       breadcrumbs: [
         {
-          text: 'Home',
-          href: '/'
-        },
-        {
-          text: 'Search Holdings'
+          text: 'Holdings Management'
         }
       ],
       errors: {
@@ -125,23 +105,28 @@ async function searchForHoldingByCph(request, h) {
 
 /**
  * Handler for GET request to create holding form
- * @param {Object} _request - Hapi request object (unused)
+ * @param {Object} request - Hapi request object
  * @param {Object} h - Hapi response toolkit
  * @returns {Object} Response object with create form view
  */
-function getCreateHolding(_request, h) {
+function getCreateHolding(request, h) {
+  const prefilledCph = request.query.cph || ''
+  
   return h.view('holdings/create', {
     pageTitle: 'Create New Holding',
     heading: 'Create New Holding',
     breadcrumbs: [
       {
-        text: 'Home',
-        href: '/'
+        text: 'Holdings Management',
+        href: '/holdings'
       },
       {
         text: 'Create New Holding'
       }
-    ]
+    ],
+    values: {
+      cph: prefilledCph
+    }
   })
 }
 
@@ -176,8 +161,8 @@ async function postCreateHolding(request, h) {
     heading: 'Holding Created Successfully',
     breadcrumbs: [
       {
-        text: 'Home',
-        href: '/'
+        text: 'Holdings Management',
+        href: '/holdings'
       },
       {
         text: 'Create New Holding',
@@ -199,15 +184,11 @@ async function postCreateHolding(request, h) {
  */
 function getSearchHolding(_request, h) {
   return h.view('holdings/search', {
-    pageTitle: 'Search Holdings',
-    heading: 'Search Holdings',
+    pageTitle: 'Holdings Management',
+    heading: 'Holdings Management',
     breadcrumbs: [
       {
-        text: 'Home',
-        href: '/'
-      },
-      {
-        text: 'Search Holdings'
+        text: 'Holdings Management'
       }
     ]
   })
@@ -238,8 +219,8 @@ async function getViewHolding(request, h) {
       heading: `${holdingData.name}`,
       breadcrumbs: [
         {
-          text: 'Home',
-          href: '/'
+          text: 'Holdings Management',
+          href: '/holdings'
         },
         {
           text: 'View Holding'
@@ -294,8 +275,8 @@ export const createHoldingController = {
               heading: 'Create New Holding',
               breadcrumbs: [
                 {
-                  text: 'Home',
-                  href: '/'
+                  text: 'Holdings Management',
+                  href: '/holdings'
                 },
                 {
                   text: 'Create New Holding'
@@ -327,15 +308,11 @@ export const searchHoldingController = {
 
           return h
             .view('holdings/search', {
-              pageTitle: 'Search Holdings',
-              heading: 'Search Holdings',
+              pageTitle: 'Holdings Management',
+              heading: 'Holdings Management',
               breadcrumbs: [
                 {
-                  text: 'Home',
-                  href: '/'
-                },
-                {
-                  text: 'Search Holdings'
+                  text: 'Holdings Management'
                 }
               ],
               errors,
